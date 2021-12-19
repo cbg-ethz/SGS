@@ -35,7 +35,7 @@ order to plot graphs, but is not mandatory.
 
 Reference
 ---------
-If you `SubGroupSeparation` in your work, please cite it as:
+If you use `SubGroupSeparation` in your work, please cite it as:
 ```
 Fritz M. Bayer, Giusi Moffa, Niko Beerenwinkel, Jack Kuipers. "Marginalization in Bayesian Networks: Integrating Exact and Approximate Inference" arXiv preprint, 2021
 ```
