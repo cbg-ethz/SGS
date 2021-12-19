@@ -1,0 +1,522 @@
+#' #' @rdname sub_belief.propagation
+#' #' @aliases sub_belief.propagation,InferenceEngine
+#' setMethod("sub_belief.propagation",
+#'           c("InferenceEngine"),
+#'           function(ie, observations = NULL, return.potentials = FALSE){
+#'             {
+#'               ###############################
+#'               # moved inside in order to eliminate a NOTE in R CMD check
+#'               proc.order <- function(node, from, adj)
+#'               {
+#'                 # Recursive method to compute order of the message passing in the upward step.
+#'                 #
+#'                 # node : current node
+#'                 # from : (local) root
+#'                 # adj  : adjacency matrix
+#'                 neighbours <- setdiff(which(adj[node,] > 0), from)
+#' 
+#'                 if (length(neighbours) > 0)
+#'                 {
+#'                   for (n in neighbours) {
+#'                     proc.order(n, node, adj)
+#'                     parents.list <<- c(parents.list, node)
+#'                   }
+#'                 }
+#' 
+#'                 process.order <<- c(process.order, node)
+#'               }
+#' 
+#'               ##############################
+#' 
+#'               # if (missing(net))
+#'               # {
+#'               net <- bn(ie)
+#'               # }
+#' 
+#'               if (missing(observations))
+#'               {
+#'                 obs <- observations(ie)
+#'                 observed.vars <- obs$observed.vars
+#'                 observed.vals <- obs$observed.vals
+#'               }
+#'               else
+#'               {
+#'                 observed.vars <- observations[[1]]
+#'                 observed.vals <- observations[[2]]
+#'                 obs <- unique.observations(observed.vars, observed.vals)
+#'                 observed.vars <- obs$observed.vars
+#'                 observed.vals <- obs$observed.vals
+#'                 observations(ie) <- list(observed.vars, observed.vals)
+#'               }
+#' 
+#'               num.nodes  <- num.nodes(net)
+#'               num.cliqs  <- num.nodes(ie)
+#' 
+#'               # cliques contains the variables that compose each clique
+#'               cliques    <- jt.cliques(ie)
+#' 
+#'               ctree      <- junction.tree(ie)
+#' 
+#'               cpts       <- cpts(net)
+#' 
+#'               variables  <- variables(net)
+#' 
+#'               dim.vars   <- lapply(1:num.nodes,
+#'                                    function(x)
+#'                                      #as.list(
+#'                                      match(
+#'                                        c(unlist(
+#'                                          names(dimnames(cpts[[x]])), F, F
+#'                                        )),
+#'                                        variables
+#'                                      )
+#'                                    #)
+#'               )
+#' 
+#' 
+#'               node.sizes <- node.sizes(net)
+#' 
+#'               quantiles <- quantiles(net)
+#' 
+#'               is.discrete <- discreteness(net)
+#' 
+#'               # discretize continuous observed variables
+#'               observed.vals.disc <- c()
+#'               if (length(observed.vars) > 0) {
+#'                 for (i in 1:length(observed.vars)) {
+#'                   ovr <- observed.vars[i]
+#'                   ovl <- observed.vals[i]
+#'                   if (is.discrete[ovr]) {
+#'                     observed.vals.disc <- c(observed.vals.disc, ovl)
+#'                   } else {
+#'                     q <- quantiles[[ovr]]
+#'                     cv <- cut(ovl, q, labels=FALSE, include.lowest=TRUE)
+#'                     if (is.na(cv)) {
+#'                       if (ovl <= q[1]) cv <- 1
+#'                       else cv <- node.sizes[ovr]
+#'                     }
+#'                     observed.vals.disc <- c(observed.vals.disc, cv)
+#'                   }
+#'                 }
+#'               }
+#' 
+#'               # potentials is a list containing the probability tables of each clique
+#'               potentials <- as.list(rep(as.list(c(1)), num.cliqs))
+#' 
+#'               # dimensions.contained contains the variables that effectively compose the cpt
+#'               # currently contained in each node of the clique tree.
+#'               # After last round it will match corresponding clique.
+#'               dimensions.contained <- lapply(1:num.cliqs, function(x) as.list(c(NULL)))
+#' 
+#' 
+#'               # choose as root (one among) the clique(s) whose connected edges have the highest overall sum
+#'               root <- which.max(rowSums(ctree))
+#' 
+#'               # Assign factors to a cluster graph
+#'               # Construct initial potentials:
+#'               # initial potentials are conditional or joint probability tables, depending on the initial BN
+#'               # and how we assign each CPT to the cliques.
+#'               #
+#'               # The probabilities are stored as multidimensional arrays, with the convention that
+#'               # the variables in the tables are in alphanumerical order.
+#'               # E.g.: the network A -> C <- D -> B, whose junction tree has two nodes (and tables) ACD and BD.
+#'               #
+#'               # We construct a table for a clique this way:
+#'               # - start with an empty table (NULL)
+#'               # - whenever a {C,J}PT is assigned to that clique, its variables are ordered
+#'               # - then, we control if the variables of the table we're inserting are already present in the clique table:
+#'               #   - if no, we can multiply the two tables, ensuring the variables are ordered after that
+#'               #   - if yes, we multiply the two tables
+#'               # If the clique is currently empty, just add the cpt.
+#'               # We have, however, to maintain the order of the variables in the probability table.
+#' 
+#'               for (cpt in 1:num.nodes)
+#'               {
+#'                 # find a suitable clique for the CPT of node `cpt` (a clique that contains node `cpt` and all of its parents)
+#'                 #                 target.clique <- which.min(lapply(1:num.cliqs,
+#'                 #                                                   function(x){
+#'                 #                                                     length(
+#'                 #                                                       which(unlist(
+#'                 #                                                         is.element(
+#'                 #                                                           c(unlist(dim.vars[[cpt]])),
+#'                 #                                                           c(cliques[[x]])
+#'                 #                                                         )
+#'                 #                                                       ) == FALSE) == 0)
+#'                 #                                                   }
+#'                 #                 ))
+#' 
+#'                 # TODO: PROFILING: is there anything better?
+#'                 target.clique <- which.min(lapply(1:num.cliqs,
+#'                                                   function(x){
+#'                                                     length(which(!is.na(match(
+#'                                                       c(unlist(dim.vars[[cpt]])),
+#'                                                       c(cliques[[x]])
+#'                                                     )) == FALSE))
+#'                                                   }))
+#' 
+#'                 # get the variables currently contained in the selected clique
+#'                 ds <- unlist(dimensions.contained[[target.clique]], F, F)
+#' 
+#'                 if (length(ds) == 0)
+#'                 {
+#'                   # if current clique is empty, just insert the cpt
+#'                   out <- sort.dimensions(cpts[[cpt]], dim.vars[[cpt]])
+#'                   potentials[[target.clique]]           <- out$potential
+#'                   dimensions.contained[[target.clique]] <- out$vars
+#'                 }
+#'                 else
+#'                 {
+#'                   # multiply current prob. table for the already inserted prob. table
+#'                   out <- mult(potentials[[target.clique]],
+#'                               dimensions.contained[[target.clique]],
+#'                               cpts[[cpt]],
+#'                               dim.vars[[cpt]],
+#'                               node.sizes)
+#'                   potentials[[target.clique]]           <- out$potential
+#'                   dimensions.contained[[target.clique]] <- out$vars
+#'                 }
+#' 
+#'               }
+#' 
+#'               # INCORPORATE EVIDENCE
+#'               # If there are any observed variables, insert the knowledge.
+#'               # Each observation is inserted by setting to zero all of the combinations that
+#'               # do not match the observation. This is done this way:
+#'               # - find a clique that contains the observed variable
+#'               # - create a probability table for the observed variable, with only one non-zero entry,
+#'               #   the one corresponding to the observed value
+#'               # - multiply the table of the clique for the newly created table
+#'               # - normalize after belief propagation
+#' 
+#'               if (length(observed.vars) > 0)
+#'               {
+#'                 # observed.vars <- c(unlist(observed.vars, F, F))
+#' 
+#'                 if (class(observed.vars) == "character") # hope that the user gives coherent input...
+#'                   observed.vars <- sapply(observed.vars, function(x) which(x == variables))
+#' 
+#'                 for (var in 1:length(observed.vars))
+#'                 {
+#'                   obs.var <- observed.vars[var]
+#'                   obs.val <- observed.vals.disc[var]
+#' 
+#'                   if (obs.val <= 0 || obs.val > node.sizes[obs.var])
+#'                   {
+#'                     message(cat("Variable", obs.var, "cannot take value", obs.val, ", skipping..."))
+#'                   }
+#'                   else
+#'                   {
+#'                     # look for one clique containing the variable
+#'                     target.clique <- which.min(lapply(1:num.cliqs,
+#'                                                       function(x) {
+#'                                                         which(is.element(
+#'                                                           unlist(dimensions.contained[[x]]),
+#'                                                           obs.var
+#'                                                         ) == TRUE)
+#'                                                       }
+#'                     ))
+#' 
+#'                     tmp <- rep(0, node.sizes[obs.var])
+#'                     tmp[obs.val] <- 1
+#'                     out <- mult(potentials[[target.clique]],
+#'                                 dimensions.contained[[target.clique]],
+#'                                 tmp,
+#'                                 obs.var,
+#'                                 node.sizes)
+#'                     potentials[[target.clique]]           <- out$potential
+#'                     dimensions.contained[[target.clique]] <- out$vars
+#'                   }
+#'                 }
+#'               }
+#' 
+#' 
+#'               # compute processing order from leaves to root
+#'               process.order <- c()
+#'               parents.list  <- c()
+#'               proc.order(root, c(), ctree)
+#'               #print("PROCESS ORDER")
+#'               #print(process.order)
+#'               #print("PARENTS LIST")
+#'               #print(parents.list)
+#'               #print("network")
+#'               #print(net)
+#' 
+#'               #########
+#'               
+#'               
+#'               subGroups <- get.allSubGroups(net@dag, obs.var)
+#'               
+#'               N_subGroups <- length(subGroups$allSubGroups)
+#'               
+#'               tempProcess.order <- list()
+#'               for (k0 in 1:N_subGroups){
+#'                 
+#'                 dimensions.contained[[k0]]
+#'                 
+#'                 tempSubGroups <- c(subGroups$allSubGroups[[k0]], subGroups$allEvidenceSubGroups[[k0]])
+#'                 
+#'                 dimensions.contained[[k0]]
+#'                 
+#'                 process.order[[k0]]
+#'                 
+#'                  %in% process.order[[k0]]
+#'                 
+#'                 
+#'                 tempProcess.order[[k0]] <- setdiff(process.order, tempSubGroups)
+#'                 
+#'                 
+#'               }
+#'               
+#'               
+#'               
+#'               
+#'               
+#'               
+#'               
+#'               #########
+#'               
+#'               # check whether message passing can be performed
+#'               if (length(process.order) > 1) {
+#' 
+#'                 # MESSAGE PASSING FROM LEAVES TO ROOT
+#' 
+#'                 # msg.pots contains the prob.tables for the messages,
+#'                 # while msg.vars contains the corresponding variables
+#'                 msg.pots <- NULL
+#'                 msg.vars <- NULL
+#'                 for (i in 1:num.cliqs)
+#'                 {
+#'                   msg.pots[[i]] <- as.list(c(NULL))
+#'                   msg.vars[[i]] <- as.list(c(NULL))
+#'                 }
+#' 
+#'                 # For each clique (excluding the root) compute the message by marginalizing
+#'                 # the variables not in the separator, then store the message and multiply it
+#'                 # for the cpt contained in the neighbour clique, overwriting the corresponding
+#'                 # potential and associated variables.
+#'                 for (clique in 1:(length(process.order)-1))
+#'                 {
+#'                   # print("clique")
+#'                   # print(clique)
+#'                   # print("parents.list[clique]")
+#'                   # print(parents.list[clique])
+#'                   # print("cliques[[parents.list[clique]]]")
+#'                   # print(cliques[[parents.list[clique]]])
+#'                   out <- compute.message(potentials[[process.order[clique]]],
+#'                                          dimensions.contained[[process.order[clique]]],
+#'                                          cliques[[process.order[clique]]],
+#'                                          cliques[[parents.list[clique]]],
+#'                                          node.sizes)
+#'                   msg.pots[[process.order[clique]]] <- out$potential
+#'                   msg.vars[[process.order[clique]]] <- out$vars
+#' 
+#'                   bk <- potentials[[parents.list[clique]]]
+#'                   bkd <- dimensions.contained[[parents.list[clique]]]
+#'                   out <- mult(potentials[[parents.list[clique]]],
+#'                               dimensions.contained[[parents.list[clique]]],
+#'                               msg.pots[[process.order[clique]]],
+#'                               msg.vars[[process.order[clique]]],
+#'                               node.sizes)
+#'                   potentials[[parents.list[clique]]]           <- out$potential
+#'                   dimensions.contained[[parents.list[clique]]] <- out$vars
+#' 
+#'                 }
+#' 
+#'                 # Upward step is thus completed. Now go backward from root to leaves.
+#'                 # This step is done by taking the CPT of the root node and dividing it (for each child)
+#'                 # by the message received from the corresponding child, then marginalize the variables
+#'                 # not in the separator and pass the new nessage to the child. As the messages computed
+#'                 # in the upward step are not needed anymore after the division, they can be overwritten.
+#'                 # Then multiply the cpt of the child for the message computed, and iterate by treating
+#'                 # each (internal) node as root.
+#'                 for (clique in (length(process.order)-1):1)
+#'                 {
+#'                   out <- divide(potentials[[parents.list[clique]]],
+#'                                 dimensions.contained[[parents.list[clique]]],
+#'                                 msg.pots[[process.order[clique]]],
+#'                                 msg.vars[[process.order[clique]]],
+#'                                 node.sizes)
+#'                   msg.pots[[process.order[clique]]] <- out$potential
+#'                   msg.vars[[process.order[clique]]] <- out$vars
+#' 
+#'                   out  <- compute.message(msg.pots[[process.order[clique]]],
+#'                                           msg.vars[[process.order[clique]]],
+#'                                           cliques[[parents.list[clique]]],
+#'                                           cliques[[process.order[clique]]],
+#'                                           node.sizes
+#'                   )
+#'                   msg.pots[[process.order[clique]]] <- out$potential
+#'                   msg.vars[[process.order[clique]]] <- out$vars
+#' 
+#'                   out <- mult(potentials[[process.order[clique]]],
+#'                               dimensions.contained[[process.order[clique]]],
+#'                               msg.pots[[process.order[clique]]],
+#'                               msg.vars[[process.order[clique]]],
+#'                               node.sizes)
+#'                   potentials[[process.order[clique]]] <- out$potential
+#'                   dimensions.contained[[process.order[clique]]] <- out$vars
+#'                 }
+#' 
+#'                 # Finally, normalize and add dimension names and return the potentials computed (will be all JPTs).
+#'                 for (x in 1:num.cliqs) {
+#'                   s <- sum(potentials[[x]])
+#'                   potentials[[x]] <- potentials[[x]] / s
+#'                   dmns <- list(NULL)
+#'                   for (i in length(dimensions.contained[[x]]))
+#'                   {
+#'                     dmns[[i]] <- c(1:node.sizes[dimensions.contained[[x]][[i]]])
+#'                   }
+#'                   dimnames(potentials[[x]])        <- dmns
+#'                   names(dimnames(potentials[[x]])) <- as.list(variables[c(unlist(dimensions.contained[[x]]))])
+#'                 }
+#' 
+#'               } # end if (length(process.order) > 1)
+#' 
+#'               if (return.potentials)
+#'                 return(potentials)
+#' 
+#'               ###################
+#'               # Now create new BN with updated beliefs
+#'               ###################
+#'               #
+#'               # To buil new conditional probability tables for the original network,
+#'               # starting from the updated beliefs, we proceed this way:
+#'               # for each node of the BN:
+#'               # - if it is an observed variable, construct a prob.table containing only
+#'               #   one variable (the one of the node) with one only non-zero (in fact, 1)
+#'               #   entry, the one corresponding to the observed value
+#'               # - if it is a non-observed variable, find a clique that contains the variables
+#'               #   of the original cpt (it must exist, because of the moralization - we have
+#'               #   already used this property), sum out the possible other variables introduced
+#'               #   by the triangulation, and divide the JPT by the JPT of the parent nodes
+#'               #   (e.g.: if we start from P(ABCD) and want P(C|A,B), we sum out D, then we
+#'               #   obtain P(AB) by summing out C, and then we compute P(ABC)/P(AB) = P(C|A,B)).
+#'               #   Easy peasy.
+#' 
+#' 
+#' 
+#'               nbn <- BN()
+#'               name(nbn)         <- name(net)
+#'               num.nodes(nbn)    <- num.nodes(net)
+#'               variables(nbn)    <- variables(net)
+#'               node.sizes(nbn)   <- node.sizes(net)
+#'               discreteness(nbn) <- discreteness(net)
+#'               dag(nbn)          <- dag(net)
+#'               wpdag(nbn)        <- wpdag(net)
+#'               scoring.func(nbn) <- scoring.func(net)
+#'               struct.algo(nbn)  <- struct.algo(net)
+#'               quantiles(nbn)    <- quantiles(net)
+#' 
+#'               ncpts <- NULL # lapply(1:num.nodes, function(x) as.list(c(NULL)))
+#' 
+#'               for (node in 1:num.nodes)
+#'               {
+#'                 # faster, but result does not change. While debugging, better keep this out...
+#'                 mpos <- match(node, observed.vars)
+#'                 if (!is.na(mpos))
+#'                   # works also when observed.vars == c()
+#'                   # in that case, the `else` branch will be the chosen one for every variable
+#'                 {
+#'                   ncpts[[node]] <- array(rep(0, node.sizes[observed.vars[mpos]]),
+#'                                          c(node.sizes[observed.vars[mpos]]))
+#'                   ncpts[[node]][observed.vals.disc[mpos]] <- 1
+#'                   dimnames(ncpts[[node]]) <- list(c(1:node.sizes[observed.vars[mpos]]))
+#'                   names(dimnames(ncpts[[node]])) <- as.list(variables[observed.vars[mpos]])
+#'                 }
+#'                 else
+#'                 {
+#'                   dnode <- unlist(dim.vars[[node]], F, F)
+#'                   #                   target.clique <- which.min(lapply(1:num.cliqs,
+#'                   #                                                     function(x){
+#'                   #                                                       length(
+#'                   #                                                         which(c(
+#'                   #                                                           is.element(
+#'                   #                                                             dnode,
+#'                   #                                                             unlist(dimensions.contained[[x]])
+#'                   #                                                           )
+#'                   #                                                         ) == FALSE) == 0)
+#'                   #                                                     }
+#'                   #                   ))
+#' 
+#'                   target.clique <- which.min(lapply(1:num.cliqs,
+#'                                                     function(x){
+#'                                                       length(which(!is.na(match(
+#'                                                         dnode,
+#'                                                         unlist(dimensions.contained[[x]])
+#'                                                       )) == FALSE))
+#'                                                     }))
+#' 
+#'                   pot <- potentials[[target.clique]]
+#'                   dms <- c(unlist(dimensions.contained[[target.clique]]))
+#'                   vs  <- c(unlist(dim.vars[[node]]))
+#' 
+#'                   #                   others <- setdiff(dms,vs)
+#'                   #                   for (var in others)
+#'                   #                   {
+#'                   #                     out <- marginalize(pot, dms, var)
+#'                   #                     pot <- out$potential
+#'                   #                     dms <- out$vars
+#'                   #                   }
+#'                   remaining <- match(vs, dms)
+#'                   dms <- dms[remaining]
+#'                   pot <- apply(pot, remaining, sum)
+#'                   pot <- pot / sum(pot)
+#' 
+#'                   #                   cat(node, " ", dms,"\n")
+#'                   #                   print(pot)
+#' 
+#'                   if (length(dms) > 1)
+#'                   {
+#'                     pot.bak <- pot
+#'                     dms.bak <- dms
+#'                     # readLines(file("stdin"),1)
+#'                     #                     out <- marginalize(pot, dms, node)
+#'                     #                     pot <- out$potential
+#'                     #                     dms <- out$vars
+#'                     remaining <- (1:length(dms))[-which(dms == node)]
+#'                     dms <- dms[remaining]
+#'                     pot <- apply(pot, remaining, sum)
+#'                     pot <- pot / sum(pot)
+#'                     out <- divide(pot.bak,
+#'                                   dms.bak,
+#'                                   as.array(pot),
+#'                                   dms, # out$vars,
+#'                                   node.sizes)
+#' 
+#'                     pot <- out$potential
+#'                     #pot <- pot / sum(pot)
+#'                     dms <- out$vars
+#'                   }
+#'                   pot <- as.array(pot)
+#'                   dmns <- list(NULL)
+#'                   for (i in length(dms))
+#'                   {
+#'                     dmns[[i]] <- c(1:node.sizes[dms[i]])
+#'                   }
+#'                   dimnames(pot)        <- dmns
+#'                   names(dimnames(pot)) <- as.list(variables[dms])
+#'                   ncpts[[node]] <- pot
+#'                   #                   print(pot)
+#'                   #                   readLines(file("stdin"),1)
+#'                 }
+#' 
+#'               }
+#' 
+#'               cpts(nbn) <- ncpts
+#' 
+#'               updated.bn(ie) <- nbn
+#'               jpts(ie) <- potentials
+#'               return(ie)
+#'             }
+#'           })
+#' 
+
+
+
+
+
+
+
+
+
+
