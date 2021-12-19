@@ -1,7 +1,7 @@
 SubGroupSeparation
 ========
 
-R package for marginalization in Bayesian networks: Integrating Exact and approximate Inference
+R package for marginalization in Bayesian networks: Integrating exact and approximate inference
 
 Introduction
 -----------
