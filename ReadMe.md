@@ -6,9 +6,9 @@ R package for marginalization in Bayesian networks: Integrating exact and approx
 Introduction
 -----------
 
-Bayesian networks have shown to be a valuable metric for modelling the underlying dependencies between variables of interest and to facilitate causal discovery. Encoding the dependencies amongst all variables, Bayesian networks are particularly suitable for dealing with missing data and prior knowledge. However, such computations require the calculation of the marginal probability distribution, which remains a fundamental problem for many statistical and scientific studies. 
+Bayesian Networks are probabilistic graphical models that can compactly represent dependencies among random variables. This package allows for efficient margainlization in Bayesian networks with exact and approximate inference options. It can be used to handle missing data or to answer probabilistic quieries. 
 
-`SubGroupSeparation` provides an efficient tool for calculating marginal probabilities in Bayesian networks that works in both low- and high-dimensional settings.
+`SubGroupSeparation` is an efficient tool for calculating marginal probabilities in Bayesian networks that works in both low- and high-dimensional settings.
 
 Installation
 -----------
