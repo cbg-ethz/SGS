@@ -25,7 +25,7 @@ tool from an R session:
 
 ```{r eval=FALSE}
 library("devtools")
-install_github("PhysFritz/SubGroupSeparation")
+install_github("cbg-ethz/SubGroupSeparation")
 ```
 
 `SubGroupSeparation` requires R `>= 3.5`, and depends on
