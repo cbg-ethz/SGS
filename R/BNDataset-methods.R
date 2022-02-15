@@ -87,7 +87,7 @@ BNDataset <- function(data, discreteness, variables = NULL, node.sizes = NULL, .
       if (discreteness[d] %in% c("d","D","T","TRUE")) discreteness[d] <- 'D'
       else if (discreteness[d] %in% c("c","C","F","FALSE")) discreteness[d] <- 'C'
       else {
-        bnstruct.log("Unrecognized status for variable ",variables(dataset)[d],", converting it to discrete.")
+        SubGroupSeparation.log("Unrecognized status for variable ",variables(dataset)[d],", converting it to discrete.")
         discreteness[d] <- 'D'
       }
     }
@@ -670,11 +670,11 @@ setMethod("impute",
           function(object, k.impute = 10)
           {
             # assumes raw data is ok
-            bnstruct.start.log("performing imputation ...")
+            SubGroupSeparation.start.log("performing imputation ...")
             object@imputed.data <- knn.impute(object@raw.data, k.impute,
                                               setdiff(1:length(object@node.sizes), c()))
             object@has.imputed.data  <- TRUE
-            bnstruct.end.log("imputation finished.")
+            SubGroupSeparation.end.log("imputation finished.")
             return(object)
           })
 
@@ -685,9 +685,9 @@ setMethod("bootstrap",
           function(object, num.boots = 100, seed = 0, imputation = FALSE, k.impute = 10)
           {
             if (imputation)
-              bnstruct.start.log("Generating bootstrap samples with imputation ...")
+              SubGroupSeparation.start.log("Generating bootstrap samples with imputation ...")
             else
-              bnstruct.start.log("Generating bootstrap samples ...")
+              SubGroupSeparation.start.log("Generating bootstrap samples ...")
             
             # assumes raw data is ok
             object@has.boots <- TRUE
@@ -716,7 +716,7 @@ setMethod("bootstrap",
               }
             }
             
-            bnstruct.end.log("Bootstrap samples generated.")
+            SubGroupSeparation.end.log("Bootstrap samples generated.")
             return(object)
           })
 

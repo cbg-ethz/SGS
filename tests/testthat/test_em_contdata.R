@@ -1,9 +1,9 @@
-library(bnstruct)
+library(SubGroupSeparation)
 context("Testing EM with continuous data")
 
 skip_on_cran()
 
-contdatafile <- system.file("extdata", "contdata.txt", package="bnstruct")
+contdatafile <- system.file("extdata", "contdata.txt", package="SubGroupSeparation")
 m <- read.table(contdatafile, header=FALSE, sep="\t")
 
 dataset <- BNDataset(data = m,

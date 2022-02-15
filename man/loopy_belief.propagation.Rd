@@ -25,7 +25,7 @@ updated \code{\link{InferenceEngine}} object.
 }
 \description{
 Perform belief propagation for the network of an InferenceEngine, given a set of observations.
-In the current version of \code{bnstruct}, belief propagation can be computed only over a junction tree.
+In the current version of \code{SubGroupSeparation}, belief propagation can be computed only over a junction tree.
 }
 \examples{
 \dontrun{

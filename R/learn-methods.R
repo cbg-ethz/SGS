@@ -232,11 +232,11 @@ setMethod("learn.params",
             # so that the sum over the last dimension is always 1
             
             if (struct.algo(bn) == "mmpc") {
-              bnstruct.start.log("no parameter learning possible for network learnt using the MMPC algorithm")
+              SubGroupSeparation.start.log("no parameter learning possible for network learnt using the MMPC algorithm")
               return(bn)
             }
 
-            bnstruct.start.log("learning network parameters ... ")
+            SubGroupSeparation.start.log("learning network parameters ... ")
             
             # just to play safe
             if (use.imputed.data)
@@ -275,8 +275,8 @@ setMethod("learn.params",
             {
               #cat("node " ,i, "\n")
               family <- c( which(dag[,i]!=0), i )
-              counts <- .Call( "bnstruct_compute_counts_nas", data[,family], node.sizes[family], 
-                               PACKAGE = "bnstruct" )
+              counts <- .Call( "SubGroupSeparation_compute_counts_nas", data[,family], node.sizes[family], 
+                               PACKAGE = "SubGroupSeparation" )
               counts <- array(c(counts), c(node.sizes[family]))
               cpts[[i]] <- counts.to.probs( counts + ess / prod(dim(counts)) )
               dms <- NULL
@@ -297,7 +297,7 @@ setMethod("learn.params",
             
             cpts(bn) <- cpts
 
-            bnstruct.end.log("parameter learning done.")
+            SubGroupSeparation.end.log("parameter learning done.")
 
             return(bn)
           }
@@ -357,7 +357,7 @@ setMethod("learn.structure",
             scoring.func <- match(tolower(scoring.func), c("bdeu", "aic", "bic"))
             if (is.na(scoring.func))
             {
-              bnstruct.log("scoring function not recognized, using BDeu")
+              SubGroupSeparation.log("scoring function not recognized, using BDeu")
               scoring.func <- 0
             }
             else {
@@ -367,8 +367,8 @@ setMethod("learn.structure",
             
             algo <- tolower(algo)
             if (!algo %in% c("sm", "mmhc", "sem", "mmpc", "hc")) {
-              bnstruct.log("structure learning algorithm not recognized, using MMHC")
-              bnstruct.log("(available options are: SM, MMHC, MMPC, HC, SEM)")
+              SubGroupSeparation.log("structure learning algorithm not recognized, using MMHC")
+              SubGroupSeparation.log("(available options are: SM, MMHC, MMPC, HC, SEM)")
               algo <- "mmhc"
             }
             
@@ -396,7 +396,7 @@ setMethod("learn.structure",
 
             # check consistency between max.parents and max.fanin
             #if (max.fanin < max.parents) {
-            #  # bnstruct.log ("bounding max.parents to max.fanin")
+            #  # SubGroupSeparation.log ("bounding max.parents to max.fanin")
             #  max.parents <- max.fanin
             #}
             
@@ -431,13 +431,13 @@ setMethod("learn.structure",
               # check consistency between max.parents and max.fanin
               if ( max.fanin < max.parents                                   ||
                   (is.null(max.parents.layers) && !is.null(max.fanin.layers))  ) {
-                bnstruct.log ("SM uses 'max.parents' and 'max.parents.layers' parameters, ",
+                SubGroupSeparation.log ("SM uses 'max.parents' and 'max.parents.layers' parameters, ",
                               "but apparently you set 'max.fanin' and 'max.fanin.layers', ",
                               "changing accordingly.")
                 max.parents <- max.fanin
                 max.parents.layers <- max.fanin.layers
               }
-              bnstruct.start.log("learning the structure using SM ...")
+              SubGroupSeparation.start.log("learning the structure using SM ...")
               if (bootstrap)
               {
                 finalPDAG <- matrix(0,num.nodes,num.nodes)
@@ -458,12 +458,12 @@ setMethod("learn.structure",
                                max.parents, layering, max.parents.layers, ess,
                                initial.cpc, mandatory.edges)
               }
-              bnstruct.end.log("learning using SM completed.")
+              SubGroupSeparation.end.log("learning using SM completed.")
             } # end if algo == sm
             
             if (algo == "sem")
             {
-              bnstruct.start.log("learning the structure using SEM ...")
+              SubGroupSeparation.start.log("learning the structure using SEM ...")
 
               bn <- sem(bn, dataset,
                         scoring.func = c("BDeu", "AIC", "BIC")[scoring.func + 1],
@@ -475,7 +475,7 @@ setMethod("learn.structure",
                         use.imputed.data = use.imputed.data,
                         use.cpc = use.cpc, mandatory.edges = mandatory.edges, ...)
               
-              bnstruct.end.log("learning using SEM completed.")
+              SubGroupSeparation.end.log("learning using SEM completed.")
             } # end if (algo == sem)
             
             # could be done just by changing some parameters and leaving it to
@@ -491,13 +491,13 @@ setMethod("learn.structure",
             if (algo == "mmpc")
             {
                 if ( max.parents < max.fanin) {
-                bnstruct.log ("MMPC uses 'max.fanin', ",
+                SubGroupSeparation.log ("MMPC uses 'max.fanin', ",
                               "but apparently you set 'max.parents', ",
                               "changing accordingly.")
                 max.parents <- max.fanin
                 max.parents.layers <- max.fanin.layers
               }
-              bnstruct.start.log("learning the structure using MMPC ...")
+              SubGroupSeparation.start.log("learning the structure using MMPC ...")
               
               if (bootstrap)
               {
@@ -517,7 +517,7 @@ setMethod("learn.structure",
                              layer.struct, max.fanin=max.fanin, mandatory.edges = mandatory.edges )
                 wpdag(bn) <- cpc
               }
-              bnstruct.end.log("learning using MMPC completed.")
+              SubGroupSeparation.end.log("learning using MMPC completed.")
             } # end if algo == mmpc
             
             # same here.
@@ -526,13 +526,13 @@ setMethod("learn.structure",
             {
               if ( max.parents < max.fanin                                   ||
                   (is.null(layer.struct) && !is.null(max.parents.layers))  ) {
-                bnstruct.log ("HC uses 'max.fanin' and 'layer.struct' parameters, ",
+                SubGroupSeparation.log ("HC uses 'max.fanin' and 'layer.struct' parameters, ",
                               "but apparently you set 'max.parents' and 'max.parents.layers', ",
                               "changing accordingly.")
                 max.parents <- max.fanin
                 max.parents.layers <- max.fanin.layers
               }
-              bnstruct.start.log("learning the structure using HC ...")
+              SubGroupSeparation.start.log("learning the structure using HC ...")
               
               if (!is.null(init.net))
                 in.dag <- dag(init.net)
@@ -566,19 +566,19 @@ setMethod("learn.structure",
                                wm.max=wm.max, layering=layering, layer.struct=layer.struct,
                                mandatory.edges = mandatory.edges)
               }
-              bnstruct.end.log("learning using HC completed.")
+              SubGroupSeparation.end.log("learning using HC completed.")
             } # end if algo == hc
             
             if (algo == "mmhc") # default
             {
               if ( max.fanin < max.parents) {
-                bnstruct.log ("MMHC uses 'max.fanin', ",
+                SubGroupSeparation.log ("MMHC uses 'max.fanin', ",
                               "but apparently you set 'max.parents', ",
                               "changing accordingly.")
                 max.parents <- max.fanin
                 max.parents.layers <- max.fanin.layers
               }
-              bnstruct.start.log("learning the structure using MMHC ...")
+              SubGroupSeparation.start.log("learning the structure using MMHC ...")
               
               if (!is.null(init.net))
                 in.dag <- dag(init.net)
@@ -628,7 +628,7 @@ setMethod("learn.structure",
                                wm.max=wm.max, layering=layering, layer.struct=layer.struct,
                                mandatory.edges = mandatory.edges )
               }
-              bnstruct.end.log("learning using MMHC completed.")
+              SubGroupSeparation.end.log("learning using MMHC completed.")
             } # end if algo == mmhc
             
             struct.algo(bn) <- algo

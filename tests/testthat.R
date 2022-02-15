@@ -1,2 +1,2 @@
 library(testthat)
-test_check("bnstruct")
+test_check("SubGroupSeparation")

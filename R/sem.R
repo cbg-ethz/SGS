@@ -14,7 +14,7 @@ setMethod("sem",
 
             # fallback in case there is no missing data: learn the network and return
             if (sum(is.na(raw.data(dataset))) == 0) {
-              bnstruct.log("no missing values found, learning the network once")
+              SubGroupSeparation.log("no missing values found, learning the network once")
               net <- learn.network(x, dataset, algo = "mmhc", scoring.func = scoring.func,
                                        initial.network = initial.network,
                                        alpha = alpha, ess = ess, bootstrap = bootstrap,

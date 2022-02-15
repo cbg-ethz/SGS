@@ -51,7 +51,7 @@ setMethod("read.dataset",
               if (disc[d] %in% c("d","D","T","TRUE")) disc[d] <- 'D'
               else if (disc[d] %in% c("c","C","F","FALSE")) disc[d] <- 'C'
               else {
-                bnstruct.log("Unrecognized status for variable ",variables(object)[d],", converting it to discrete.")
+                SubGroupSeparation.log("Unrecognized status for variable ",variables(object)[d],", converting it to discrete.")
                 disc[d] <- 'D'
               }
             }
@@ -626,14 +626,14 @@ setMethod("write_xgmml","BN",
             if (write.wpdag) {
               g <- wpdag(x)
               if (is.null(g))
-                bnstruct.log("error: no wpdag to be saved")
+                SubGroupSeparation.log("error: no wpdag to be saved")
               g <- g / max.weight
               g[which(g < frac)] <- 0
               g <- g * 255 # rescale for color
             } else {
               g <- dag(x)
               if (is.null(g))
-                bnstruct.log("error: no dag to be saved")
+                SubGroupSeparation.log("error: no dag to be saved")
             }
             
             num.nodes  <- num.nodes(x)
@@ -766,35 +766,35 @@ setMethod("write_xgmml","BN",
 
 
 # output log messages
-bnstruct.log <- function(...)
+SubGroupSeparation.log <- function(...)
 {
   m <- ""
   
-  blit <- get("bnstruct.log.indent.tracker", .bnstruct.env)
+  blit <- get("SubGroupSeparation.log.indent.tracker", .SubGroupSeparation.env)
   if (blit > 0)
     for (i in seq_len(blit))
       m <- paste(m, "... ", sep='')
   
-  m <- strcat(m, "bnstruct :: ")
+  m <- strcat(m, "SubGroupSeparation :: ")
   m <- strcat(m, ...)
   message(m)
 }
 
 # output begin-of-action log messages
-bnstruct.start.log <- function(...)
+SubGroupSeparation.start.log <- function(...)
 {
-  bnstruct.log(...)
-  assign("bnstruct.log.indent.tracker", get("bnstruct.log.indent.tracker", .bnstruct.env) + 1, envir = .bnstruct.env)
+  SubGroupSeparation.log(...)
+  assign("SubGroupSeparation.log.indent.tracker", get("SubGroupSeparation.log.indent.tracker", .SubGroupSeparation.env) + 1, envir = .SubGroupSeparation.env)
 }
 
 # output begin-of-action log messages
-bnstruct.end.log <- function(...)
+SubGroupSeparation.end.log <- function(...)
 {
-  assign("bnstruct.log.indent.tracker", max(0,get("bnstruct.log.indent.tracker", .bnstruct.env) - 1), envir = .bnstruct.env)
-  bnstruct.log(...)
+  assign("SubGroupSeparation.log.indent.tracker", max(0,get("SubGroupSeparation.log.indent.tracker", .SubGroupSeparation.env) - 1), envir = .SubGroupSeparation.env)
+  SubGroupSeparation.log(...)
 }
 
-bnstruct.reset.log <- function()
+SubGroupSeparation.reset.log <- function()
 {
-  assign("bnstruct.log.indent.tracker", 0, envir = .bnstruct.env)
+  assign("SubGroupSeparation.log.indent.tracker", 0, envir = .SubGroupSeparation.env)
 }

@@ -6,10 +6,16 @@
 #' @param obs list containing the evidence nodes and associated values
 #' @return relevant DAG
 #' @export
-sample.normConst <- function(BayesNet, obs, s_method = "SGS", N_samples = 100, relevantSubNet = TRUE, plot = TRUE)
+sample.normConst <- function(BayesNet, obs, s_method = "SGS", N_samples = 100, relevantSubNet = FALSE, plot = TRUE)
 { 
   # Importance sampling in Bayesian networks given the evidence
   # Returned is the normalzing constant
+  
+  # sub group sampling
+  if(s_method=="SGS"){
+    results <- sample.subGroupSampling(BayesNet, obs, N_samples = N_samples, relevantSubNet = relevantSubNet, plot = plot)
+    return(results)
+  }
   
   # Compute the updated Bayesian network using BP 
   sortUpdatedNet <- FALSE
@@ -18,6 +24,8 @@ sample.normConst <- function(BayesNet, obs, s_method = "SGS", N_samples = 100, r
     engineTemp <- belief.propagation(engineTemp, obs)
     updatedNet <- engineTemp@updated.bn
     sortUpdatedNet <- TRUE
+    updatedNetBP <- updatedNet
+    # print(updatedNet)
   }
   # Compute the updated Bayesian network using LBP 
   if (s_method=="LBP-LW"){
@@ -27,8 +35,15 @@ sample.normConst <- function(BayesNet, obs, s_method = "SGS", N_samples = 100, r
     sortUpdatedNet <- TRUE
   }
   # Compute the updated Bayesian network using subgroup BP
-  if (s_method=="SGS"){
-    updatedNet <- subGroup_belief.propagation(BayesNet, obs, group_limit = 15)
+  if (s_method=="SGSold"){
+    updatedNet <- subGroup_belief.propagation(BayesNet, obs)
+    sortUpdatedNet <- TRUE
+    updatedNetSGS <- updatedNet
+    # print(updatedNet)
+  }
+  # Compute the updated Bayesian network using subgroup BP
+  if (s_method=="LBP"){
+    updatedNet <- subGroup_loopyBelief.propagation(BayesNet, obs)
     sortUpdatedNet <- TRUE
   }
   
@@ -38,6 +53,9 @@ sample.normConst <- function(BayesNet, obs, s_method = "SGS", N_samples = 100, r
   Nparents <- sapply(c(1:lengthBN),function(x) length(dim(net@cpts[[x]]))-1)
   
   observed.vars <- obs$observed.vars
+  if (class(obs$observed.vars) == "character") # hope that the user gives coherent input...
+    observed.vars <- sapply(observed.vars, function(x) which(x == variablesBN))
+
   observed.vals <- obs$observed.vals
   
   # sort CPTs according to dimnames
@@ -49,25 +67,27 @@ sample.normConst <- function(BayesNet, obs, s_method = "SGS", N_samples = 100, r
     net@cpts[[g0]] <- aperm(net@cpts[[g0]], perm = tempPerm)
   }
   nodeParents <- sapply(c(1:lengthBN),function(x) match(head(names(dimnames(net@cpts[[x]])),-1),variablesBN))
+  nodeNamesCPT <- sapply(c(1:lengthBN),function(x) match(names(dimnames(net@cpts[[x]])),variablesBN))
   
-  # repeat the sorting for the updatedNet
+  # sort the CPTs of the updatedNet according to the CPTs of the original net
   if (sortUpdatedNet){
     # sort CPTs according to dimnames
     nodeNamesCPT2 <- sapply(c(1:lengthBN),function(x) match(names(dimnames(updatedNet@cpts[[x]])),variablesBN))
-    for(g1 in 1:lengthBN){
-      nodePosition <- match(g1, nodeNamesCPT2[[g1]])
-      tempPerm <- c(1:length(nodeNamesCPT2[[g1]]))
-      tempPerm <- c(tempPerm[-nodePosition],tempPerm[nodePosition])
+    nodesFree <- setdiff(1:lengthBN, obs$observed.vars)
+    for(g1 in nodesFree){
+      tempPerm <- match(nodeNamesCPT[[g1]], nodeNamesCPT2[[g1]])
       updatedNet@cpts[[g1]] <- aperm(updatedNet@cpts[[g1]], perm = tempPerm)
     }
     nodeParents2 <- sapply(c(1:lengthBN),function(x) match(head(names(dimnames(updatedNet@cpts[[x]])),-1),variablesBN))
+    
   }
   
   # # faster version, but might mix up the ordering
   # nodeParents <- sapply(c(1:lengthBN),function(x) get.allParents(dag(net),x))
   
   # initialize vector of starting variables
-  curVec <- rep(1, lengthBN)
+  minDimBN <- min(node.sizes(BayesNet)) # pick starting vector at random to avoid bias of Gibbs sampling
+  curVec <- sample.int(minDimBN,lengthBN,replace = TRUE) #rep(1, lengthBN)
   curVec[observed.vars] <- observed.vals
   
   # get topological order for sampling order
@@ -112,7 +132,7 @@ sample.normConst <- function(BayesNet, obs, s_method = "SGS", N_samples = 100, r
         probsMB <- get.probNodeMB(net, curVec, j2, nodeParents, nodeChildren, consideredNodes)
         tempProb <- probsMB$probMB
         tempProb2 <- probsMB$tempProbNode
-      }else if(s_method %in% c("BP-LW", "LBP-LW", "SGBP-LW","SGS")){
+      }else if(s_method %in% c("BP-LW", "LBP-LW", "SGBP-LW","SGSold","LBP")){
         tempProb <- get.probNode(updatedNet, curVec, j2, nodeParents2)
         tempProb2 <- get.probNode(net, curVec, j2, nodeParents)
       }else{
@@ -214,141 +234,137 @@ get.probNodeMB <- function(net, curVec, node, nodeParents, nodeChildren, conside
   return(list("probMB"=probMB, "tempProbNode"=tempProbNode))
 }
 
-plot.normConstCalc <- function(NormCalcList)
-{
-  # Plot the progress
+
+calcExactInference <- function(myBN, myObs, showTimes=FALSE){
+  # calculate the exact normalizing constant of a Bayes net given observation
   
-  curVariance <- sapply(c(1:length(NormCalcList$partitionFuncTempAll)), function(x) sd(NormCalcList$partitionFuncTempAll[1:x])/sqrt(x))
-  lowBound <- NormCalcList$partitionFunc-curVariance
-  upBound <- NormCalcList$partitionFunc+curVariance
+  start_time <- Sys.time() # measure computation time
   
-  df <- data.frame(normC=NormCalcList$partitionFunc,countsS=c(1:length(NormCalcList$partitionFunc)),lowBound=lowBound,upBound=upBound,type="Cool core")
+  # consider only the ancestors of the observed variables
+  relevantNodes <- get.allAncestors(myBN@dag, myObs$observed.vars)
+  nodes_free <- setdiff(relevantNodes, myObs$observed.vars)
   
-  color_list <- '#EE6677'
+  # print approximate time
+  if(showTimes==TRUE){
+    print(paste("Approximated time:",3/(2^16)*2^length(nodes_free), "minutes"))
+  }
   
-  ggplot(data=df, aes(y = normC, x = countsS))+
-    geom_line(aes(y = normC, x = countsS,color=color_list)) + 
-    geom_ribbon(aes(ymin=lowBound, ymax=upBound, fill=color_list),alpha=0.5) + 
-    theme(legend.position = "none") +
-    xlab("Sampling Step") + 
-    ylab("Normalizing Constant")
+  # create matrix containing all possible combinations in the net
+  # this will then be used in the summation over possible values
+  
+  # create possible permuations of free nodes
+  allVec <- permutations(2,length(nodes_free),c(1,2), repeats=TRUE)
+  
+  # create empty matrix
+  newVec <- matrix(1,dim(allVec)[1],length(myBN@variables))
+  
+  # insert permutations into empty matrix  
+  j <- 1
+  for (i in nodes_free){
+    newVec[,i] <- allVec[,j]
+    j <- j+1
+  }
+  
+  # insert observed values into empty matrix  
+  j <- 1
+  for (i in myObs$observed.vars){
+    newVec[,i] <- myObs$observed.vals[j]
+    j <- j+1
+  }
+  
+  # calc the marginals
+  nodeParents <- sapply(1:length(myBN@variables), function(x) get.allParents(myBN@dag, x))
+  nodes <- relevantNodes
+
+  N_length <- dim(newVec)[1]
+  normConst <- 0
+  for (i in 1:N_length){
+    normConst <- normConst + get.probVector(myBN, newVec[i,], nodes, nodeParents)
+  }
+  
+  end_time <- Sys.time()
+  elapsed_time <- end_time - start_time
+  
+  # print elapsed time
+  if(showTimes==TRUE){
+    print(paste("Elapsed time:",elapsed_time/60, "minutes"))
+  }
+  
+  return(normConst)
+  
+}
+
+get.probVector <- function(myBN, curVec, nodes, nodeParents, logSpace=FALSE){
+  # get the product of the probability of multiple nodes given vector
+  
+  # work in log space to allow for small values (as they occur in high dims)
+  tempVar <- 0
+  for (iNode in nodes){
+    curNodeVal <- curVec[iNode]
+    tempVar <- tempVar + log(unname(
+      get.probNode(myBN, curVec, iNode, nodeParents)[curNodeVal]))
+  }
+  
+  # if necessary, return result in logspace
+  if (logSpace==FALSE){
+    tempVar <- exp(tempVar)
+  }
+  
+  return(tempVar)
   
 }
 
 
-plot.samplingProgress <- function(sampleResults, exactValue = NULL)
-{
-  # Plot the progress
-  
-  lengthMethods <- length(sampleResults)
-  
-  # set colors
-  if(lengthMethods>3){
-    N_colors <- lengthMethods
-    color_list <- brewer.pal(n = N_colors, name = 'RdYlBu')
-  }else{
-    N_colors <- 3
-    color_list <- brewer.pal(n = N_colors, name = 'RdYlBu')[1:lengthMethods]
-  }
-  # without Rcolorbrewer:
-  # color_list <- c("#EE6677", "#228833", "#4477AA")
-  
-  dfAll <- NULL
-  Smethod <- NULL
-  
-  for (t0 in 1:length(sampleResults)){
-    NormCalcList <- sampleResults[[t0]]
-    curVariance <- sapply(c(1:length(NormCalcList$partitionFuncTempAll)), 
-                          function(x) sd(NormCalcList$partitionFuncTempAll[1:x])/sqrt(x))
-    lowBound <- NormCalcList$partitionFunc-curVariance
-    upBound <- NormCalcList$partitionFunc+curVariance
-    timeScale <- c(1:length(NormCalcList$partitionFunc))/length(NormCalcList$partitionFunc)*NormCalcList$elapsed_time[[1]]
-    
-    df <- data.frame(normC=NormCalcList$partitionFunc,
-                     countsS=timeScale,
-                     lowBound=lowBound,upBound=upBound)
-    df$group <- t0
-    df$Method <- NormCalcList$method
-    
-    Smethod <- c(Smethod,NormCalcList$method)
-    dfAll <- rbind(dfAll, df)
-  }
-  
-  if(length(exactValue)==0){
-    ggplot(data=dfAll, aes(y = normC, x = countsS, group=group))+
-      geom_line(aes(y = normC, x = countsS,colour=Method)) + 
-      geom_ribbon(aes(ymin=lowBound, ymax=upBound, fill=Method),alpha=0.5) + 
-      scale_colour_manual(values=color_list) +
-      scale_fill_manual(values=color_list) +
-      # guides(fill = FALSE) +
-      guides(col = FALSE) +
-      xlab("Elapsed Time (s)") + 
-      ylab("Normalizing Constant")
-  }else{
-    ggplot(data=dfAll, aes(y = normC, x = countsS, group=group))+
-      geom_line(aes(y = normC, x = countsS,colour=Method)) + 
-      geom_ribbon(aes(ymin=lowBound, ymax=upBound, fill=Method),alpha=0.5) + 
-      scale_colour_manual(values=color_list) +
-      scale_fill_manual(values=color_list) +
-      geom_hline(yintercept=exactValue, linetype="dashed", color = "black") +
-      # guides(fill = FALSE) +
-      guides(col = FALSE) +
-      xlab("Elapsed Time (s)") + 
-      ylab("Normalizing Constant")
-  }
-  
-  
-}
 
-benchmark <- function(BayesNet = NULL, obs = NULL, methods = c("FS","GS", "SGS"), N_samples = 500, N_nodes = 30)
+
+permutations <- function (n, r, v = 1:n, set = TRUE, repeats.allowed = FALSE) 
 {
-  # benchmark different sampling schemes
+  # function copied from the gtools v3.5.0 by Gregory R. Warnes
   
-  # sample Bayesian network and observation if missing
-  if(length(BayesNet)==0){
-    N_nodes <- N_nodes #10
-    N_neighbours <- 2 
-    nodeDim <- 2
-    BayesNet <- randomBN(N_nodes, N_neighbours, nodeDim, visualize = FALSE)
+  if (mode(n) != "numeric" || length(n) != 1 || n < 1 || (n%%1) != 
+      0) 
+    stop("bad value of n")
+  if (mode(r) != "numeric" || length(r) != 1 || r < 1 || (r%%1) != 
+      0) 
+    stop("bad value of r")
+  if (!is.atomic(v) || length(v) < n) 
+    stop("v is either non-atomic or too short")
+  if ((r > n) & repeats.allowed == FALSE) 
+    stop("r > n and repeats.allowed=FALSE")
+  if (set) {
+    v <- unique(sort(v))
+    if (length(v) < n) 
+      stop("too few different elements")
   }
-  exactValue <- NULL
-  if(length(obs)==0){
-    N_obs <- as.integer(N_nodes/2)
-    obs <- list("observed.vars" = sample(1:N_nodes, N_obs), "observed.vals" = rep(1,N_obs))
-    # exactValue <- (1/nodeDim)^N_obs
-  }
-  
-  #
-  sampleResults <- list()
-  for (b0 in 1:length(methods)){
-    # adjust the number of samples to the method as some sample faster 
-    # (for plotting purposes only)
-    if(methods[b0]=="GS"){
-      N_samplesTemp <- as.integer(N_samples/4)
-    }else if(methods[b0]=="FS"){
-      N_samplesTemp <- N_samples*2
-    }else{
-      N_samplesTemp <- N_samples
+  v0 <- vector(mode(v), 0)
+  if (repeats.allowed) 
+    sub <- function(n, r, v) {
+      if (r == 1) 
+        matrix(v, n, 1)
+      else if (n == 1) 
+        matrix(v, 1, r)
+      else {
+        inner <- Recall(n, r - 1, v)
+        cbind(rep(v, rep(nrow(inner), n)), matrix(t(inner), 
+                                                  ncol = ncol(inner), nrow = nrow(inner) * n, 
+                                                  byrow = TRUE))
+      }
     }
-    
-    # perform sampling
-    start_time <- Sys.time() # measure computation time
-    sampleResults[[b0]] <- sample.normConst(BayesNet, obs, s_method = methods[b0], N_samples = N_samplesTemp)
-    end_time <- Sys.time()
-    elapsed_time <- end_time - start_time
-    sampleResults[[b0]]$elapsed_time <- elapsed_time
-    sampleResults[[b0]]$method <- methods[b0]
-    
-    # if(methods[b0]=="SGS"){
-    #   exactValue <- sampleResults[[b0]]$partitionFunc[N_samples]
-    # }
+  else sub <- function(n, r, v) {
+    if (r == 1) 
+      matrix(v, n, 1)
+    else if (n == 1) 
+      matrix(v, 1, r)
+    else {
+      X <- NULL
+      for (i in 1:n) X <- rbind(X, cbind(v[i], Recall(n - 
+                                                        1, r - 1, v[-i])))
+      X
+    }
   }
-  
-  # plot the results (i.e. sampling progress)
-  if(length(exactValue)==0){
-    plot.samplingProgress(sampleResults)
-  }else{
-    plot.samplingProgress(sampleResults, exactValue)
-  }
-  
+  sub(n, r, v[1:n])
 }
+
+
+
+

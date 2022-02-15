@@ -1,4 +1,4 @@
-library(bnstruct)
+library(SubGroupSeparation)
 context("Testing CPTs")
 
 dataset <- child()

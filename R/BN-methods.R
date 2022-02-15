@@ -606,7 +606,7 @@ plot.BN <-
                 if (!requireNamespace("qgraph", quietly=T))
                     stop("this function requires the qgraph package when using 'method = \"qgraph\"'.") 
             } else {
-                stop("plotting method not available in bnstruct. Please use one between 'default' and 'qgraph'.")
+                stop("plotting method not available in SubGroupSeparation. Please use one between 'default' and 'qgraph'.")
             }
 
             
@@ -747,7 +747,7 @@ setMethod("sample.row", "BN",
           function(x, mar=0){
             
             if (mar < 0 || mar > 1) {
-              bnstruct.log("warning: non-admissible value for mar, set to 0")
+              SubGroupSeparation.log("warning: non-admissible value for mar, set to 0")
               mar <- 0
             }
             
@@ -820,7 +820,7 @@ setMethod("sample.dataset",c("BN"),
           function(x, n = 100, mar=0)
           {
             if (mar < 0 || mar > 1) {
-              bnstruct.log("warning: non-admissible value for mar, set to 0")
+              SubGroupSeparation.log("warning: non-admissible value for mar, set to 0")
               mar <- 0
             }
             

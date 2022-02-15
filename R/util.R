@@ -35,7 +35,7 @@ fancy.cpt <- function( cpt )
 # 	{
 # 		family <- c( which(dag[,i]!=0), i )
 # 		counts <- .Call( "compute_counts_nas", data[,family], node.sizes[family], 
-# 			PACKAGE = "bnstruct" )
+# 			PACKAGE = "SubGroupSeparation" )
 # 		cpts[[i]] <- counts.to.probs( counts + ess / prod(dim(counts)) )
 #     dimnames(cpts[[i]]) <- d.names[family]
 # 	}
@@ -465,3 +465,34 @@ fast.bincombinations <- function(p)
          FUN.VALUE = integer(2^(p))))
 }
 
+# identifies the connected components of a network structure,
+# in case the DAG is divided into disconnected subnetworks.
+# Return: a list whose elements are arrays containings the subgraphs
+identify.subgraphs <- function(am) {
+  
+  visited <- rep(0, nrow(am))
+  subgs <- list()
+  csd <- c()
+  l <- 1
+  
+  while (length(which(visited == 0)) > 0) {
+    curr <- which(visited == 0)[1]
+    visited[curr] <- l
+    csd = c(curr)
+    connected <- c(which(am[,curr] > 0), which(am[curr,] > 0))
+    while(length(connected) > 0) {
+      i <- connected[1]
+      connected <- connected[-1]
+      if (visited[i] == 0) {
+        connected <- unique(sort(c(connected,which(am[,i] > 0), which(am[i,] > 0))))
+        visited[i] <- l
+        csd <- c(csd, i)
+      }
+    } 
+    subgs[[l]] <- sort(csd)
+    csd <- c()
+    l <- l+1
+  }
+  
+  return(subgs)
+}

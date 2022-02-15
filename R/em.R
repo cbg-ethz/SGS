@@ -24,7 +24,7 @@ setMethod("em",
             #     - in case of parents with missing values: take variables in topological order
             #   - compute values according to distribution
 
-            bnstruct.start.log("starting EM algorithm ...")
+            SubGroupSeparation.start.log("starting EM algorithm ...")
             
             rawdata  <- raw.data(dataset)
             if (test.updated.bn(x))
@@ -201,7 +201,7 @@ setMethod("em",
             
             updated.bn(x) <- bn
             
-            bnstruct.end.log("EM algorithm completed.")
+            SubGroupSeparation.end.log("EM algorithm completed.")
             
             return(list("InferenceEngine" = x, "BNDataset" = dataset))
           })

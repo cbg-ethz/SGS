@@ -186,13 +186,16 @@ get.allSubGroups <- function(DAG, evidenceNodes, visualize = F){
   
   # visualize 
   if(visualize){
-    dim2 <- ceiling(sqrt(length(allSubBNs)))
-    dim1 <- ceiling(length(allSubBNs)/dim2)
+    dim2 <- ceiling(sqrt(length(allSubGroups)))
+    dim1 <- ceiling(length(allSubGroups)/dim2)
     storeMar <- par("mar")
     par(mfrow=c(dim1,dim2),mar=c(1,1,1,1))
-    for (jj in 1:length(allSubBNs)){
+    for (jj in 1:length(allSubGroups)){
       # graphviz.plot(allSubBNs[[jj]])
-      graphviz.plot(allSubBNs[[jj]], highlight = list(nodes = allEvidenceSubGroups[[jj]], col = "black", fill = "grey"))
+      # graphviz.plot(allSubGroups[[jj]], highlight = list(nodes = allEvidenceSubGroups[[jj]], col = "black", fill = "grey"))
+      subDAG <- as.matrix(as_adjacency_matrix(induced_subgraph(
+        graph_from_adjacency_matrix(DAG,mode="directed"),c(allEvidenceSubGroups[[jj]],allSubGroups[[jj]]))))
+      plot.BN(subDAG)#, highlight = list(nodes = allEvidenceSubGroups[[jj]], col = "black", fill = "grey"))
     }
     par(mfrow = c(1,1))
     par(mar=storeMar)
@@ -267,9 +270,238 @@ sub_belief.propagation <- function(BayesNet, obs)
 }
 
 
-subGroup_belief.propagation <- function(BayesNet, obs, group_limit = 15)
+subGroup_belief.propagation <- function(BayesNet, obs, group_limit = 500)
 {
   # belief propagation by sub groups
+  evidenceNodes <- obs[[1]]
+  subGroups <- get.allSubGroups(dag(BayesNet), evidenceNodes)
+  
+  # print(obs)
+  
+  # print(subGroups)
+  
+  N_subGroups <- length(subGroups$allSubGroups)
+  
+  for (k0 in 1:N_subGroups)
+  {
+    if((!length(subGroups$allSubGroups[[k0]])==0) && (subGroups$allSubGroups[[k0]] <= group_limit)){
+      # create the sub BN with according observation
+      tempSubGroups <- c(subGroups$allSubGroups[[k0]], subGroups$allEvidenceSubGroups[[k0]])
+      tempSubGroups <- sort(tempSubGroups)
+      # print("tempSubGroups")
+      # print(tempSubGroups)
+      tempSubBN <- get.subBN(BayesNet, tempSubGroups)
+      
+      # print("tempSubBN@cpts")
+      # print(tempSubBN@cpts)
+      
+      # version 1 
+      tempObsVarsOrder <- subGroups$allEvidenceSubGroups[[k0]]
+      orderObs <- match(tempObsVarsOrder, obs[[1]])
+      tempObsVars <- match(tempObsVarsOrder,tempSubGroups)
+      tempObsVals <- obs[[2]][orderObs]
+      tempSubObs <- list("observed.vars" = tempObsVars, "observed.vals" = tempObsVals)
+     
+      # perform belief propagation on the sub BN
+      tempSubEngine <- InferenceEngine(tempSubBN)
+      tempSubEngine <- belief.propagation(tempSubEngine, tempSubObs)
+      tempUpdatedNet <- tempSubEngine@updated.bn
+      
+      # copy the updated information (CPTs) back to the original Bayes Net
+      orderGroupNodes1 <- setdiff(1:length(variables(tempUpdatedNet)), tempObsVars)
+      orderGroupNodes2 <- subGroups$allSubGroups[[k0]]
+      orderGroupNodes2 <- sort(orderGroupNodes2)
+      
+      cpts(BayesNet)[orderGroupNodes2] <- cpts(tempUpdatedNet)[orderGroupNodes1]
+      
+      # cpts(BayesNet)[tempSubGroups] <- cpts(tempUpdatedNet)
+      # print("tempSubGroups")
+      # print(tempSubGroups)
+    }# else{
+    # print("To do: incorporate evidence in CPT (not necessary for sampling though).")
+    # }
+    
+    ## TO DO: see above the comment. 
+  }
+  return(BayesNet)
+}
+
+subGroupSampling.propagation <- function(BayesNet, obs, group_limit = 15)
+{
+  # belief propagation by sub groups
+  evidenceNodes <- obs[[1]]
+  subGroups <- get.allSubGroups(dag(BayesNet), evidenceNodes)
+  
+  N_subGroups <- length(subGroups$allSubGroups)
+  
+  tempNode.sizes <- BayesNet@node.sizes
+  tempNormConst <- 1
+  sampledNodes <- c()
+  sampledEvidenceNodes <- c()
+  
+  for (k0 in 1:N_subGroups)
+  {
+    freeLength <- length(subGroups$allSubGroups[[k0]])
+    netLength <- length(c(subGroups$allSubGroups[[k0]], subGroups$allEvidenceSubGroups[[k0]]))
+    
+    if((!freeLength==0) && (netLength <= group_limit)){
+      
+      ### Exact inference when possible (apply junction-tree)
+      
+      # create the sub BN with according observation
+      tempSubGroups <- c(subGroups$allSubGroups[[k0]], subGroups$allEvidenceSubGroups[[k0]])
+      tempSubGroups <- sort(tempSubGroups)
+      
+      tempSubBN <- get.subBN(BayesNet, tempSubGroups)
+      
+      # version 1 
+      tempObsVarsOrder <- subGroups$allEvidenceSubGroups[[k0]]
+      orderObs <- match(tempObsVarsOrder, obs[[1]])
+      tempObsVars <- match(tempObsVarsOrder,tempSubGroups)
+      tempObsVals <- obs[[2]][orderObs]
+      tempSubObs <- list("observed.vars" = tempObsVars, "observed.vals" = tempObsVals)
+      
+      # modify the non-child evidence CPT 
+      # (such that it does not influence the temporary normalizing constant)
+      NCEvidenceNodes <- setdiff(subGroups$allEvidenceSubGroups[[k0]], subGroups$allChiEvidence[[k0]])
+      
+      for (k1 in NCEvidenceNodes){
+        
+        tempValue <- obs[[2]][match(k1,obs[[1]])]
+        
+        temptCPT <- as.table(rep(0,tempNode.sizes[k1]))
+        temptCPT[tempValue] <- 1
+        
+        dimnames(temptCPT) <- list(c(1:tempNode.sizes[k1]))
+        names(dimnames(temptCPT)) <- as.list(k1)
+        
+        positionInCPT <- match(k1, tempSubGroups)
+        tempSubBN@cpts[[positionInCPT]] <- temptCPT
+      }
+      
+      # perform belief propagation and calc the norm const of the sub BN 
+      tempSubEngine <- InferenceEngine(tempSubBN)
+      tempSubEngine <- belief.propagation(tempSubEngine, tempSubObs, return.potentials=TRUE)
+      normConstSubGroup <- sum(tempSubEngine[[1]])
+      tempNormConst <- tempNormConst*normConstSubGroup
+      
+      # print(tempNormConst)
+      
+    }else if((!freeLength==0) && (netLength > group_limit)){
+      
+      ### Approximate inference when necessary (apply LBP to the CPT)
+      
+      # create the sub BN with according observation
+      tempSubGroups <- c(subGroups$allSubGroups[[k0]], subGroups$allEvidenceSubGroups[[k0]])
+      tempSubGroups <- sort(tempSubGroups)
+      
+      tempSubBN <- get.subBN(BayesNet, tempSubGroups)
+      
+      # version 1 
+      tempObsVarsOrder <- subGroups$allEvidenceSubGroups[[k0]]
+      orderObs <- match(tempObsVarsOrder, obs[[1]])
+      tempObsVars <- match(tempObsVarsOrder,tempSubGroups)
+      tempObsVals <- obs[[2]][orderObs]
+      tempSubObs <- list("observed.vars" = tempObsVars, "observed.vals" = tempObsVals)
+      
+      # perform belief propagation on the sub BN
+      tempSubEngine <- InferenceEngine(tempSubBN)
+      tempSubEngine <- loopy_belief.propagation(tempSubEngine, tempSubObs)
+      tempUpdatedNet <- tempSubEngine@updated.bn
+      
+      # copy the updated information (CPTs) back to the original Bayes Net
+      orderGroupNodes1 <- setdiff(1:length(variables(tempUpdatedNet)), tempObsVars)
+      orderGroupNodes2 <- subGroups$allSubGroups[[k0]]
+      orderGroupNodes2 <- sort(orderGroupNodes2)
+      
+      cpts(BayesNet)[orderGroupNodes2] <- cpts(tempUpdatedNet)[orderGroupNodes1]
+      
+      # important to know for stochastic sampling
+      sampledNodes <- c(sampledNodes,orderGroupNodes2)
+      sampledEvidenceNodes <- c(sampledEvidenceNodes, subGroups$allChiEvidence[[k0]])
+      
+    }else{
+      # include the remaining evidence nodes
+      
+      remainNodes <- subGroups$allChiEvidence[[k0]]
+      
+      tempProb <- 1
+      
+      # get probability of the remaining evidence nodes
+      for (k2 in remainNodes){
+        
+        ## TO DO: REMOVE PARENT BUG
+        tempValue <- obs[[2]][match(k2,obs[[1]])]
+        tempProb <- tempProb*unname(cpts(BayesNet)[[k2]][tempValue])
+        
+      }
+      
+      # include in norm const
+      tempNormConst <- tempNormConst*tempProb
+      
+      
+      
+    }
+    
+  }
+  return(list("BayesNet"=BayesNet, "sampledNodes"=sampledNodes, "sampledEvidenceNodes"=sampledEvidenceNodes, "tempNormConst"=tempNormConst))
+}
+
+
+subGroup_loopyBelief.propagation <- function(BayesNet, obs, group_limit = 500)
+{
+  # belief propagation by sub groups
+  evidenceNodes <- obs[[1]]
+  subGroups <- get.allSubGroups(dag(BayesNet), evidenceNodes)
+  
+  # print(obs)
+  
+  # print(subGroups)
+  
+  N_subGroups <- length(subGroups$allSubGroups)
+  
+  for (k0 in 1:N_subGroups)
+  {
+    if((!length(subGroups$allSubGroups[[k0]])==0) && (subGroups$allSubGroups[[k0]] <= group_limit)){
+      # create the sub BN with according observation
+      tempSubGroups <- c(subGroups$allSubGroups[[k0]], subGroups$allEvidenceSubGroups[[k0]])
+      tempSubGroups <- sort(tempSubGroups)
+      
+      tempSubBN <- get.subBN(BayesNet, tempSubGroups)
+      
+      # version 1 
+      tempObsVarsOrder <- subGroups$allEvidenceSubGroups[[k0]]
+      orderObs <- match(tempObsVarsOrder, obs[[1]])
+      tempObsVars <- match(tempObsVarsOrder,tempSubGroups)
+      tempObsVals <- obs[[2]][orderObs]
+      tempSubObs <- list("observed.vars" = tempObsVars, "observed.vals" = tempObsVals)
+      
+      # perform belief propagation on the sub BN
+      tempSubEngine <- InferenceEngine(tempSubBN)
+      tempSubEngine <- loopy_belief.propagation(tempSubEngine, tempSubObs)
+      tempUpdatedNet <- tempSubEngine@updated.bn
+      
+      # copy the updated information (CPTs) back to the original Bayes Net
+      orderGroupNodes1 <- setdiff(1:length(variables(tempUpdatedNet)), tempObsVars)
+      orderGroupNodes2 <- subGroups$allSubGroups[[k0]]
+      orderGroupNodes2 <- sort(orderGroupNodes2)
+      
+      cpts(BayesNet)[orderGroupNodes2] <- cpts(tempUpdatedNet)[orderGroupNodes1]
+
+    }# else{
+    # print("To do: incorporate evidence in CPT (not necessary for sampling though).")
+    # }
+    
+    ## TO DO: see above the comment. 
+  }
+  return(BayesNet)
+}
+
+
+
+subGroup_loopyBelief.propagation2 <- function(BayesNet, obs, group_limit = 500)
+{
+  # loopy belief propagation by sub groups
   evidenceNodes <- obs[[1]]
   subGroups <- get.allSubGroups(dag(BayesNet), evidenceNodes)
   
@@ -290,19 +522,79 @@ subGroup_belief.propagation <- function(BayesNet, obs, group_limit = 15)
       
       # perform belief propagation on the sub BN
       tempSubEngine <- InferenceEngine(tempSubBN)
-      tempSubEngine <- belief.propagation(tempSubEngine, tempSubObs)
+      tempSubEngine <- loopy_belief.propagation(tempSubEngine, tempSubObs)
       tempUpdatedNet <- tempSubEngine@updated.bn
       
       # copy the updated information (CPTs) back to the original Bayes Net
-      cpts(BayesNet)[tempSubGroups] <- cpts(tempUpdatedNet)
+      
+      orderGroupNodes1 <- setdiff(1:length(variables(tempUpdatedNet)), tempObsVars)
+      orderGroupNodes2 <- subGroups$allSubGroups[[k0]]
+      orderGroupNodes2 <- sort(orderGroupNodes2)
+      
+      cpts(BayesNet)[orderGroupNodes2] <- cpts(tempUpdatedNet)[orderGroupNodes1]
     }# else{
     # print("To do: incorporate evidence in CPT (not necessary for sampling though).")
     # }
-    
-    ## TO DO: see above the comment. 
   }
   return(BayesNet)
 }
+
+
+# subGroup_belief.propagation3 <- function(BayesNet, obs, group_limit = 60)
+# {
+#   # belief propagation by sub groups
+#   evidenceNodes <- obs[[1]]
+#   subGroups <- get.allSubGroups(dag(BayesNet), evidenceNodes)
+#   
+#   N_subGroups <- length(subGroups$allSubGroups)
+#   
+#   for (k0 in 1:N_subGroups)
+#   {
+#     if((!length(subGroups$allSubGroups[[k0]])==0) && (subGroups$allSubGroups[[k0]] <= group_limit)){
+#       # create the sub BN with according observation
+#       tempSubGroups <- c(subGroups$allSubGroups[[k0]], subGroups$allEvidenceSubGroups[[k0]])
+#       tempSubGroups <- sort(tempSubGroups)
+#       tempSubBN <- get.subBN(BayesNet, tempSubGroups)
+#       tempObsVarsOrder <- subGroups$allEvidenceSubGroups[[k0]]
+#       orderObs <- match(tempObsVarsOrder, obs[[1]])
+#       tempObsVars <- match(tempObsVarsOrder,tempSubGroups)
+#       tempObsVals <- obs[[2]][orderObs]
+#       tempSubObs <- list("observed.vars" = tempObsVars, "observed.vals" = tempObsVals)
+#       
+#       # perform belief propagation on the sub BN
+#       tempSubEngine <- InferenceEngine(tempSubBN)
+#       tempSubEngine <- belief.propagation(tempSubEngine, tempSubObs)
+#       tempUpdatedNet <- tempSubEngine@updated.bn
+#       
+#       # copy the updated information (CPTs) back to the original Bayes Net
+#       cpts(BayesNet)[tempSubGroups] <- cpts(tempUpdatedNet)
+#     }if((!length(subGroups$allSubGroups[[k0]])==0) && !(subGroups$allSubGroups[[k0]] <= group_limit)){
+#       # create the sub BN with according observation
+#       tempSubGroups <- c(subGroups$allSubGroups[[k0]], subGroups$allEvidenceSubGroups[[k0]])
+#       tempSubGroups <- sort(tempSubGroups)
+#       tempSubBN <- get.subBN(BayesNet, tempSubGroups)
+#       tempObsVarsOrder <- subGroups$allEvidenceSubGroups[[k0]]
+#       orderObs <- match(tempObsVarsOrder, obs[[1]])
+#       tempObsVars <- match(tempObsVarsOrder,tempSubGroups)
+#       tempObsVals <- obs[[2]][orderObs]
+#       tempSubObs <- list("observed.vars" = tempObsVars, "observed.vals" = tempObsVals)
+#       
+#       # perform belief propagation on the sub BN
+#       tempSubEngine <- InferenceEngine(tempSubBN)
+#       tempSubEngine <- loopy_belief.propagation(tempSubEngine, tempSubObs)
+#       tempUpdatedNet <- tempSubEngine@updated.bn
+#       
+#       # copy the updated information (CPTs) back to the original Bayes Net
+#       cpts(BayesNet)[tempSubGroups] <- cpts(tempUpdatedNet)
+#     }# else{
+#     # print("To do: incorporate evidence in CPT (not necessary for sampling though).")
+#     # }
+#     
+#     ## TO DO: see above the comment. 
+#   }
+#   return(BayesNet)
+# }
+
 
 #' Create random Bayesian network
 #'
@@ -316,24 +608,34 @@ subGroup_belief.propagation <- function(BayesNet, obs, group_limit = 15)
 #' @param visualize If true, the network is plotted
 #' @return random Bayesian network of type BN()
 #' @export
-randomBN <- function(N_nodes, N_neighbours = 2, nodeDim = 2, visualize = FALSE)
+randomBN <- function(N_nodes, N_neighbours = 2, nodeDim = 2, method = "er", uniformCPTs = TRUE, visualize = FALSE)
 {
   # create random discrete Bayes net based on the randDAG function of "pcalg"
   
   # sample random DAG
-  tempDAG <- unname(as(randDAG(N_nodes, N_neighbours, "regular", 
+  tempDAG <- unname(as(randDAG(N_nodes, method = method, N_neighbours, "regular", 
                                weighted = FALSE), "matrix"))
   
   # create probability tables
   AllBNprobs <- list()
-  node.sizes <- rep(2,N_samples)
+  node.sizes <- rep(nodeDim,N_nodes)
   for (m0 in 1:N_nodes){
     tempParents <- get.allParents(tempDAG, m0)
     tempParentsLength <- length(tempParents)+1
     
+    # create CPTs
+    if (uniformCPTs==TRUE){
     # sample CPTs uniformly
-    tempProb <- as.table(array(runif(nodeDim^tempParentsLength), 
+    tempProb <- as.table(array((runif(nodeDim^tempParentsLength)*0.9+0.05), 
                                dim = rep(nodeDim,tempParentsLength)))
+    }else{
+    # create binary CPTs with [0.9,0.1]
+    # NOTE: here allow only the binary CPT case
+    nodeDim <- 2
+    tempProb <- as.table(array(c(rep(0.9,tempParentsLength),rep(0.1,tempParentsLength)), 
+                               dim = rep(nodeDim,tempParentsLength)))
+    }
+    
     # #for homogeneous CPTs
     # tempProb <- as.table(array(1/nodeDim, dim = rep(nodeDim,tempParentsLength))) 
     
@@ -387,6 +689,15 @@ randomBN <- function(N_nodes, N_neighbours = 2, nodeDim = 2, visualize = FALSE)
   return(tempBN)
 }
 
+randomObs <- function(N_nodes,N_obs){
+  # create random observation
+  obs <- list("observed.vars" = sample(1:N_nodes, N_obs), "observed.vals" = rep(1,N_obs))
+  
+  return(obs)
+}
+
+
+
 
 
 
@@ -429,6 +740,172 @@ randomBN <- function(N_nodes, N_neighbours = 2, nodeDim = 2, visualize = FALSE)
 #   return(normConst)
 # }
 
+
+junction.tree.normConstSGS <- function(BayesNet, obs)
+{
+  # belief propagation by sub groups
+  evidenceNodes <- obs[[1]]
+  subGroups <- get.allSubGroups(dag(BayesNet), evidenceNodes)
+  
+  N_subGroups <- length(subGroups$allSubGroups)
+  
+  tempNode.sizes <- BayesNet@node.sizes
+  tempNormConst <- 1
+  sampledNodes <- c()
+  sampledEvidenceNodes <- c()
+  
+  for (k0 in 1:N_subGroups)
+  {
+    freeLength <- length(subGroups$allSubGroups[[k0]])
+    netLength <- length(c(subGroups$allSubGroups[[k0]], subGroups$allEvidenceSubGroups[[k0]]))
+    
+    if(!freeLength==0){
+      
+      ### Exact inference when possible (apply junction-tree)
+      
+      # create the sub BN with according observation
+      tempSubGroups <- c(subGroups$allSubGroups[[k0]], subGroups$allEvidenceSubGroups[[k0]])
+      tempSubGroups <- sort(tempSubGroups)
+      
+      tempSubBN <- get.subBN(BayesNet, tempSubGroups)
+      
+      # version 1 
+      tempObsVarsOrder <- subGroups$allEvidenceSubGroups[[k0]]
+      orderObs <- match(tempObsVarsOrder, obs[[1]])
+      tempObsVars <- match(tempObsVarsOrder,tempSubGroups)
+      tempObsVals <- obs[[2]][orderObs]
+      tempSubObs <- list("observed.vars" = tempObsVars, "observed.vals" = tempObsVals)
+      
+      # modify the non-child evidence CPT 
+      # (such that it does not influence the temporary normalizing constant)
+      NCEvidenceNodes <- setdiff(subGroups$allEvidenceSubGroups[[k0]], subGroups$allChiEvidence[[k0]])
+      
+      for (k1 in NCEvidenceNodes){
+        
+        tempValue <- obs[[2]][match(k1,obs[[1]])]
+        
+        temptCPT <- as.table(rep(0,tempNode.sizes[k1]))
+        temptCPT[tempValue] <- 1
+        
+        dimnames(temptCPT) <- list(c(1:tempNode.sizes[k1]))
+        names(dimnames(temptCPT)) <- as.list(k1)
+        
+        positionInCPT <- match(k1, tempSubGroups)
+        tempSubBN@cpts[[positionInCPT]] <- temptCPT
+      }
+      
+      # perform belief propagation and calc the norm const of the sub BN 
+      tempSubEngine <- InferenceEngine(tempSubBN)
+      tempSubEngine <- belief.propagation(tempSubEngine, tempSubObs, return.potentials=TRUE)
+      normConstSubGroup <- sum(tempSubEngine[[1]])
+      tempNormConst <- tempNormConst*normConstSubGroup
+      
+      # print(tempNormConst)
+      
+    }else{
+      # include the remaining evidence nodes
+      
+      remainNodes <- subGroups$allChiEvidence[[k0]]
+      
+      tempProb <- 1
+      
+      # get probability of the remaining evidence nodes
+      for (k2 in remainNodes){
+        
+        ## TO DO: REMOVE PARENT BUG
+        
+        # get parents of node
+        temPParents <- get.allParents(dag(BayesNet),k2)
+        
+        if(length(temPParents)==0){
+          # get obs value of node
+          tempValue <- obs[[2]][match(k2,obs[[1]])]
+          # calc prob of node
+          tempProb <- tempProb*unname(cpts(BayesNet)[[k2]][tempValue])
+        }else{
+          # get obs value of parents and node
+          tempValueParents <- obs[[2]][match(temPParents,obs[[1]])]
+          tempValue <- obs[[2]][match(k2,obs[[1]])]
+          nodeParValue <- c(tempValueParents,tempValue)
+          
+          # calc prob of node
+          # tempProb <- tempProb*unname(cpts(BayesNet)[[k2]][nodeParValue])
+          mystring <- paste("cpts(BayesNet)[[k2]][", paste(as.character(nodeParValue), collapse=", "),"]")
+          tempProb <- tempProb*eval(parse(text=mystring))
+        }
+        
+      }
+      
+      # include in norm const
+      tempNormConst <- tempNormConst*tempProb
+      
+    }
+    
+  }
+  return(tempNormConst)
+}
+
+
+junction.tree.normConstNormal <- function(BayesNet, obs)
+{
+  # standard belief propagation on the Bayes Net
+
+  tempSubEngine <- InferenceEngine(BayesNet)
+  tempSubEngine <- belief.propagation(tempSubEngine, obs, return.potentials=TRUE)
+  normConstSubGroup <- sum(tempSubEngine[[1]])
+  tempNormConst <- normConstSubGroup
+      
+  return(tempNormConst)
+}
+
+
+get.allMarkovBlanket <- function(DAG, node){
+  # get Markov Blanket of a node for a DAG
+  
+  # get parents, children and parents of the children (Markov Blanket)
+  tempPar <- get.allParents(DAG,node)
+  tempChi <- get.allChildren(DAG,node)
+  tempParChi <- c()
+  for (i in tempChi){
+    tempParChi <- c(tempParChi, get.allParents(DAG,i))
+  }
+  tempParChi <- setdiff(tempParChi,node)
+  
+  newGroupNodes <- c(tempPar,tempChi,tempParChi)
+  newGroupNodes <- unique(newGroupNodes)
+  
+  return(newGroupNodes)
+}
+
+get.averageMarkovBlanketSize <- function(DAG){
+  # get average Markov Blanket size of a DAG
+  
+  # get MB size of each node
+  lengthDAG <- dim(DAG)[1]
+  lengthMBs <- numeric(lengthDAG)
+  for (b0 in 1:lengthDAG){
+    lengthMBs[b0] <- length(get.allMarkovBlanket(DAG, b0))
+  }
+  
+  # calculate mean
+  averageMBsize <- mean(lengthMBs)
+  
+  return(averageMBsize)
+}
+
+
+get.typicalMarkovBlanketSize <- function(N_var, N_nets=100, DAGmethod="er", N_neighbours=2){
+  # get typical MB size
+  lengthMBs <- numeric(N_nets)
+  for (v1 in 1:N_nets){
+    DAG <- dag(randomBN(N_var, method=DAGmethod, N_neighbours=N_neighbours))
+    lengthMBs[v1] <- get.averageMarkovBlanketSize(DAG)
+  }
+  # calc. mean
+  averageMBsize <- mean(lengthMBs)
+  
+  return(averageMBsize)
+}
 
 
 

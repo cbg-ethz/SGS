@@ -81,6 +81,9 @@ setMethod("belief.propagation",
               is.discrete <- discreteness(net)
               
               # discretize continuous observed variables
+              if (class(observed.vars) == "character") # hope that the user gives coherent input...
+                observed.vars <- sapply(observed.vars, function(x) which(x == variables))
+              
               observed.vals.disc <- c()
               if (length(observed.vars) > 0) {
                 for (i in 1:length(observed.vars)) {
@@ -98,6 +101,58 @@ setMethod("belief.propagation",
                     observed.vals.disc <- c(observed.vals.disc, cv)
                   }
                 }
+              }
+              
+              # the following lines are necessary due to a sub-group specific issue:
+              # if a subgroup is taken, sometimes a variables parent might be cut off
+              # this can only happen if nodes that are observed 
+              # here, we adjust the respective CPTs accordingly
+              repeat_dimVars <- FALSE
+              for (u0 in 1:num.nodes){
+                if(!is.na(match(NA,dim.vars[[u0]]))){
+                  repeat_dimVars <- TRUE
+                  tempIntOut <- which(dim.vars[[u0]] %in% NA)
+                  
+                  pot <- cpts[[u0]]
+                  dms <- names(dimnames(cpts[[u0]]))
+                  tempDimNames <- names(dimnames(cpts[[u0]]))
+                  tempDimms <- tempDimNames[tempIntOut]
+                  for (u1 in 1:length(tempIntOut)){
+                    
+                    out <- marginalize(pot, dms, tempDimms[u1])
+                    
+                    pot <- out$potential
+                    dms <- out$vars
+                    
+                  }
+                  
+                  dms <- match(dms, variables)
+                  
+                  pot <- as.array(pot)
+                  dmns <- list(NULL)
+                  
+                  for (i in 1:length(dms))
+                  {
+                    dmns[[i]] <- c(1:node.sizes[dms[i]])
+                  }
+                  dimnames(pot)        <- dmns
+                  names(dimnames(pot)) <- as.list(variables[dms])
+                  cpts[[u0]] <- pot
+                  
+                }
+              }
+              if(repeat_dimVars == TRUE){
+                dim.vars   <- lapply(1:num.nodes,
+                                     function(x)
+                                       #as.list(
+                                       match(
+                                         c(unlist(
+                                           names(dimnames(cpts[[x]])), F, F
+                                         )),
+                                         variables
+                                       )
+                                     #)
+                )
               }
               
               # potentials is a list containing the probability tables of each clique
@@ -163,9 +218,7 @@ setMethod("belief.propagation",
                   out <- sort.dimensions(cpts[[cpt]], dim.vars[[cpt]])
                   potentials[[target.clique]]           <- out$potential
                   dimensions.contained[[target.clique]] <- out$vars
-                }
-                else
-                {
+                }else{
                   # multiply current prob. table for the already inserted prob. table
                   out <- mult(potentials[[target.clique]],
                               dimensions.contained[[target.clique]],
@@ -176,6 +229,23 @@ setMethod("belief.propagation",
                   dimensions.contained[[target.clique]] <- out$vars
                 }
                 
+              }
+              
+              # removing a bug: 
+              # pontential for error: the table is not in alphanumerical order
+              for (l0 in 1:length(cliques)){
+                # length(dimensions.contained[[l0]])
+                # length(as.vector(cliques[[l0]]))
+                
+                notContained <- setdiff(as.vector(cliques[[l0]]),dimensions.contained[[l0]])
+                
+                if(!length(notContained)==0){
+                  for (l1 in 1:length(notContained)){
+                    potentials[[l0]] <- sapply(list(potentials[[l0]],potentials[[l0]]), identity, simplify="array")
+                    dimensions.contained[[l0]] <- append(dimensions.contained[[l0]],
+                                                         notContained[[l1]])
+                  }
+                }
               }
               
               # INCORPORATE EVIDENCE
@@ -241,6 +311,20 @@ setMethod("belief.propagation",
               #print("network")
               #print(net)
               
+              if(length(process.order)!=num.cliqs){
+                print("---------------------------")
+                print("WARNING: length(process.order)!=num.cliqs . Please correct check the process.order.")
+                print("sort(process.order)")
+                print(sort(process.order))
+                print("length(process.order)")
+                print(length(process.order))
+                print("num.cliqs")
+                print(num.cliqs)
+                print("---------------------------")
+              }
+              
+              potentialsUnnormalized <- potentials
+              
               # check whether message passing can be performed
               if (length(process.order) > 1) {
                 
@@ -270,8 +354,8 @@ setMethod("belief.propagation",
                   #print(cliques[[parents.list[clique]]])
                   out <- compute.message(potentials[[process.order[clique]]],
                                          dimensions.contained[[process.order[clique]]],
-                                         cliques[[process.order[clique]]],
-                                         cliques[[parents.list[clique]]],
+                                         dimensions.contained[[process.order[clique]]],
+                                         dimensions.contained[[parents.list[clique]]],
                                          node.sizes)
                   msg.pots[[process.order[clique]]] <- out$potential
                   msg.vars[[process.order[clique]]] <- out$vars
@@ -307,8 +391,8 @@ setMethod("belief.propagation",
                   
                   out  <- compute.message(msg.pots[[process.order[clique]]],
                                           msg.vars[[process.order[clique]]],
-                                          cliques[[parents.list[clique]]],
-                                          cliques[[process.order[clique]]],
+                                          dimensions.contained[[parents.list[clique]]],
+                                          dimensions.contained[[process.order[clique]]],
                                           node.sizes
                   )
                   msg.pots[[process.order[clique]]] <- out$potential
@@ -323,12 +407,15 @@ setMethod("belief.propagation",
                   dimensions.contained[[process.order[clique]]] <- out$vars
                 }
                 
+                # Before normalizing, safe the potential in order to store the JPTs such that they give the norm const
+                potentialsUnnormalized <- potentials
+                
                 # Finally, normalize and add dimension names and return the potentials computed (will be all JPTs).
                 for (x in 1:num.cliqs) {
                   s <- sum(potentials[[x]])
                   potentials[[x]] <- potentials[[x]] / s
                   dmns <- list(NULL)
-                  for (i in length(dimensions.contained[[x]]))
+                  for (i in 1:length(dimensions.contained[[x]]))
                   {
                     dmns[[i]] <- c(1:node.sizes[dimensions.contained[[x]][[i]]])
                   }
@@ -339,7 +426,7 @@ setMethod("belief.propagation",
               } # end if (length(process.order) > 1)
               
               if (return.potentials)
-                return(potentials)
+                return(potentialsUnnormalized)
               
               ###################
               # Now create new BN with updated beliefs
@@ -455,7 +542,7 @@ setMethod("belief.propagation",
                   }
                   pot <- as.array(pot)
                   dmns <- list(NULL)
-                  for (i in length(dms))
+                  for (i in 1:length(dms))
                   {
                     dmns[[i]] <- c(1:node.sizes[dms[i]])
                   }

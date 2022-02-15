@@ -68,12 +68,12 @@ the cardinality of \code{X}. The same applies for the levels of quantization for
 If the value ranges for the data are different from the expected ones, it is possible to specify a different
 starting value (for the whole dataset) with the \code{starts.from} parameter. E.g. by \code{starts.from=0}
 we assume that the values of the variables in the dataset have range \code{[0,|X|-1]}.
-Please keep in mind that the internal representation of bnstruct starts from 1,
+Please keep in mind that the internal representation of SubGroupSeparation starts from 1,
 and the original starting values are then lost. 
 
 It is possible to use two files, one for the data and one for the metadata,
 instead of providing manually all of the info. 
-bnstruct requires the data files to be in a format subsequently described.
+SubGroupSeparation requires the data files to be in a format subsequently described.
 The actual data has to be in (a text file containing data in) tabular format, one tuple per row,
 with the values for each variable separated by a space or a tab. Values for each variable have to be
 numbers, starting from \code{1} in case of discrete variables.
