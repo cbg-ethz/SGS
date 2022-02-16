@@ -15,7 +15,8 @@ Suggests:
     Rgraphviz,
     qgraph,
     knitr,
-    testthat
+    testthat,
+    rmarkdown
 Authors@R: c(person("Fritz", "Bayer", role=c("aut","cre"),
     email="frbayer@ethz.ch"))
 License: GPL (>=2) | file LICENSE

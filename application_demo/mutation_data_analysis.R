@@ -1,24 +1,19 @@
 # reproducable R script of application``
 
-# load BiDAG packages
+# load Bayesian network packages
 
+library(SubGroupSeparation)
 library(BiDAG)
 library(reshape2)
 library(pcalg)
 library(ggplot2)
 library(Bestie)
 
-# Load packages
+# Load packages for plots
 
 library("usethis")
-library("devtools")
 library("RColorBrewer")
 library("ggpubr")
-
-library("parallel")
-
-# load_all()
-install_github("PhysFritz/SubGroupSeparation")
 
 ################################
 # Application replication code # 
@@ -30,6 +25,7 @@ mutation_array <- readRDS(file = "mutation_array_processed.rds")
 patienet_data <- readRDS(file = "patient_array_processed.rds")
 
 
+##############################################################
 ## Step 1: Learn the full Bayes nets of each cancer subtype ##
 ##############################################################
 
@@ -61,6 +57,7 @@ kircBNSGS <- convertBNBestieToSGS(kircDAGaugmented)
 kirpBNSGS <- convertBNBestieToSGS(kirpDAGaugmented)
 
 
+####################################################################
 ## Step 2: Classification of Korean data via normalizing constant ##
 ####################################################################
 
@@ -113,6 +110,7 @@ inferenceRes <- normConstSample
 # now repeat step 1 and 2, but without the normalizing constant, removing all
 # all missing varibles from the analysis
 
+#################################################################
 ## Step 3: Learn the reduced Bayes nets of each cancer subtype ##
 #################################################################
 

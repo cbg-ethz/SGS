@@ -232,42 +232,42 @@ get.subBN <- function(BayesNet,relevantNodes)
 }
 
 
-sub_belief.propagation <- function(BayesNet, obs)
-{
-  # belief propagation by sub groups
-  evidenceNodes <- obs[[1]]
-  subGroups <- get.allSubGroups(dag(BayesNet), evidenceNodes)
-  
-  N_subGroups <- length(subGroups$allSubGroups)
-  
-  for (k0 in 1:N_subGroups)
-  {
-    if(!length(subGroups$allSubGroups[[k0]])==0){
-      # create the sub BN with according observation
-      tempSubGroups <- c(subGroups$allSubGroups[[k0]], subGroups$allEvidenceSubGroups[[k0]])
-      tempSubGroups <- sort(tempSubGroups)
-      tempSubBN <- get.subBN(BayesNet, tempSubGroups)
-      tempObsVarsOrder <- subGroups$allEvidenceSubGroups[[k0]]
-      orderObs <- match(tempObsVarsOrder, obs[[1]])
-      tempObsVars <- match(tempObsVarsOrder,tempSubGroups)
-      tempObsVals <- obs[[2]][orderObs]
-      tempSubObs <- list("observed.vars" = tempObsVars, "observed.vals" = tempObsVals)
-      
-      # perform belief propagation on the sub BN
-      tempSubEngine <- InferenceEngine(tempSubBN)
-      tempSubEngine <- belief.propagation(tempSubEngine, tempSubObs)
-      tempUpdatedNet <- tempSubEngine@updated.bn
-      
-      # copy the updated information (CPTs) back to the original Bayes Net
-      cpts(BayesNet)[tempSubGroups] <- cpts(tempUpdatedNet)
-    }# else{
-      # print("To do: incorporate evidence in CPT (not necessary for sampling though).")
-    # }
-    
-    ## TO DO: see above the comment. 
-  }
-  return(BayesNet)
-}
+# sub_belief.propagation <- function(BayesNet, obs)
+# {
+#   # belief propagation by sub groups
+#   evidenceNodes <- obs[[1]]
+#   subGroups <- get.allSubGroups(dag(BayesNet), evidenceNodes)
+#   
+#   N_subGroups <- length(subGroups$allSubGroups)
+#   
+#   for (k0 in 1:N_subGroups)
+#   {
+#     if(!length(subGroups$allSubGroups[[k0]])==0){
+#       # create the sub BN with according observation
+#       tempSubGroups <- c(subGroups$allSubGroups[[k0]], subGroups$allEvidenceSubGroups[[k0]])
+#       tempSubGroups <- sort(tempSubGroups)
+#       tempSubBN <- get.subBN(BayesNet, tempSubGroups)
+#       tempObsVarsOrder <- subGroups$allEvidenceSubGroups[[k0]]
+#       orderObs <- match(tempObsVarsOrder, obs[[1]])
+#       tempObsVars <- match(tempObsVarsOrder,tempSubGroups)
+#       tempObsVals <- obs[[2]][orderObs]
+#       tempSubObs <- list("observed.vars" = tempObsVars, "observed.vals" = tempObsVals)
+#       
+#       # perform belief propagation on the sub BN
+#       tempSubEngine <- InferenceEngine(tempSubBN)
+#       tempSubEngine <- belief.propagation(tempSubEngine, tempSubObs)
+#       tempUpdatedNet <- tempSubEngine@updated.bn
+#       
+#       # copy the updated information (CPTs) back to the original Bayes Net
+#       cpts(BayesNet)[tempSubGroups] <- cpts(tempUpdatedNet)
+#     }# else{
+#       # print("To do: incorporate evidence in CPT (not necessary for sampling though).")
+#     # }
+#     
+#     ## TO DO: see above the comment. 
+#   }
+#   return(BayesNet)
+# }
 
 
 subGroup_belief.propagation <- function(BayesNet, obs, group_limit = 500)
