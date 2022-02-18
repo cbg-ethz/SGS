@@ -17,6 +17,8 @@ Suggests:
     knitr,
     testthat,
     rmarkdown
+Imports: 
+    cowplot
 Authors@R: c(person("Fritz", "Bayer", role=c("aut","cre"),
     email="frbayer@ethz.ch"))
 License: GPL-3
