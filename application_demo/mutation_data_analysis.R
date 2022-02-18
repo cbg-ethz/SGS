@@ -49,8 +49,8 @@ itKirp <- iterativeMCMC(KIRPscore, mergetype = "skeleton", verbose = FALSE)
 itKirc <- iterativeMCMC(KIRCscore, mergetype = "skeleton", verbose = FALSE)
 
 # get the condtional probability tables (CPTs) of both graphs
-kircDAGaugmented <- Bestie:::DAGparameters(itKirc$DAG, KIRCscore)
-kirpDAGaugmented <- Bestie:::DAGparameters(itKirp$DAG, KIRPscore)
+kircDAGaugmented <- DAGparameters(itKirc$DAG, KIRCscore)
+kirpDAGaugmented <- DAGparameters(itKirp$DAG, KIRPscore)
 
 # convert Bayes net of Bestie to SGS format
 kircBNSGS <- convertBNBestieToSGS(kircDAGaugmented)
@@ -135,8 +135,8 @@ itKirp_mutual <- iterativeMCMC(KIRPscore_mutual, mergetype = "skeleton", verbose
 itKirc_mutual <- iterativeMCMC(KIRCscore_mutual, mergetype = "skeleton", verbose = FALSE)
 
 # get the condtional probability tables (CPTs) of both graphs
-kirpDAGaugmented_mutual <- Bestie:::DAGparameters(itKirp_mutual$DAG, KIRPscore_mutual)
-kircDAGaugmented_mutual <- Bestie:::DAGparameters(itKirc_mutual$DAG, KIRCscore_mutual)
+kirpDAGaugmented_mutual <- DAGparameters(itKirp_mutual$DAG, KIRPscore_mutual)
+kircDAGaugmented_mutual <- DAGparameters(itKirc_mutual$DAG, KIRCscore_mutual)
 
 # convert Bayes net of Bestie to SGS format
 kircBNSGS_mutual <- convertBNBestieToSGS(kircDAGaugmented_mutual)

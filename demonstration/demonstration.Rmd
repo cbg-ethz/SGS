@@ -1,0 +1,43 @@
+---
+title: "Exact and Approximate Inference in Bayesian Networks with examples in R"
+author: "Fritz Bayer"
+date: "2/17/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+# load Bayesian network packages
+library(SubGroupSeparation)
+library(BiDAG)
+library(reshape2)
+library(pcalg)
+library(ggplot2)
+library(Bestie)
+```
+
+## Inference and Marginalization
+
+Bayesian networks are a fundamental tool in the world of machine learning and statistics and have recently gained popularity as they are considered to be the most popular causal model on the market. While recent advances allow us to learn high-dimensional Bayesian networks, the task of inference remains challenging. But what do we mean by inference and marginalization? To answer the question, let us start with a simple example of wet grass. We know that either rain or a sprinkler increase the probability of the grass being wet, so let us draw the corresponding graph:
+
+
+```{r}
+set.seed(1)
+wetGrass <- randomBN(3)
+wetGrass@variables <- c("rain", "sprinkler", "grass wet")
+plot.BN(wetGrass)
+```
+
+```{r, warning=FALSE, message=FALSE}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

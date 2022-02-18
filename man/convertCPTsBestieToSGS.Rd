@@ -7,7 +7,7 @@
 convertCPTsBestieToSGS(DAGaugmented)
 }
 \arguments{
-\item{DAGaugmented}{CPTs of type Bestie (created by Bestie:::DAGparameters())}
+\item{DAGaugmented}{CPTs of type Bestie (created by DAGparameters())}
 }
 \value{
 CPTs of SGS format

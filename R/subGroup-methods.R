@@ -740,8 +740,15 @@ randomObs <- function(N_nodes,N_obs){
 #   return(normConst)
 # }
 
-
-junction.tree.normConstSGS <- function(BayesNet, obs)
+#' Exact inference via SupGroupSeparation
+#'
+#' Outputs the the marginal probability
+#'
+#' @param BayesNet Bayesian network of type bn.fit
+#' @param obs observation
+#' @return marginal probability
+#' @export
+exactInference <- function(BayesNet, obs)
 {
   # belief propagation by sub groups
   evidenceNodes <- obs[[1]]

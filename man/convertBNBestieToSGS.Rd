@@ -7,13 +7,13 @@
 convertBNBestieToSGS(DAGaugmented)
 }
 \arguments{
-\item{DAGaugmented}{Bayes net of type Bestie (created by Bestie:::DAGparameters())}
+\item{DAGaugmented}{Bayes net of type Bestie (created by DAGparameters())}
 }
 \value{
 Bayes net of SGS format
 }
 \description{
 Converts Bayesian network of Bestie format to SGS format
-CPTs of Bestie are created by Bestie:::DAGparameters() 
+CPTs of Bestie are created by DAGparameters() 
 and DAG of Bestie is created by BiDAG::iterativeMCMC()$DAG
 }

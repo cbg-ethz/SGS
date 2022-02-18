@@ -267,7 +267,7 @@ benchmarkStudyMain <- function(BayesNet = NULL, obs = NULL, methods = c("FS","GS
   
   # calc exact result
   if(exactValue){
-    exactVal <- junction.tree.normConstSGS(BayesNet, obs)
+    exactVal <- exactInference(BayesNet, obs)
   }
   
   benchmarkResults <- list()

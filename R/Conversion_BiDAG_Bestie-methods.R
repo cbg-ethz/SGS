@@ -6,12 +6,12 @@
 #'
 #' Converts CPTs of Bestie format to SGS format
 #'
-#' @param DAGaugmented CPTs of type Bestie (created by Bestie:::DAGparameters())
+#' @param DAGaugmented CPTs of type Bestie (created by DAGparameters())
 #' @return CPTs of SGS format
 #' @export
 convertCPTsBestieToSGS <- function(DAGaugmented){
   # Convert CPTs of Bestie format to SGS format
-  # CPTs of Bestie are created by Bestie:::DAGparameters()
+  # CPTs of Bestie are created by DAGparameters()
   
   DAGBestie <- DAGaugmented$DAG
   CPTsBestie <- DAGaugmented$pmeans
@@ -54,13 +54,15 @@ convertCPTsBestieToSGS <- function(DAGaugmented){
   return(CPTsSGS)
 }
 
+
+
 #' Bayesian network Conversion Bestie to SGS format
 #'
 #' Converts Bayesian network of Bestie format to SGS format
-#' CPTs of Bestie are created by Bestie:::DAGparameters() 
+#' CPTs of Bestie are created by DAGparameters() 
 #' and DAG of Bestie is created by BiDAG::iterativeMCMC()$DAG
 #'
-#' @param DAGaugmented Bayes net of type Bestie (created by Bestie:::DAGparameters())
+#' @param DAGaugmented Bayes net of type Bestie (created by DAGparameters())
 #' @return Bayes net of SGS format
 #' @export
 convertBNBestieToSGS <- function(DAGaugmented){
@@ -84,3 +86,116 @@ convertBNBestieToSGS <- function(DAGaugmented){
   
   return(tempBN)
 }
+
+#' Learn Bayesian Network
+#'
+#' Outputs the Bayesian network DAG and CPTs
+#'
+#' @param mydata input data for learning
+#' @param bdepar hyper-parameters for structure learning
+#' @return Bayesian network of type SubGroupSeparation
+#' @export
+learnBN <- function(mydata, bdepar = list(chi = 0.5, edgepf = 2)){
+  
+  dataScore <- scoreparameters("bde", mydata, bdepar)
+  
+  DAG <- iterativeMCMC(dataScore, mergetype = "skeleton", verbose = FALSE)
+  
+  DAGaugmented <- DAGparameters(itKirc$DAG, dataScore)
+  
+  BayesNetSGS <- convertBNBestieToSGS(DAGaugmented)
+  
+  return(BayesNetSGS)
+}
+
+
+#' Learn CPTs (taken from Bestie package)
+#'
+#' Return the CPTs for a Bayesian network (author Jack Kuipers)
+#'
+#' @param incidence DAG
+#' @param dataParams score parameters
+#' @return CPTs of the Bayes net
+#' @export
+DAGparameters <- function(incidence, dataParams){
+  if (dataParams$type != "bde") {
+    stop("The implementation is currently only for the BDe score.")
+  }
+  if (dataParams$DBN) {
+    n <- dataParams$n
+    nsmall <- dataParams$nsmall
+    bgn <- dataParams$bgn
+    slices <- dataParams$slices
+    dataParams_first <- dataParams$firstslice
+    if (bgn > 0) {
+      reorder <- c(1:bgn + nsmall, 1:nsmall)
+      dataParams_first$data <- dataParams_first$data[, 
+                                                     reorder]
+      dataParams_first$d1 <- dataParams_first$d1[, reorder]
+      dataParams_first$d0 <- dataParams_first$d0[, reorder]
+    }
+    params_first <- DAGparameters(incidence[1:n, 1:n], dataParams_first)
+    dataParams_other <- dataParams$otherslices
+    reorder <- c(1:n + nsmall, 1:nsmall)
+    dataParams_other$data <- dataParams_other$data[, reorder]
+    dataParams_other$d1 <- dataParams_other$d1[, reorder]
+    dataParams_other$d0 <- dataParams_other$d0[, reorder]
+    params <- DAGparameters(incidence, dataParams_other)
+    allalphas <- params$alphas
+    allalphas[1:n] <- params_first$alphas
+    allbetas <- params$betas
+    allbetas[1:n] <- params_first$betas
+    allpmeans <- params$pmeans
+    allpmeans[1:n] <- params_first$pmeans
+    if (slices > 2) {
+      nbig <- n + nsmall * (slices - 1)
+      incidence_unroll <- matrix(0, nbig, nbig)
+      incidence_unroll[1:nrow(incidence), 1:ncol(incidence)] <- incidence
+      allalphas_unroll <- vector("list", nbig)
+      allbetas_unroll <- vector("list", nbig)
+      allpmeans_unroll <- vector("list", nbig)
+      allalphas_unroll[1:ncol(incidence)] <- allalphas
+      allbetas_unroll[1:ncol(incidence)] <- allbetas
+      allpmeans_unroll[1:ncol(incidence)] <- allpmeans
+      for (ii in 1:(slices - 2)) {
+        block_rows <- n - nsmall + 1:(2 * nsmall)
+        block_cols <- n + 1:nsmall
+        incidence_unroll[block_rows + nsmall * ii, block_cols + 
+                           nsmall * ii] <- incidence[block_rows, block_cols]
+        allalphas_unroll[block_cols + nsmall * ii] <- allalphas[block_cols]
+        allbetas_unroll[block_cols + nsmall * ii] <- allbetas[block_cols]
+        allpmeans_unroll[block_cols + nsmall * ii] <- allpmeans[block_cols]
+        if (bgn > 0) {
+          block_rows <- 1:bgn
+          incidence_unroll[block_rows, block_cols + nsmall * 
+                             ii] <- incidence[block_rows, block_cols]
+        }
+      }
+      incidence <- incidence_unroll
+      allalphas <- allalphas_unroll
+      allbetas <- allbetas_unroll
+      allpmeans <- allpmeans_unroll
+    }
+  }
+  else {
+    n <- nrow(incidence)
+    allalphas <- vector("list", n)
+    allbetas <- vector("list", n)
+    allpmeans <- vector("list", n)
+    for (j in 1:n) {
+      parentNodes <- which(incidence[, j] == 1)
+      tempResult <- DAGparametersCore(j, parentNodes, dataParams)
+      allalphas[[j]] <- tempResult$alphas
+      allbetas[[j]] <- tempResult$betas
+      allpmeans[[j]] <- tempResult$pmeans
+    }
+  }
+  posteriorParams <- list()
+  posteriorParams$DAG <- incidence
+  posteriorParams$alphas <- allalphas
+  posteriorParams$betas <- allbetas
+  posteriorParams$pmeans <- allpmeans
+  return(posteriorParams)
+}
+
+
