@@ -25,8 +25,7 @@ tool from an R session:
 
 ```{r eval=FALSE}
 library("devtools")
-Sys.setenv("R_REMOTES_NO_ERRORS_FROM_WARNINGS" = "true")
-install_github("cbg-ethz/SubGroupSeparation")
+load_all()
 ```
 
 `SubGroupSeparation` requires R `>= 3.5`, and depends on
@@ -34,10 +33,4 @@ install_github("cbg-ethz/SubGroupSeparation")
 `methods`. Package `Rgraphviz` is requested in
 order to plot graphs, but is not mandatory.
 
-Reference
----------
-If you use `SubGroupSeparation` in your work, please cite it as:
-```
-Fritz M. Bayer, Giusi Moffa, Niko Beerenwinkel, Jack Kuipers. "Marginalization in Bayesian Networks: Integrating Exact and Approximate Inference" arXiv preprint, 2021
-```
 
