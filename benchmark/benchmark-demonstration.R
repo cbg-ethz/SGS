@@ -2,6 +2,7 @@
 
 # Load packages
 
+library("SubGroupSeparation")
 library("usethis")
 library("devtools")
 library("pcalg")
@@ -9,18 +10,15 @@ library("ggplot2")
 library("RColorBrewer")
 library("ggpubr")
 
-install_github("PhysFritz/SubGroupSeparation")
-# load_all()
-
 # packages for benchmark visualization
 
 library("cowplot")
 library("gridExtra")
 library("matrixStats")
 
-###############################################################################
-## Test Different Dimensions ##################################################
-###############################################################################
+###############################
+## Test Different Dimensions ##
+###############################
 
 # Choose network parameters
 
@@ -76,9 +74,9 @@ makeAllPlots(resultTable1,resultTable2,resultTable3, resultTable4, c("50","100",
              c("Number of Nodes n=50","Number of Nodes n=100","Number of Nodes n=150","Number of Nodes n=200"), "Dims")
 
 
-###############################################################################
-## Test Different Nets ########################################################
-###############################################################################
+#########################
+## Test Different Nets ##
+#########################
 
 # Choose network parameters
 
@@ -131,9 +129,9 @@ makeAllPlots(resultTable1,resultTable2,resultTable3, resultTable4, c("E-R","E-R 
 
 
 
-###############################################################################
-## Test Different Sparcity ####################################################
-###############################################################################
+#############################
+## Test Different Sparcity ##
+#############################
 
 # Choose network parameters
 
@@ -185,9 +183,9 @@ makeAllPlots(resultTable1,resultTable2,resultTable3, resultTable4, c("S=2","S=3"
 
 
 
-###############################################################################
-## Different Fractions of Evidence ############################################
-###############################################################################
+#####################################
+## Different Fractions of Evidence ##
+#####################################
 
 # Choose network parameters
 
@@ -238,9 +236,9 @@ makeAllPlots(resultTable1,resultTable2,resultTable3, resultTable4, c("f=0.2","f=
              c("Evidence Fraction f=0.2","Evidence Fraction f=0.4","Evidence Fraction f=0.6","Evidence Fraction f=0.8"), "Fractions")
 
 
-###############################################################################
-## Multiple Categories ########################################################
-###############################################################################
+#########################
+## Multiple Categories ##
+#########################
 
 # Choose network parameters
 

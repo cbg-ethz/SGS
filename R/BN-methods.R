@@ -589,8 +589,7 @@ print.BN <- function(x, ...)
 #' @aliases plot,BN plot.BN,BN
 #' @rdname plot
 #' @export
-plot.BN <- 
-  function( x, method = "default", use.node.names = TRUE, frac = 0.2, max.weight = max(dag(x)),
+plot.BN <- function( x, method = "default", use.node.names = TRUE, frac = 0.2, max.weight = max(dag(x)),
                     node.size.lab=14, node.col = rep('white',num.nodes(x)),
                     plot.wpdag = FALSE, ...)
           {
