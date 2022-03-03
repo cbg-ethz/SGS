@@ -1,3 +1,6 @@
+Efficient Exact and Approximate Inference in Bayesian Networks
+-----------
+
 `SubGroupSeparation` is an R package for marginalization in Bayesian networks. It allows for efficient exact and approximate inference that works both in low- and high-dimensional settings.
 
 Installation
