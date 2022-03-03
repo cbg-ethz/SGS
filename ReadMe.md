@@ -1,4 +1,4 @@
-`SubGroupSeparation` is efficient tool for calculating marginal probabilities in Bayesian networks that works in both low- and high-dimensional settings.
+`SubGroupSeparation` is an R package for marginalization in Bayesian networks. It allows for efficient exact and approximate inference that works both in low- and high-dimensional settings.
 
 Installation
 -----------
