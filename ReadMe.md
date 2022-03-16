@@ -6,9 +6,6 @@ Efficient Exact and Approximate Inference in Bayesian Networks
 Installation
 -----------
 
-The latest development version of `SubGroupSeparation` can be found on GitHub
-[here](https://github.com/cbg-ethz/SubGroupSeparation).
-
 In order to install the package, it suffices to launch
 `R CMD INSTALL path/to/SubGroupSeparation`
 from a terminal, or `make install` from within the package source folder.
