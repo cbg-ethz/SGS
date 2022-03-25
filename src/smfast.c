@@ -49,7 +49,8 @@ SEXP SubGroupSeparation_fbp( SEXP aflml )
 
 SEXP SubGroupSeparation_fbs( SEXP bps, SEXP aflml )
 {
-	R_len_t si, sink, nop, pos;
+	R_len_t si, sink, nop;
+	R_len_t __attribute__((unused)) pos;
 	R_len_t n_nodes = nrows(aflml); 
 	R_len_t pow_nodes = ncols(aflml);
 	R_len_t mask = 1;

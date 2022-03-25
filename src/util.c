@@ -197,7 +197,8 @@ double bdeu_score( unsigned int * d, unsigned int n_nodes, unsigned int n_cases,
 
 SEXP SubGroupSeparation_compute_counts_nas( SEXP data, SEXP node_sizes )
 {
-	long int i,j,index,elmt,stride;
+	long int i,j,index,elmt;
+	long int __attribute__((unused)) stride;
 	// inputs
 	int * d = INTEGER(data);
 	int n_nodes = ncols(data);
@@ -250,7 +251,8 @@ SEXP SubGroupSeparation_compute_counts_nas( SEXP data, SEXP node_sizes )
 
 SEXP SubGroupSeparation_compute_counts( SEXP data, SEXP node_sizes )
 {
-  int i,j,index,elmt;
+  int i,j,index;
+  int __attribute__((unused)) elmt;
 	// inputs
 	int * d = INTEGER(data);
 	int n_nodes = ncols(data);
