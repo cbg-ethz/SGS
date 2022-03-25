@@ -11,12 +11,12 @@ library(Bestie)
 
 # Load packages for plots
 
-library("usethis")
-library("RColorBrewer")
-library("ggpubr")
+library(usethis)
+library(RColorBrewer)
+library(ggpubr)
 
 ################################
-# Application replication code # 
+# Application replication code #
 ################################
 
 
@@ -40,7 +40,7 @@ KIRPscore <- scoreparameters("bde", kirp, bdepar = myBdepar,
                                edgepmat = edgepmat)
 KIRCscore <- scoreparameters("bde", kirc, bdepar = myBdepar,
                                edgepmat = edgepmat)
-  
+
 #Estimating MAP DAGs
 
 #KIRP
@@ -70,7 +70,7 @@ mutualGenesInMA <- sapply(mutualGenes, function(xx) which(colnames(mutation_arra
 n_patients <- length(patienet_data[,1])
 normConstSample <- array(NA, dim=c(n_patients,4))
 
-  
+
 # for each patient, get the corresponding mutation value of mutual genes
 patientObs <- list()
 n_patients <- length(patienet_data[,1])
@@ -119,8 +119,8 @@ kirpReduced <- kirp[,mutualGenesInBN]
 kircReduced <- kirc[,mutualGenesInBN]
 
 set.seed(17)
-  
-#constructing score objects 
+
+#constructing score objects
 edgepmat_mutual <- string2mat(colnames(kirpReduced), interactions, mapping, type = "pf", pf = 2)
 KIRPscore_mutual <- scoreparameters("bde", kirpReduced, bdepar = myBdepar,
                                     edgepmat = edgepmat_mutual)
@@ -149,7 +149,7 @@ kirpBNSGS_mutual <- convertBNBestieToSGS(kirpDAGaugmented_mutual)
 ########################################################################
 ## Step 4: Classification of Korean data without normalizing constant ##
 ########################################################################
-  
+
 # get position of mutual genes in Bayes net and mutation array
 mutualGenesInBN <- sapply(mutualGenes, function(xx) which(colnames(kirpReduced) == xx))
 mutualGenesInMA <- sapply(mutualGenes, function(xx) which(colnames(mutation_array) == xx))
