@@ -4,21 +4,19 @@
 \alias{sample.subGroupSampling}
 \title{Sub Group Sampling (SGS) in Bayesian Networks}
 \usage{
-sample.subGroupSampling(
-  BayesNet,
-  obs,
-  N_samples = 100,
-  relevantSubNet = FALSE,
-  plot = TRUE
-)
+sample.subGroupSampling(BayesNet, obs, N_samples = 100, plot = TRUE)
 }
 \arguments{
 \item{BayesNet}{Bayesian network}
 
-\item{obs}{list containing the evidence nodes and associated values}
+\item{obs}{List containing the evidence nodes and associated values}
+
+\item{N_samples}{Number of samples}
+
+\item{plot}{If TRUE, plot the progress}
 }
 \value{
-relevant DAG
+Normalizing constant and vector of intermediate results
 }
 \description{
 Outputs the normalizing constant given some evidence of a Bayesian network

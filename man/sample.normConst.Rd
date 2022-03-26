@@ -16,10 +16,18 @@ sample.normConst(
 \arguments{
 \item{BayesNet}{Bayesian network}
 
-\item{obs}{list containing the evidence nodes and associated values}
+\item{obs}{List containing the evidence nodes and associated values}
+
+\item{s_method}{Inference method}
+
+\item{N_samples}{Number of samples}
+
+\item{relevantSubNet}{Whether to consider the relevant subnet}
+
+\item{plot}{If TRUE, plot results}
 }
 \value{
-relevant DAG
+Normalizing constant and vector of intermediate results
 }
 \description{
 Outputs the normalizing constant given some evidence of a Bayesian network

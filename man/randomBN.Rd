@@ -20,6 +20,10 @@ randomBN(
 
 \item{nodeDim}{number of possible assignments of each node (binary by default)}
 
+\item{method}{Graph type input for randDAG ("er" by default)}
+
+\item{uniformCPTs}{whether CPTs are simulated from a uniform distribution}
+
 \item{visualize}{If true, the network is plotted}
 }
 \value{

@@ -4,12 +4,14 @@
 \alias{get.allSubGroups}
 \title{Get All Conditionally Independent Subgroups (CIS)}
 \usage{
-get.allSubGroups(DAG, evidenceNodes, visualize = F)
+get.allSubGroups(DAG, evidenceNodes, visualize = FALSE)
 }
 \arguments{
+\item{DAG}{DAG}
+
 \item{evidenceNodes}{vector containing the evidence nodes}
 
-\item{BayesNet}{Bayesian network of type bn.fit}
+\item{visualize}{if TRUE, plot the graph}
 }
 \value{
 list of all CIS of the Bayesian network given the evidence

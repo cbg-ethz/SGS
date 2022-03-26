@@ -1,8 +1,11 @@
+#' @importFrom stats sd
 plot.normConstCalc <- function(NormCalcList)
 {
   # Plot the progress
   
-  curVariance <- sapply(c(1:length(NormCalcList$partitionFuncTempAll)), function(x) sd(NormCalcList$partitionFuncTempAll[1:x])/sqrt(x))
+  normC=countsS=0
+  
+  curVariance <- sapply(c(1:length(NormCalcList$partitionFuncTempAll)), function(x) stats::sd(NormCalcList$partitionFuncTempAll[1:x])/sqrt(x))
   lowBound <- NormCalcList$partitionFunc-curVariance
   upBound <- NormCalcList$partitionFunc+curVariance
   
@@ -19,10 +22,13 @@ plot.normConstCalc <- function(NormCalcList)
   
 }
 
-
+#' @importFrom stats sd
+#' @importFrom RColorBrewer brewer.pal
 plot.samplingProgress <- function(sampleResults, exactValue = NULL)
 {
   # Plot the progress
+  
+  normC=countsS=group=Method=0
   
   lengthMethods <- length(sampleResults)
   
@@ -43,7 +49,7 @@ plot.samplingProgress <- function(sampleResults, exactValue = NULL)
   for (t0 in 1:length(sampleResults)){
     NormCalcList <- sampleResults[[t0]]
     curVariance <- sapply(c(1:length(NormCalcList$partitionFuncTempAll)), 
-                          function(x) sd(NormCalcList$partitionFuncTempAll[1:x])/sqrt(x))
+                          function(x) stats::sd(NormCalcList$partitionFuncTempAll[1:x])/sqrt(x))
     lowBound <- NormCalcList$partitionFunc-curVariance
     upBound <- NormCalcList$partitionFunc+curVariance
     timeScale <- c(1:length(NormCalcList$partitionFunc))/length(NormCalcList$partitionFunc)*NormCalcList$elapsed_time[[1]]
@@ -87,6 +93,7 @@ plot.samplingProgress <- function(sampleResults, exactValue = NULL)
 
 benchmark <- function(BayesNet = NULL, obs = NULL, methods = c("FS","GS", "SGS"), N_samples = 500, N_nodes = 30, exactValue = FALSE)
 {
+  
   # benchmark different sampling schemes
   
   # sample Bayesian network and observation if missing
@@ -104,7 +111,7 @@ benchmark <- function(BayesNet = NULL, obs = NULL, methods = c("FS","GS", "SGS")
   
   # calc exact result
   if(exactValue){
-    exactVal <- calcExactInference(myBN, myObs)
+    exactVal <- calcExactInference(BayesNet, obs)
   }
   
   # sample by method
@@ -264,38 +271,40 @@ benchmarkStudy <- function(BayesNet = NULL, obs = NULL, methods = c("FS","GS", "
 benchmarkStudyMain <- function(BayesNet = NULL, obs = NULL, methods = c("FS","GS", "SGS"), N_samples = 500, N_rep = 10, N_nodes = 30, exactValue = TRUE)
 {
   # repeat the benchmarking N_rep times
-  
+
   # calc exact result
   if(exactValue){
     exactVal <- exactInference(BayesNet, obs)
   }
-  
+
   benchmarkResults <- list()
   for (i in 1:N_rep){
     tempRes <- benchmarkStudy(BayesNet, obs, methods, N_samples, N_nodes)
     benchmarkResults[[i]] <- tempRes
   }
-  
-  
+
+
 
   if(exactValue){
     myResults <- processAndPlot(benchmarkResults,exactVal)
-    
+
     myResults$simulationDetails <- list("BayesNet"=BayesNet, "obs"=obs, "methods"=methods, "N_samples"=N_samples, "N_rep"=N_rep)
-    
+
     return(myResults)
-  }
-  else{
-    plot.samplingProgressStudy(benchmarkResults)
-  }
-  
+  }#else{
+    # plot.samplingProgressStudy(benchmarkResults)
+  #}
+
 }
 
 
+#' @importFrom RColorBrewer brewer.pal
+#' @importFrom ggpubr ggarrange
 processAndPlot <- function(benchmarkResults, exactVal)
 {
-  # Plot the progress
+  normC=countsS=group=Method=0
   
+  # Plot the progress
   lengthMethods <- length(benchmarkResults[[1]])
   lengthRes <- length(benchmarkResults)
   
@@ -551,6 +560,8 @@ plot.BNwithObs <- function(myBN, myObs){
   plot.BN(myBN, node.col = nodeCol)
 }
 
+#' @importFrom RColorBrewer brewer.pal
+#' @importFrom graphics par
 plot.BNwithSubGroups <- function(myBN, myObs, visualizeAll=FALSE){
   # plot BN with subgroups in color and corresponding observations in grey
   
@@ -678,8 +689,10 @@ benchmarkMultipleNets <- function(N_var, N_Obs, N_nets, N_rep, N_samples=100, sa
 # }
 
 
+#' @importFrom utils tail
 ProcessResultTableNRMSE <- function(myResultTable, returnResults=FALSE){
   
+  NRMSE=countsS=group=Method=BoxPlotResNRMS=0
   averageResults_byTime <- myResultTable[[1]]$results_byTime
   averageResults_final <- myResultTable[[1]]$results_final
   
@@ -727,7 +740,7 @@ ProcessResultTableNRMSE <- function(myResultTable, returnResults=FALSE){
   p4 <- ggplot(data=averageResults_final, aes(x=Method, y=BoxPlotResNRMS, colour=Method)) + 
     geom_boxplot()+
     geom_jitter(position=position_jitter(0.8))+
-    scale_colour_manual(values=tail(color_list,2))+
+    scale_colour_manual(values=utils::tail(color_list,2))+
     theme(legend.position = "none")+
     ylab(paste0("NRMSE (", averageResults_final$timePointInSec, "s)"))+
     scale_x_discrete(limits=c("LBP","SGS"))
@@ -750,29 +763,35 @@ ProcessResultTableNRMSE <- function(myResultTable, returnResults=FALSE){
 # 
 # tempBN <- convert_bnlearn(hailfinder)
 
-convert_bnlearn <- function(BNconvert){
-  # convert Bayes net of type "bnlearn" to type "SubGroupSeparation"
-  
-  lengthBNC <- length(BNconvert)
-  
-  # create new BN
-  tempBN <- BN()
-  name(tempBN) <- "converted Bayes net"
-  num.nodes(tempBN) <- lengthBNC
-  variables(tempBN) <- names(BNconvert)
-  discreteness(tempBN) <- rep(TRUE, lengthBNC)
-  node.sizes(tempBN) <- sapply(1:lengthBNC, function(x) unname(dim(BNconvert[[x]]$prob)[1]))
-  cpts(tempBN) <- sapply(1:lengthBNC, function(x) BNconvert[[x]]$prob)
-  dag(tempBN) <- amat(BNconvert)
-  wpdag(tempBN) <- matrix(0, lengthBNC, lengthBNC)
-  
-  return(tempBN)
-}
+# convert_bnlearn <- function(BNconvert){
+#   # convert Bayes net of type "bnlearn" to type "SubGroupSeparation"
+#   
+#   lengthBNC <- length(BNconvert)
+#   
+#   # create new BN
+#   tempBN <- BN()
+#   name(tempBN) <- "converted Bayes net"
+#   num.nodes(tempBN) <- lengthBNC
+#   variables(tempBN) <- names(BNconvert)
+#   discreteness(tempBN) <- rep(TRUE, lengthBNC)
+#   node.sizes(tempBN) <- sapply(1:lengthBNC, function(x) unname(dim(BNconvert[[x]]$prob)[1]))
+#   cpts(tempBN) <- sapply(1:lengthBNC, function(x) BNconvert[[x]]$prob)
+#   dag(tempBN) <- amat(BNconvert)
+#   wpdag(tempBN) <- matrix(0, lengthBNC, lengthBNC)
+#   
+#   return(tempBN)
+# }
 
 
-
+#' @import ggplot2
+#' @importFrom RColorBrewer brewer.pal
+#' @importFrom gridExtra grid.arrange
+#' @importFrom grDevices cairo_pdf
+#' @importFrom utils tail
 makeAllPlots <- function(resultTable1,resultTable2,resultTable3, resultTable4, labelBP = c("1","2","3","4"), labelHead = c("1","2","3","4"), fileName = "Test", width = 7, height = 4.1){
   # function to create the final plots from the benchmark studies
+  
+  dimBN=BoxPlotResNRMS=Method=NRMSE=countsS=group=NULL
   
   ## FinalPlots:
   restuls1 <- ProcessResultTableNRMSE(resultTable1, returnResults = TRUE)
@@ -825,7 +844,7 @@ makeAllPlots <- function(resultTable1,resultTable2,resultTable3, resultTable4, l
   dodge <- position_dodge(width = 0.4)
   
   # make a boxplot of the results
-  p1 <- ggplot(data=resAllDims2, aes(x=factor(dimBN, level = c(labelBP[1],labelBP[2],labelBP[3],labelBP[4])), y=BoxPlotResNRMS, fill=Method, colour=Method)) + 
+  p1 <- ggplot(data=resAllDims2, aes(x=factor(dimBN, levels = c(labelBP[1],labelBP[2],labelBP[3],labelBP[4])), y=BoxPlotResNRMS, fill=Method, colour=Method)) + 
     geom_boxplot(outlier.shape = NA) + ## THIS IS FOR JITTER, otherwise geom_boxplot()+
     # geom_jitter(position=position_jitter(0.42), cex=0.4, data=resAllDims2_subset, position = dodge)+
     geom_point(pch = 21,data=resAllDims2_subset, position = position_jitterdodge(0.12),cex=0.4)+ ## THIS IS FOR JITTER
@@ -841,7 +860,7 @@ makeAllPlots <- function(resultTable1,resultTable2,resultTable3, resultTable4, l
   plotData <- plotData[!plotData$Method=='FS',]
   plotData$Method[plotData$Method=="LBP"] <- "LBP-IS"
   
-  minLims <- min(c(tail(plotData$countsS[plotData$Method=="LBP-IS"],1),tail(plotData$countsS[plotData$Method=="GS"],1), tail(plotData$countsS[plotData$Method=="SGS"],1)))
+  minLims <- min(c(utils::tail(plotData$countsS[plotData$Method=="LBP-IS"],1),utils::tail(plotData$countsS[plotData$Method=="GS"],1), utils::tail(plotData$countsS[plotData$Method=="SGS"],1)))
   
   p2 <- ggplot(data=plotData, aes(y = NRMSE, x = countsS, group=group))+
     geom_line(aes(y = NRMSE, x = countsS,colour=Method)) + 
@@ -883,7 +902,7 @@ makeAllPlots <- function(resultTable1,resultTable2,resultTable3, resultTable4, l
   plotData <- plotData[!plotData$Method=='FS',]
   plotData$Method[plotData$Method=="LBP"] <- "LBP-IS"
   
-  minLims <- min(c(tail(plotData$countsS[plotData$Method=="LBP-IS"],1),tail(plotData$countsS[plotData$Method=="GS"],1), tail(plotData$countsS[plotData$Method=="SGS"],1)))
+  minLims <- min(c(utils::tail(plotData$countsS[plotData$Method=="LBP-IS"],1),utils::tail(plotData$countsS[plotData$Method=="GS"],1), utils::tail(plotData$countsS[plotData$Method=="SGS"],1)))
   
   p3 <- ggplot(data=plotData, aes(y = NRMSE, x = countsS, group=group))+
     geom_line(aes(y = NRMSE, x = countsS,colour=Method)) + 
@@ -925,7 +944,7 @@ makeAllPlots <- function(resultTable1,resultTable2,resultTable3, resultTable4, l
   plotData <- plotData[!plotData$Method=='FS',]
   plotData$Method[plotData$Method=="LBP"] <- "LBP-IS"
   
-  minLims <- min(c(tail(plotData$countsS[plotData$Method=="LBP-IS"],1),tail(plotData$countsS[plotData$Method=="GS"],1), tail(plotData$countsS[plotData$Method=="SGS"],1)))
+  minLims <- min(c(utils::tail(plotData$countsS[plotData$Method=="LBP-IS"],1),utils::tail(plotData$countsS[plotData$Method=="GS"],1), utils::tail(plotData$countsS[plotData$Method=="SGS"],1)))
   
   p4 <- ggplot(data=plotData, aes(y = NRMSE, x = countsS, group=group))+
     geom_line(aes(y = NRMSE, x = countsS,colour=Method)) + 
@@ -967,7 +986,7 @@ makeAllPlots <- function(resultTable1,resultTable2,resultTable3, resultTable4, l
   plotData <- plotData[!plotData$Method=='FS',]
   plotData$Method[plotData$Method=="LBP"] <- "LBP-IS"
   
-  minLims <- min(c(tail(plotData$countsS[plotData$Method=="LBP-IS"],1),tail(plotData$countsS[plotData$Method=="GS"],1), tail(plotData$countsS[plotData$Method=="SGS"],1)))
+  minLims <- min(c(utils::tail(plotData$countsS[plotData$Method=="LBP-IS"],1),utils::tail(plotData$countsS[plotData$Method=="GS"],1), utils::tail(plotData$countsS[plotData$Method=="SGS"],1)))
   
   p5 <- ggplot(data=plotData, aes(y = NRMSE, x = countsS, group=group))+
     geom_line(aes(y = NRMSE, x = countsS,colour=Method)) + 
@@ -1010,7 +1029,7 @@ makeAllPlots <- function(resultTable1,resultTable2,resultTable3, resultTable4, l
   # png("~/Desktop/Figure1.png", width = 10, height = 10, units = 'cm', res = 300)
   # grid.arrange(p1)
   # dev.off()
-  cairo_pdf(paste0("~/Desktop/Figure", fileName,"BoxPlot.pdf"), width = width, height = height)
+  grDevices::cairo_pdf(paste0("~/Desktop/Figure", fileName,"BoxPlot.pdf"), width = width, height = height)
   grid.arrange(p1)
   dev.off()
   

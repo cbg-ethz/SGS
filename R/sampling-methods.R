@@ -3,9 +3,14 @@
 #' Outputs the normalizing constant given some evidence of a Bayesian network
 #'
 #' @param BayesNet Bayesian network
-#' @param obs list containing the evidence nodes and associated values
-#' @return relevant DAG
+#' @param obs List containing the evidence nodes and associated values
+#' @param s_method Inference method
+#' @param N_samples Number of samples
+#' @param relevantSubNet Whether to consider the relevant subnet
+#' @param plot If TRUE, plot results
+#' @return Normalizing constant and vector of intermediate results
 #' @export
+#' @importFrom utils head
 sample.normConst <- function(BayesNet, obs, s_method = "SGS", N_samples = 100, relevantSubNet = FALSE, plot = TRUE)
 { 
   # Importance sampling in Bayesian networks given the evidence
@@ -13,7 +18,7 @@ sample.normConst <- function(BayesNet, obs, s_method = "SGS", N_samples = 100, r
   
   # sub group sampling
   if(s_method=="SGS"){
-    results <- sample.subGroupSampling(BayesNet, obs, N_samples = N_samples, relevantSubNet = relevantSubNet, plot = plot)
+    results <- sample.subGroupSampling(BayesNet, obs, N_samples = N_samples, plot = plot)
     return(results)
   }
   
@@ -253,7 +258,7 @@ calcExactInference <- function(myBN, myObs, showTimes=FALSE){
   # this will then be used in the summation over possible values
   
   # create possible permuations of free nodes
-  allVec <- permutations(2,length(nodes_free),c(1,2), repeats=TRUE)
+  allVec <- permutations(2,length(nodes_free),c(1,2), repeats.allowed=TRUE)
   
   # create empty matrix
   newVec <- matrix(1,dim(allVec)[1],length(myBN@variables))

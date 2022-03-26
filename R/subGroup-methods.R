@@ -2,8 +2,8 @@
 #'
 #' Outputs the relevant subnetwork of the Bayesian network given the evidence
 #'
-#' @param DAG DAG as permutation matrix
-#' @param evidenceNodes vector containing the evidence nodes (order: 1 instead of "A")
+#' @param dag DAG as permutation matrix
+#' @param A vector containing the evidence nodes (order: 1 instead of "A")
 #' @return relevant DAG
 #' @export
 get.allAncestors <- function(dag,A)
@@ -87,11 +87,14 @@ get.subGroup <- function(DAG, evidenceNodes, startNode)
 #'
 #' Outputs all CISs of the Bayesian network given the evidence
 #'
-#' @param BayesNet Bayesian network of type bn.fit
+#' @param DAG DAG
 #' @param evidenceNodes vector containing the evidence nodes
+#' @param visualize if TRUE, plot the graph
 #' @return list of all CIS of the Bayesian network given the evidence
 #' @export
-get.allSubGroups <- function(DAG, evidenceNodes, visualize = F){
+#' 
+#' @importFrom graphics par
+get.allSubGroups <- function(DAG, evidenceNodes, visualize = FALSE){
   
   lengthDAG <- dim(DAG)[1]
   
@@ -605,15 +608,19 @@ subGroup_loopyBelief.propagation2 <- function(BayesNet, obs, group_limit = 500)
 #' @param N_nodes number of nodes of the network (30 by default)
 #' @param N_neighbours expected number of neighbours per node (binary by default)
 #' @param nodeDim number of possible assignments of each node (binary by default)
+#' @param method Graph type input for randDAG ("er" by default)
+#' @param uniformCPTs whether CPTs are simulated from a uniform distribution
 #' @param visualize If true, the network is plotted
 #' @return random Bayesian network of type BN()
 #' @export
+#' @importFrom pcalg randDAG
+#' @importFrom graphics plot.new
 randomBN <- function(N_nodes, N_neighbours = 2, nodeDim = 2, method = "er", uniformCPTs = TRUE, visualize = FALSE)
 {
   # create random discrete Bayes net based on the randDAG function of "pcalg"
   
   # sample random DAG
-  tempDAG <- unname(as(randDAG(N_nodes, method = method, N_neighbours, "regular", 
+  tempDAG <- unname(as(pcalg::randDAG(N_nodes, method = method, N_neighbours, "regular", 
                                weighted = FALSE), "matrix"))
   
   # create probability tables

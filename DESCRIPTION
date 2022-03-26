@@ -7,8 +7,6 @@ Date: 2021-12-014
 Depends:
     R (>= 3.5.0),
     bitops,
-    Matrix,
-    igraph,
     methods
 Suggests:
     graph,
@@ -18,7 +16,16 @@ Suggests:
     testthat,
     rmarkdown
 Imports: 
-    cowplot
+    igraph,
+    stats,
+    BiDAG,
+    Bestie,
+    cowplot,
+    ggplot2,
+    ggpubr,
+    pcalg,
+    RColorBrewer,
+    gridExtra
 Authors@R: c(person("Fritz", "Bayer", role=c("aut","cre"),
     email="frbayer@ethz.ch"))
 License: GPL-3

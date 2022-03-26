@@ -7,9 +7,9 @@
 get.allAncestors(dag, A)
 }
 \arguments{
-\item{DAG}{DAG as permutation matrix}
+\item{dag}{DAG as permutation matrix}
 
-\item{evidenceNodes}{vector containing the evidence nodes (order: 1 instead of "A")}
+\item{A}{vector containing the evidence nodes (order: 1 instead of "A")}
 }
 \value{
 relevant DAG

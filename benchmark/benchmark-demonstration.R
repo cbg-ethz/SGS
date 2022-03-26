@@ -4,14 +4,12 @@
 
 library("SubGroupSeparation")
 library("usethis")
-library("devtools")
-library("pcalg")
-library("ggplot2")
-library("RColorBrewer")
-library("ggpubr")
 
 # packages for benchmark visualization
 
+library("ggplot2")
+library("RColorBrewer")
+library("ggpubr")
 library("cowplot")
 library("gridExtra")
 library("matrixStats")

@@ -3,10 +3,13 @@
 #' Outputs the normalizing constant given some evidence of a Bayesian network
 #'
 #' @param BayesNet Bayesian network
-#' @param obs list containing the evidence nodes and associated values
-#' @return relevant DAG
+#' @param obs List containing the evidence nodes and associated values
+#' @param N_samples Number of samples
+#' @param plot If TRUE, plot the progress
+#' @return Normalizing constant and vector of intermediate results
 #' @export
-sample.subGroupSampling <- function(BayesNet, obs, N_samples = 100, relevantSubNet = FALSE, plot = TRUE)
+#' @importFrom utils head
+sample.subGroupSampling <- function(BayesNet, obs, N_samples = 100, plot = TRUE)
 { 
   # Importance sampling in Bayesian networks given the evidence
   # Returned is the normalzing constant
@@ -42,7 +45,7 @@ sample.subGroupSampling <- function(BayesNet, obs, N_samples = 100, relevantSubN
     tempPerm <- c(tempPerm[-nodePosition],tempPerm[nodePosition])
     net@cpts[[g0]] <- aperm(net@cpts[[g0]], perm = tempPerm)
   }
-  nodeParents <- sapply(c(1:lengthBN),function(x) match(head(names(dimnames(net@cpts[[x]])),-1),variablesBN))
+  nodeParents <- sapply(c(1:lengthBN),function(x) match(utils::head(names(dimnames(net@cpts[[x]])),-1),variablesBN))
   nodeNamesCPT <- sapply(c(1:lengthBN),function(x) match(names(dimnames(net@cpts[[x]])),variablesBN))
   
   # sort the CPTs of the updatedNet according to the CPTs of the original net
@@ -54,7 +57,7 @@ sample.subGroupSampling <- function(BayesNet, obs, N_samples = 100, relevantSubN
       tempPerm <- match(nodeNamesCPT[[g1]], nodeNamesCPT2[[g1]])
       updatedNet@cpts[[g1]] <- aperm(updatedNet@cpts[[g1]], perm = tempPerm)
     }
-    nodeParents2 <- sapply(c(1:lengthBN),function(x) match(head(names(dimnames(updatedNet@cpts[[x]])),-1),variablesBN))
+    nodeParents2 <- sapply(c(1:lengthBN),function(x) match(utils::head(names(dimnames(updatedNet@cpts[[x]])),-1),variablesBN))
     
   }
   
@@ -68,12 +71,12 @@ sample.subGroupSampling <- function(BayesNet, obs, N_samples = 100, relevantSubN
   # get topological order for sampling order
   topolOrder <- topo_sort(graph_from_adjacency_matrix(dag(net), "directed"), mode = c("out"))
   
-  # get relevant subnetwork
-  if (relevantSubNet==FALSE){
-    consideredNodes <- c(1:lengthBN)
-  }else{
-    consideredNodes <- get.allAncestors(dag(net), observed.vars) 
-  }
+  # # get relevant subnetwork
+  # if (relevantSubNet==FALSE){
+  #   consideredNodes <- c(1:lengthBN)
+  # }else{
+  #   consideredNodes <- get.allAncestors(dag(net), observed.vars) 
+  # }
   
   # intialize partition function
   partitionFuncMean <- 0
