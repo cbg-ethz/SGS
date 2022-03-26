@@ -17,3 +17,23 @@ marginal probability
 \description{
 Outputs the the marginal probability
 }
+\examples{
+\dontrun{
+# create random BN and label variables 
+set.seed(6)
+myBayesNet <- randomBN(3)
+myBayesNet@variables <- c("rain", "sprinkler", "wet grass")
+plot(myBayesNet)
+
+# what's the probability of having rain?
+# define observed variables and calculate marginal probability
+myObserved <- list(observed.vars=c("rain"), observed.vals=c(2))
+exactInference(myBayesNet,myObserved)
+
+# what's the probability of having rain and wet grass at the same time?
+# define observed variables and calculate marginal probability
+myObserved <- list(observed.vars=c("rain", "wet grass"), observed.vals=c(2,2))
+exactInference(myBayesNet,myObserved)
+}
+
+}

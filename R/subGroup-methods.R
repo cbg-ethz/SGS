@@ -111,7 +111,7 @@ get.allSubGroups <- function(DAG, evidenceNodes, visualize = FALSE){
   
   # check if subgroups are available
   if(length(setdiff(relevantNodes, evidenceNodes))==0){
-    print("No sampling required as the evidence nodes have no parents.")
+    # print("No sampling required as the evidence nodes have no parents.")
     
     allSubGroups <- list(numeric(0))
     allEvidenceSubGroups <- list(evidenceNodes)
@@ -754,9 +754,37 @@ randomObs <- function(N_nodes,N_obs){
 #' @param BayesNet Bayesian network of type bn.fit
 #' @param obs observation
 #' @return marginal probability
+#' 
+#' @examples
+#' \dontrun{
+#' # create random BN and label variables 
+#' set.seed(6)
+#' myBayesNet <- randomBN(3)
+#' myBayesNet@variables <- c("rain", "sprinkler", "wet grass")
+#' plot(myBayesNet)
+#' 
+#' # what's the probability of having rain?
+#' # define observed variables and calculate marginal probability
+#' myObserved <- list(observed.vars=c("rain"), observed.vals=c(2))
+#' exactInference(myBayesNet,myObserved)
+#' 
+#' # what's the probability of having rain and wet grass at the same time?
+#' # define observed variables and calculate marginal probability
+#' myObserved <- list(observed.vars=c("rain", "wet grass"), observed.vals=c(2,2))
+#' exactInference(myBayesNet,myObserved)
+#' }
+#' 
 #' @export
 exactInference <- function(BayesNet, obs)
 {
+  # check input format
+  if(!length(obs[[1]])==length(obs[[2]])) stop("Length of observed.vars does not match length of observed.vals. Please correct.")
+  if (is.character(obs[[1]])){
+    obs[[1]] <- match(obs[[1]], BayesNet@variables)
+  }
+  # convert variable names to numbers for easier processing
+  BayesNet@variables <- as.character(c(1:length(BayesNet@variables)))
+  
   # belief propagation by sub groups
   evidenceNodes <- obs[[1]]
   subGroups <- get.allSubGroups(dag(BayesNet), evidenceNodes)

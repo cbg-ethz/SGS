@@ -132,7 +132,7 @@ benchmark <- function(BayesNet = NULL, obs = NULL, methods = c("FS","GS", "SGS")
     
     # perform sampling
     start_time <- Sys.time() # measure computation time
-    sampleResults[[b0]] <- sample.normConst(BayesNet, obs, s_method = methods[b0], N_samples = N_samplesTemp)
+    sampleResults[[b0]] <- approxInference(BayesNet, obs, s_method = methods[b0], N_samples = N_samplesTemp, returnList=TRUE)
     end_time <- Sys.time()
     elapsed_time <- end_time - start_time
     sampleResults[[b0]]$elapsed_time <- elapsed_time
@@ -188,7 +188,7 @@ benchmark <- function(BayesNet = NULL, obs = NULL, methods = c("FS","GS", "SGS")
 #     
 #     # perform sampling
 #     start_time <- Sys.time() # measure computation time
-#     sampleResults[[b0]] <- sample.normConst(BayesNet, obs, s_method = methods[b0], N_samples = N_samplesTemp)
+#     sampleResults[[b0]] <- approxInference(BayesNet, obs, s_method = methods[b0], N_samples = N_samplesTemp, returnList=TRUE)
 #     end_time <- Sys.time()
 #     elapsed_time <- end_time - start_time
 #     sampleResults[[b0]]$elapsed_time <- elapsed_time
@@ -244,7 +244,7 @@ benchmarkStudy <- function(BayesNet = NULL, obs = NULL, methods = c("FS","GS", "
     
     # perform sampling
     start_time <- Sys.time() # measure computation time
-    sampleResults[[b0]] <- sample.normConst(BayesNet, obs, s_method = methods[b0], N_samples = N_samplesTemp)
+    sampleResults[[b0]] <- approxInference(BayesNet, obs, s_method = methods[b0], N_samples = N_samplesTemp, returnList=TRUE)
     end_time <- Sys.time()
     elapsed_time <- end_time - start_time
     sampleResults[[b0]]$elapsed_time <- elapsed_time

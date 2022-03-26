@@ -8,18 +8,32 @@
 #' @param N_samples Number of samples
 #' @param relevantSubNet Whether to consider the relevant subnet
 #' @param plot If TRUE, plot results
+#' @param returnList If TRUE, return detailed list of intermediate results
 #' @return Normalizing constant and vector of intermediate results
 #' @export
 #' @importFrom utils head
-sample.normConst <- function(BayesNet, obs, s_method = "SGS", N_samples = 100, relevantSubNet = FALSE, plot = TRUE)
+approxInference <- function(BayesNet, obs, s_method = "SGS", N_samples = 100, relevantSubNet = FALSE, plot = TRUE, returnList=FALSE)
 { 
   # Importance sampling in Bayesian networks given the evidence
   # Returned is the normalzing constant
   
+  # check input format
+  if(!length(obs[[1]])==length(obs[[2]])) stop("Length of observed.vars does not match length of observed.vals. Please correct.")
+  if (is.character(obs[[1]])){
+    obs[[1]] <- match(obs[[1]], BayesNet@variables)
+  }
+  # convert variable names to numbers for easier processing
+  BayesNet@variables <- as.character(c(1:length(BayesNet@variables)))
+  
   # sub group sampling
   if(s_method=="SGS"){
     results <- sample.subGroupSampling(BayesNet, obs, N_samples = N_samples, plot = plot)
-    return(results)
+    
+    if(returnList){
+      return(results)
+    }else{
+      return(results$NormConst)
+    }
   }
   
   # Compute the updated Bayesian network using BP 
@@ -189,7 +203,11 @@ sample.normConst <- function(BayesNet, obs, s_method = "SGS", N_samples = 100, r
     #plot(1:N_samples, partitionFunc, type="l", col="blue", main="Parition Function", xlab="Sampling Step", ylab="Normalizing Constant")
   }
   
-  return(results)
+  if(returnList){
+    return(results)
+  }else{
+    return(results$NormConst)
+  }
   
 }
 

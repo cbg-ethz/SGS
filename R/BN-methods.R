@@ -585,7 +585,7 @@ print.BN <- function(x, ...)
 #' @importFrom graphics plot
 #' @importFrom grDevices colors dev.off postscript
 #' 
-#' @name plot
+##' @name plot
 #' @aliases plot,BN plot.BN,BN
 #' @rdname plot
 #' @export
