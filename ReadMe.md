@@ -21,9 +21,9 @@ install_github("cbg-ethz/SubGroupSeparation")
 ```
 
 `SubGroupSeparation` requires R `>= 3.5`, and depends on
-`bitops`, `igraph`, `Matrix`, `graph` and
-`methods`. Package `Rgraphviz` is requested in
-order to plot graphs, but is not mandatory.
+`bitops` and
+`methods`. Other packages are requested in
+order to plot graphs, but are not mandatory.
 
 Reference
 ---------
