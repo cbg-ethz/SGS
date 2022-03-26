@@ -5,6 +5,8 @@ Efficient Exact and Approximate Inference in Bayesian Networks
 
 <img src="https://github.com/cbg-ethz/SubGroupSeparation/blob/main/vignettes/figures/illustration.png" width="1028"/>
 
+![](https://github.com/cbg-ethz/SubGroupSeparation/blob/main/vignettes/figures/illustration.png?raw=true)
+
 Installation
 -----------
 
