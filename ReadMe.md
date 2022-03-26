@@ -15,7 +15,6 @@ tool from an R session:
 
 ```{r eval=FALSE}
 library("devtools")
-Sys.setenv("R_REMOTES_NO_ERRORS_FROM_WARNINGS" = "true")
 install_github("cbg-ethz/SubGroupSeparation")
 ```
 
