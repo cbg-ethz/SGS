@@ -3,7 +3,7 @@ Efficient Exact and Approximate Inference in Bayesian Networks
 
 `SubGroupSeparation` is an R package for marginalization in Bayesian networks. It allows for efficient exact and approximate inference that works both in low- and high-dimensional settings. As illustrated below, efficient marginalization is reached by splitting the calculation into sub-calculations of lower dimensionality.
 
-![SGS](https://github.com/cbg-ethz/SubGroupSeparation/blob/master/vignettes/figures/illustration.png?raw=true)
+%![SGS](https://github.com/cbg-ethz/SubGroupSeparation/blob/master/vignettes/figures/illustration.png?raw=true)
 
 Installation
 -----------
@@ -25,12 +25,6 @@ install_github("cbg-ethz/SubGroupSeparation")
 `methods`. Other packages are requested in
 order to plot graphs, but are not mandatory.
 
-Reference
----------
-If you use `SubGroupSeparation` in your work, please cite it as:
-```
-Fritz M. Bayer, Giusi Moffa, Niko Beerenwinkel, Jack Kuipers. "Marginalization in Bayesian Networks: Integrating Exact and Approximate Inference" arXiv preprint, 2021
-```
 
 Demonstration 
 -------------
@@ -48,5 +42,12 @@ plot(myBayesNet)
 # define observed variables and calculate marginal probability
 myObserved <- list(observed.vars=c("rain", "wet grass"), observed.vals=c(2,2))
 exactInference(myBayesNet,myObserved)
-
 ```
+
+Reference
+---------
+If you use `SubGroupSeparation` in your work, please cite it as:
+```
+Fritz M. Bayer, Giusi Moffa, Niko Beerenwinkel, Jack Kuipers. "Marginalization in Bayesian Networks: Integrating Exact and Approximate Inference" arXiv preprint, 2021
+```
+
