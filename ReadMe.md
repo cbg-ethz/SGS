@@ -31,3 +31,23 @@ If you use `SubGroupSeparation` in your work, please cite it as:
 ```
 Fritz M. Bayer, Giusi Moffa, Niko Beerenwinkel, Jack Kuipers. "Marginalization in Bayesian Networks: Integrating Exact and Approximate Inference" arXiv preprint, 2021
 ```
+
+Demonstration 
+-------------
+
+```{r eval=FALSE}
+library(SubGroupSeparation)
+library(reshape2)
+
+# create BN and label variables 
+set.seed(6)
+myBayesNet <- randomBN(3)
+myBayesNet@variables <- c("rain", "sprinkler", "wet grass")
+plot(myBayesNet)
+
+# what's the probability of having rain and wet grass at the same time?
+# define observed variables and calculate marginal probability
+myObserved <- list(observed.vars=c("rain", "wet grass"), observed.vals=c(2,2))
+exactInference(myBayesNet,myObserved)
+
+```
