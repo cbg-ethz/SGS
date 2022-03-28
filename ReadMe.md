@@ -37,7 +37,6 @@ Demonstration
 
 ```{r eval=FALSE}
 library(SubGroupSeparation)
-library(reshape2)
 
 # create BN and label variables 
 set.seed(6)
