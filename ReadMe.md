@@ -26,8 +26,8 @@ install_github("cbg-ethz/SubGroupSeparation")
 order to plot graphs, but are not mandatory.
 
 
-Demonstration 
--------------
+Example 
+-------
 
 ```{r eval=FALSE}
 library(SubGroupSeparation)
