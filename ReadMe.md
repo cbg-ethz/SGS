@@ -38,6 +38,6 @@ exactInference(myBayesNet,myObserved)
 Benchmark Results 
 -------
 
-To assess the performance of our SGS method, we benchmarked it against standard inference schemes (Gibbs sampling and loopy belief propagation) over a broad range of different Bayesian networks. To investigate structural dependencies, we simulated Bayesian networks of different dimensions, graph types, network densities, category sizes and fractions of evidence variables. The normalized root mean squared error (NRMSE) was used for comparing the accuracy of each method.
+We benchmarked the performance of our SGS method against standard inference schemes (Gibbs sampling and loopy belief propagation) over a broad range of different Bayesian networks. The results are summarized in the Figure below (lower is better), displaying the normalized root mean squared error (NRMSE).
 
 # ![SGS](https://github.com/cbg-ethz/SubGroupSeparation/blob/master/vignettes/figures/benchmark.png)
