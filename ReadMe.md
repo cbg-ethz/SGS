@@ -1,4 +1,4 @@
-Marginalization in Bayesian Networks: Integrating Exact and Approximate Inference
+Efficient Exact and Approximate Inference in Bayesian Networks
 -----------
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
@@ -10,6 +10,14 @@ Installation
 In order to install the package, it suffices to launch
 `R CMD INSTALL path/to/SubGroupSeparation`
 from a terminal, or `make install` from within the package source folder.
+
+Being hosted on GitHub, it is possible to use the `install_github`
+tool from an R session:
+
+```{r eval=FALSE}
+library("devtools")
+install_github("cbg-ethz/SubGroupSeparation")
+```
 
 `SubGroupSeparation` requires R `>= 3.5`, and depends on
 `bitops` and
@@ -41,3 +49,10 @@ Benchmark Results
 We benchmarked the performance of our SGS method against standard inference schemes (Gibbs sampling and loopy belief propagation) over a broad range of different Bayesian networks. The results are summarized in the Figure below (lower is better), displaying the normalized root mean squared error (NRMSE).
 
 # ![SGS](https://github.com/cbg-ethz/SubGroupSeparation/blob/master/vignettes/figures/benchmark.png)
+
+Reference
+---------
+If you use `SubGroupSeparation` in your work, please cite it as:
+```
+Fritz M. Bayer, Giusi Moffa, Niko Beerenwinkel, Jack Kuipers. "Marginalization in Bayesian Networks: Integrating Exact and Approximate Inference" arXiv preprint, 2021
+```
