@@ -38,4 +38,4 @@ exactInference(myBayesNet,myObserved)
 Benchmark Results 
 -------
 
-# ![benchmark](https://github.com/cbg-ethz/SubGroupSeparation/blob/master/vignettes/figures/summary.pdf)
+# ![SGS](https://github.com/cbg-ethz/SubGroupSeparation/blob/master/vignettes/figures/benchmark.png?raw=true)
