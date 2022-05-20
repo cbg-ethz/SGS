@@ -607,7 +607,21 @@ plot.BNwithSubGroups <- function(myBN, myObs, visualizeAll=FALSE){
   }
 }
 
-
+#' Benchmark Inference Methods
+#'
+#' Outputs benchmark results of different inference methods
+#'
+#' @param N_var number of variables
+#' @param N_Obs number of observations
+#' @param N_nets number of Bayes nets
+#' @param N_rep number of repetitions
+#' @param N_samples number of samples
+#' @param samplingMethods benchmarked sampling methods
+#' @param DAGmethod DAG method
+#' @param N_neighbours number of neighbours
+#' @param nodeDim category size
+#' @return benchmark results
+#' @export
 benchmarkMultipleNets <- function(N_var, N_Obs, N_nets, N_rep, N_samples=100, samplingMethods=c("GS","SGS", "LBP"),DAGmethod="er", N_neighbours=2, nodeDim=2){
   
   # benchmark multiple Bayes nets of same size
