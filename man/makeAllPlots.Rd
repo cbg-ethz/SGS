@@ -13,7 +13,9 @@ makeAllPlots(
   labelHead = c("1", "2", "3", "4"),
   fileName = "Test",
   width = 7,
-  height = 4.1
+  height = 4.1,
+  niceBoxPlot = FALSE,
+  retP = FALSE
 )
 }
 \arguments{
@@ -32,6 +34,10 @@ makeAllPlots(
 \item{width}{figure width}
 
 \item{height}{figure height}
+
+\item{niceBoxPlot}{if TRUE, only a fraction of points (150) are plotted in boxplot}
+
+\item{retP}{if TRUE, a plot is returned for summary plot, otherwise no ruturn}
 }
 \value{
 plot of benchmark results

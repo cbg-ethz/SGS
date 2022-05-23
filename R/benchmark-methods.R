@@ -809,6 +809,8 @@ ProcessResultTableNRMSE <- function(myResultTable, returnResults=FALSE){
 #' @param fileName file name
 #' @param width figure width
 #' @param height figure height
+#' @param niceBoxPlot if TRUE, only a fraction of points (150) are plotted in boxplot
+#' @param retP if TRUE, a plot is returned for summary plot, otherwise no ruturn
 #' @return plot of benchmark results
 #' 
 #' @import ggplot2
@@ -818,10 +820,8 @@ ProcessResultTableNRMSE <- function(myResultTable, returnResults=FALSE){
 #' @importFrom utils tail
 #' 
 #' @export
-makeAllPlots <- function(resultTable1,resultTable2,resultTable3, resultTable4, labelBP = c("1","2","3","4"), labelHead = c("1","2","3","4"), fileName = "Test", width = 7, height = 4.1){
+makeAllPlots <- function(resultTable1,resultTable2,resultTable3, resultTable4, labelBP = c("1","2","3","4"), labelHead = c("1","2","3","4"), fileName = "Test", width = 7, height = 4.1, niceBoxPlot=FALSE, retP=FALSE){
   # function to create the final plots from the benchmark studies
-  
-  dimBN=BoxPlotResNRMS=Method=NRMSE=countsS=group=NULL
   
   ## FinalPlots:
   restuls1 <- ProcessResultTableNRMSE(resultTable1, returnResults = TRUE)
@@ -846,42 +846,60 @@ makeAllPlots <- function(resultTable1,resultTable2,resultTable3, resultTable4, l
   # change LBP name for plotting
   resAllDims2$Method[resAllDims2$Method=="LBP"] <- "LBP-IS"
   
-  # create subset of data for plotting with "geom_jitter"
+  # # create subset of data for plotting with "geom_jitter"
   numb_points <- 150
-
-  dftest1 = resAllDims2[resAllDims2$Method=="LBP-IS"&resAllDims2$dimBN==50,][1:numb_points,]
-  dftest2 = resAllDims2[resAllDims2$Method=="SGS"&resAllDims2$dimBN==50,][1:numb_points,]
-  dftest3 = resAllDims2[resAllDims2$Method=="GS"&resAllDims2$dimBN==50,][1:numb_points,]
-  resAllDims2_subset1 <- merge(merge(dftest1,dftest2,  all = TRUE),dftest3,  all = TRUE)
-
-  dftest1 = resAllDims2[resAllDims2$Method=="LBP-IS"&resAllDims2$dimBN==100,][1:numb_points,]
-  dftest2 = resAllDims2[resAllDims2$Method=="SGS"&resAllDims2$dimBN==100,][1:numb_points,]
-  dftest3 = resAllDims2[resAllDims2$Method=="GS"&resAllDims2$dimBN==100,][1:numb_points,]
-  resAllDims2_subset2 <- merge(merge(dftest1,dftest2,  all = TRUE),dftest3,  all = TRUE)
-
-  dftest1 = resAllDims2[resAllDims2$Method=="LBP-IS"&resAllDims2$dimBN==150,][1:numb_points,]
-  dftest2 = resAllDims2[resAllDims2$Method=="SGS"&resAllDims2$dimBN==150,][1:numb_points,]
-  dftest3 = resAllDims2[resAllDims2$Method=="GS"&resAllDims2$dimBN==150,][1:numb_points,]
-  resAllDims2_subset3 <- merge(merge(dftest1,dftest2,  all = TRUE),dftest3,  all = TRUE)
-
-  dftest1 = resAllDims2[resAllDims2$Method=="LBP-IS"&resAllDims2$dimBN==200,][1:numb_points,]
-  dftest2 = resAllDims2[resAllDims2$Method=="SGS"&resAllDims2$dimBN==200,][1:numb_points,]
-  dftest3 = resAllDims2[resAllDims2$Method=="GS"&resAllDims2$dimBN==200,][1:numb_points,]
-  resAllDims2_subset4 <- merge(merge(dftest1,dftest2,  all = TRUE),dftest3,  all = TRUE)
-
-  resAllDims2_subset <- merge(merge(merge(resAllDims2_subset1,resAllDims2_subset2, all = TRUE),resAllDims2_subset3,all = TRUE), resAllDims2_subset4,  all = TRUE)
+  
+  if (niceBoxPlot==TRUE){
+    dftest1 = resAllDims2[resAllDims2$Method=="LBP-IS"&resAllDims2$dimBN==labelBP[1],][1:numb_points,]
+    dftest2 = resAllDims2[resAllDims2$Method=="SGS"&resAllDims2$dimBN==labelBP[1],][1:numb_points,]
+    dftest3 = resAllDims2[resAllDims2$Method=="GS"&resAllDims2$dimBN==labelBP[1],][1:numb_points,]
+    resAllDims2_subset1 <- merge(merge(dftest1,dftest2,  all = TRUE),dftest3,  all = TRUE)
+    
+    dftest1 = resAllDims2[resAllDims2$Method=="LBP-IS"&resAllDims2$dimBN==labelBP[2],][1:numb_points,]
+    dftest2 = resAllDims2[resAllDims2$Method=="SGS"&resAllDims2$dimBN==labelBP[2],][1:numb_points,]
+    dftest3 = resAllDims2[resAllDims2$Method=="GS"&resAllDims2$dimBN==labelBP[2],][1:numb_points,]
+    resAllDims2_subset2 <- merge(merge(dftest1,dftest2,  all = TRUE),dftest3,  all = TRUE)
+    
+    dftest1 = resAllDims2[resAllDims2$Method=="LBP-IS"&resAllDims2$dimBN==labelBP[3],][1:numb_points,]
+    dftest2 = resAllDims2[resAllDims2$Method=="SGS"&resAllDims2$dimBN==labelBP[3],][1:numb_points,]
+    dftest3 = resAllDims2[resAllDims2$Method=="GS"&resAllDims2$dimBN==labelBP[3],][1:numb_points,]
+    resAllDims2_subset3 <- merge(merge(dftest1,dftest2,  all = TRUE),dftest3,  all = TRUE)
+    
+    dftest1 = resAllDims2[resAllDims2$Method=="LBP-IS"&resAllDims2$dimBN==labelBP[4],][1:numb_points,]
+    dftest2 = resAllDims2[resAllDims2$Method=="SGS"&resAllDims2$dimBN==labelBP[4],][1:numb_points,]
+    dftest3 = resAllDims2[resAllDims2$Method=="GS"&resAllDims2$dimBN==labelBP[4],][1:numb_points,]
+    resAllDims2_subset4 <- merge(merge(dftest1,dftest2,  all = TRUE),dftest3,  all = TRUE)
+    
+    resAllDims2_subset <- merge(merge(merge(resAllDims2_subset1,resAllDims2_subset2, all = TRUE),resAllDims2_subset3,all = TRUE), resAllDims2_subset4,  all = TRUE)
+  }
   
   dodge <- position_dodge(width = 0.4)
   
-  # make a boxplot of the results
-  p1 <- ggplot(data=resAllDims2, aes(x=factor(dimBN, levels = c(labelBP[1],labelBP[2],labelBP[3],labelBP[4])), y=BoxPlotResNRMS, fill=Method, colour=Method)) + 
-    geom_boxplot(outlier.shape = NA) + ## THIS IS FOR JITTER, otherwise geom_boxplot()+
-    # geom_jitter(position=position_jitter(0.42), cex=0.4, data=resAllDims2_subset, position = dodge)+
-    geom_point(pch = 21,data=resAllDims2_subset, position = position_jitterdodge(0.12),cex=0.4)+ ## THIS IS FOR JITTER
-    scale_colour_manual(values=color_list[c(1,2,4)])+
-    scale_fill_manual(values=c("white","white","white"))+
-    labs(y = "NRMSE", x="Dimensions")+
-    ylim(0,1.5)
+  if(niceBoxPlot==TRUE){
+    # make a boxplot of the results
+    p1 <- ggplot(data=resAllDims2, aes(x=factor(dimBN, level = c(labelBP[1],labelBP[2],labelBP[3],labelBP[4])), y=BoxPlotResNRMS, fill=Method, colour=Method), alpha = 0.3) + 
+      geom_boxplot(outlier.shape = NA, alpha = 0.3) + ## THIS IS FOR JITTER, otherwise geom_boxplot()+
+      # geom_jitter(position=position_jitter(0.42), cex=0.4, data=resAllDims2_subset, position = dodge)+
+      geom_point(pch = 21,data=resAllDims2_subset, position = position_jitterdodge(0.15),cex=0.4, alpha = 0.3)+ ## THIS IS FOR JITTER
+      scale_colour_manual(values=color_list[c(1,3,4)])+
+      scale_fill_manual(values=color_list[c(1,3,4)])+ # values=c("white","white","white"))+
+      labs(y = "NRMSE", x="Dimensions")+
+      ylim(0,1.5)+
+      theme_minimal()+
+      theme(legend.position = "bottom")
+  }else{
+    # make a boxplot of the results
+    p1 <- ggplot(data=resAllDims2, aes(x=factor(dimBN, level = c(labelBP[1],labelBP[2],labelBP[3],labelBP[4])), y=BoxPlotResNRMS, fill=Method, colour=Method), alpha = 0.3) + 
+      geom_boxplot(outlier.shape = NA, alpha = 0.3) + ## THIS IS FOR JITTER, otherwise geom_boxplot()+
+      # geom_jitter(position=position_jitter(0.42), cex=0.4, data=resAllDims2_subset, position = dodge)+
+      geom_point(pch = 21,data=resAllDims2, position = position_jitterdodge(0.15),cex=0.4, alpha = 0.3)+ ## THIS IS FOR JITTER
+      scale_colour_manual(values=color_list[c(1,3,4)])+
+      scale_fill_manual(values=color_list[c(1,3,4)])+ # values=c("white","white","white"))+
+      labs(y = "NRMSE", x="Dimensions")+
+      ylim(0,1.5)+
+      theme_minimal()+
+      theme(legend.position = "bottom")
+  }
   
   print(p1)
   
@@ -890,39 +908,43 @@ makeAllPlots <- function(resultTable1,resultTable2,resultTable3, resultTable4, l
   plotData <- plotData[!plotData$Method=='FS',]
   plotData$Method[plotData$Method=="LBP"] <- "LBP-IS"
   
-  minLims <- min(c(utils::tail(plotData$countsS[plotData$Method=="LBP-IS"],1),utils::tail(plotData$countsS[plotData$Method=="GS"],1), utils::tail(plotData$countsS[plotData$Method=="SGS"],1)))
+  minLims <- min(c(tail(plotData$countsS[plotData$Method=="LBP-IS"],1),tail(plotData$countsS[plotData$Method=="GS"],1), tail(plotData$countsS[plotData$Method=="SGS"],1)))
   
   p2 <- ggplot(data=plotData, aes(y = NRMSE, x = countsS, group=group))+
     geom_line(aes(y = NRMSE, x = countsS,colour=Method)) + 
-    scale_colour_manual(values=color_list[c(1,2,4)]) +
+    scale_colour_manual(values=color_list[c(1,3,4)]) +
     lims(x=c(0,minLims))+
     # guides(fill = FALSE) +
     # guides(col = FALSE) +
     xlab("Elapsed Time") + 
+    theme_minimal()+
+    theme(legend.direction = "horizontal")+
     ylab("NRMSE") # + xlim(-0.01, 0.2)  + ylim(-0.1e-11, 0.75e-11)
   
   print(p2)
   
   p2s <- ggplot(data=plotData, aes(y = NRMSE, x = countsS, group=group))+
     geom_line(aes(y = NRMSE*sqrt(countsS), x = countsS,colour=Method)) +
-    scale_colour_manual(values=color_list[c(1,2,4)]) +
+    scale_colour_manual(values=color_list[c(1,3,4)]) +
     lims(x=c(0,minLims))+
     # guides(fill = FALSE) +
     # guides(col = FALSE) +
     xlab("Elapsed Time") +
+    theme_minimal()+
     ylab(expression(NRMSE*sqrt(t))) # + xlim(-0.01, 0.2)  + ylim(-0.1e-11, 0.75e-11)
   
   print(p2s)
   
   p2ss <- ggplot(data=plotData, aes(y = NRMSE, x = countsS, group=group))+
     geom_line(aes(y = log(NRMSE), x = log(countsS),colour=Method)) +
-    scale_colour_manual(values=color_list[c(1,2,4)]) +
+    scale_colour_manual(values=color_list[c(1,3,4)]) +
     # lims(x=c(0,minLims))+
     # guides(fill = FALSE) +
     # guides(col = FALSE) +
     # scale_x_continuous(trans='log2') +
     # scale_y_continuous(trans='log2') +
     xlab("log(Elapsed Time)") +
+    theme_minimal()+
     ylab("log(NRMSE)") # + xlim(-0.01, 0.2)  + ylim(-0.1e-11, 0.75e-11)
   
   print(p2ss)
@@ -932,39 +954,42 @@ makeAllPlots <- function(resultTable1,resultTable2,resultTable3, resultTable4, l
   plotData <- plotData[!plotData$Method=='FS',]
   plotData$Method[plotData$Method=="LBP"] <- "LBP-IS"
   
-  minLims <- min(c(utils::tail(plotData$countsS[plotData$Method=="LBP-IS"],1),utils::tail(plotData$countsS[plotData$Method=="GS"],1), utils::tail(plotData$countsS[plotData$Method=="SGS"],1)))
+  minLims <- min(c(tail(plotData$countsS[plotData$Method=="LBP-IS"],1),tail(plotData$countsS[plotData$Method=="GS"],1), tail(plotData$countsS[plotData$Method=="SGS"],1)))
   
   p3 <- ggplot(data=plotData, aes(y = NRMSE, x = countsS, group=group))+
     geom_line(aes(y = NRMSE, x = countsS,colour=Method)) + 
-    scale_colour_manual(values=color_list[c(1,2,4)]) +
+    scale_colour_manual(values=color_list[c(1,3,4)]) +
     lims(x=c(0,minLims))+
     # guides(fill = FALSE) +
     # guides(col = FALSE) +
     xlab("Elapsed Time") + 
+    theme_minimal()+
     ylab("NRMSE") # + xlim(-0.01, 0.2)  + ylim(-0.1e-11, 0.75e-11)
   
   print(p3)
   
   p3s <- ggplot(data=plotData, aes(y = NRMSE*sqrt(countsS), x = countsS, group=group))+
     geom_line(aes(y = NRMSE*sqrt(countsS), x = countsS,colour=Method)) +
-    scale_colour_manual(values=color_list[c(1,2,4)]) +
+    scale_colour_manual(values=color_list[c(1,3,4)]) +
     lims(x=c(0,minLims))+
     # guides(fill = FALSE) +
     # guides(col = FALSE) +
     xlab("Elapsed Time") +
+    theme_minimal()+
     ylab(expression(NRMSE*sqrt(t))) # + xlim(-0.01, 0.2)  + ylim(-0.1e-11, 0.75e-11)
   
   print(p3s)
   
   p3ss <- ggplot(data=plotData, aes(y = NRMSE, x = countsS, group=group))+
     geom_line(aes(y = log(NRMSE), x = log(countsS),colour=Method)) +
-    scale_colour_manual(values=color_list[c(1,2,4)]) +
+    scale_colour_manual(values=color_list[c(1,3,4)]) +
     # lims(x=c(0,minLims))+
     # guides(fill = FALSE) +
     # guides(col = FALSE) +
     # scale_x_continuous(trans='log2') +
     # scale_y_continuous(trans='log2') +
     xlab("log(Elapsed Time)") +
+    theme_minimal()+
     ylab("log(NRMSE)") # + xlim(-0.01, 0.2)  + ylim(-0.1e-11, 0.75e-11)
   
   print(p3ss)
@@ -974,39 +999,42 @@ makeAllPlots <- function(resultTable1,resultTable2,resultTable3, resultTable4, l
   plotData <- plotData[!plotData$Method=='FS',]
   plotData$Method[plotData$Method=="LBP"] <- "LBP-IS"
   
-  minLims <- min(c(utils::tail(plotData$countsS[plotData$Method=="LBP-IS"],1),utils::tail(plotData$countsS[plotData$Method=="GS"],1), utils::tail(plotData$countsS[plotData$Method=="SGS"],1)))
+  minLims <- min(c(tail(plotData$countsS[plotData$Method=="LBP-IS"],1),tail(plotData$countsS[plotData$Method=="GS"],1), tail(plotData$countsS[plotData$Method=="SGS"],1)))
   
   p4 <- ggplot(data=plotData, aes(y = NRMSE, x = countsS, group=group))+
     geom_line(aes(y = NRMSE, x = countsS,colour=Method)) + 
-    scale_colour_manual(values=color_list[c(1,2,4)]) +
+    scale_colour_manual(values=color_list[c(1,3,4)]) +
     lims(x=c(0,minLims))+
     # guides(fill = FALSE) +
     # guides(col = FALSE) +
     xlab("Elapsed Time") + 
+    theme_minimal()+
     ylab("NRMSE") # + xlim(-0.01, 0.2)  + ylim(-0.1e-11, 0.75e-11)
   
   print(p4)
   
   p4s <- ggplot(data=plotData, aes(y = NRMSE*sqrt(countsS), x = countsS, group=group))+
     geom_line(aes(y = NRMSE*sqrt(countsS), x = countsS,colour=Method)) +
-    scale_colour_manual(values=color_list[c(1,2,4)]) +
+    scale_colour_manual(values=color_list[c(1,3,4)]) +
     lims(x=c(0,minLims))+
     # guides(fill = FALSE) +
     # guides(col = FALSE) +
     xlab("Elapsed Time") +
+    theme_minimal()+
     ylab(expression(NRMSE*sqrt(t))) # + xlim(-0.01, 0.2)  + ylim(-0.1e-11, 0.75e-11)
   
   print(p4s)
   
   p4ss <- ggplot(data=plotData, aes(y = NRMSE, x = countsS, group=group))+
     geom_line(aes(y = log(NRMSE), x = log(countsS),colour=Method)) +
-    scale_colour_manual(values=color_list[c(1,2,4)]) +
+    scale_colour_manual(values=color_list[c(1,3,4)]) +
     # lims(x=c(0,minLims))+
     # guides(fill = FALSE) +
     # guides(col = FALSE) +
     # scale_x_continuous(trans='log2') +
     # scale_y_continuous(trans='log2') +
     xlab("log(Elapsed Time)") +
+    theme_minimal()+
     ylab("log(NRMSE)") # + xlim(-0.01, 0.2)  + ylim(-0.1e-11, 0.75e-11)
   
   print(p4ss)
@@ -1016,39 +1044,42 @@ makeAllPlots <- function(resultTable1,resultTable2,resultTable3, resultTable4, l
   plotData <- plotData[!plotData$Method=='FS',]
   plotData$Method[plotData$Method=="LBP"] <- "LBP-IS"
   
-  minLims <- min(c(utils::tail(plotData$countsS[plotData$Method=="LBP-IS"],1),utils::tail(plotData$countsS[plotData$Method=="GS"],1), utils::tail(plotData$countsS[plotData$Method=="SGS"],1)))
+  minLims <- min(c(tail(plotData$countsS[plotData$Method=="LBP-IS"],1),tail(plotData$countsS[plotData$Method=="GS"],1), tail(plotData$countsS[plotData$Method=="SGS"],1)))
   
   p5 <- ggplot(data=plotData, aes(y = NRMSE, x = countsS, group=group))+
     geom_line(aes(y = NRMSE, x = countsS,colour=Method)) + 
-    scale_colour_manual(values=color_list[c(1,2,4)]) +
+    scale_colour_manual(values=color_list[c(1,3,4)]) +
     lims(x=c(0,minLims))+
     # guides(fill = FALSE) +
     # guides(col = FALSE) +
     xlab("Elapsed Time") + 
+    theme_minimal()+
     ylab("NRMSE") # + xlim(-0.01, 0.2)  + ylim(-0.1e-11, 0.75e-11)
   
   print(p5)
   
   p5s <- ggplot(data=plotData, aes(y = NRMSE*sqrt(countsS), x = countsS, group=group))+
     geom_line(aes(y = NRMSE*sqrt(countsS), x = countsS,colour=Method)) +
-    scale_colour_manual(values=color_list[c(1,2,4)]) +
+    scale_colour_manual(values=color_list[c(1,3,4)]) +
     lims(x=c(0,minLims))+
     # guides(fill = FALSE) +
     # guides(col = FALSE) +
     xlab("Elapsed Time") +
+    theme_minimal()+
     ylab(expression(NRMSE*sqrt(t))) # + xlim(-0.01, 0.2)  + ylim(-0.1e-11, 0.75e-11)
   
   print(p5s)
   
   p5ss <- ggplot(data=plotData, aes(y = NRMSE, x = countsS, group=group))+
     geom_line(aes(y = log(NRMSE), x = log(countsS),colour=Method)) +
-    scale_colour_manual(values=color_list[c(1,2,4)]) +
+    scale_colour_manual(values=color_list[c(1,3,4)]) +
     # lims(x=c(0,minLims))+
     # guides(fill = FALSE) +
     # guides(col = FALSE) +
     # scale_x_continuous(trans='log2') +
     # scale_y_continuous(trans='log2') +
     xlab("log(Elapsed Time)") +
+    theme_minimal()+
     ylab("log(NRMSE)") # + xlim(-0.01, 0.2)  + ylim(-0.1e-11, 0.75e-11)
   
   print(p5ss)
@@ -1059,15 +1090,20 @@ makeAllPlots <- function(resultTable1,resultTable2,resultTable3, resultTable4, l
   # png("~/Desktop/Figure1.png", width = 10, height = 10, units = 'cm', res = 300)
   # grid.arrange(p1)
   # dev.off()
-  grDevices::cairo_pdf(paste0("~/Desktop/Figure", fileName,"BoxPlot.pdf"), width = width, height = height)
+  cairo_pdf(paste0("~/Desktop/Figure", fileName,"BoxPlot.pdf"), width = width, height = height)
   grid.arrange(p1)
   dev.off()
+  
+  # tikz(paste0("~/Desktop/Figure", fileName,"BoxPlot.tex"), width = width, height = height)
+  # grid.arrange(p1)
+  # dev.off()
   
   p_grid <- grid.arrange(p2+ggtitle(labelHead[1])+theme(legend.position = "none"),p3+ggtitle(labelHead[2])+theme(legend.position = "none"),
                          p4+ggtitle(labelHead[3])+theme(legend.position = "none"),p5+ggtitle(labelHead[4])+theme(legend.position = "none"))
   legend <- cowplot::get_legend(p2)
   
-  p6 <- cowplot::plot_grid(p_grid, legend,ncol = 2, rel_heights = c(1, 1), rel_widths = c(1,0.15))
+  # p6 <- cowplot::plot_grid(p_grid, legend,ncol = 2, rel_heights = c(1, 1), rel_widths = c(1,0.15))
+  p6 <- cowplot::plot_grid(p_grid, legend, nrow = 2, rel_heights = c(1, 0.1), rel_widths = c(1,1))
   
   # plot 6
   # png("~/Desktop/Figure6.png", width = 10, height = 10, units = 'cm', res = 300)
@@ -1077,11 +1113,16 @@ makeAllPlots <- function(resultTable1,resultTable2,resultTable3, resultTable4, l
   grid.arrange(p6)
   dev.off()
   
+  # tikz(paste0("~/Desktop/Figure", fileName,".tex"), width = width, height = height)
+  # grid.arrange(p6)
+  # dev.off()
+  
   p_grids <- grid.arrange(p2s+ggtitle(labelHead[1])+theme(legend.position = "none"),p3s+ggtitle(labelHead[2])+theme(legend.position = "none"),
                           p4s+ggtitle(labelHead[3])+theme(legend.position = "none"),p5s+ggtitle(labelHead[4])+theme(legend.position = "none"))
   legend <- cowplot::get_legend(p2)
   
-  p6s <- cowplot::plot_grid(p_grids, legend,ncol = 2, rel_heights = c(1, 1), rel_widths = c(1,0.15))
+  # p6s <- cowplot::plot_grid(p_grids, legend,ncol = 2, rel_heights = c(1, 1), rel_widths = c(1,0.15))
+  p6s <- cowplot::plot_grid(p_grids, legend,nrow = 2, rel_heights = c(1, 0.1), rel_widths = c(1,1))
   
   # plot 6
   # png("~/Desktop/Figure6.png", width = 10, height = 10, units = 'cm', res = 300)
@@ -1090,19 +1131,22 @@ makeAllPlots <- function(resultTable1,resultTable2,resultTable3, resultTable4, l
   cairo_pdf(paste0("~/Desktop/Figure", fileName,"_time.pdf"), width = width, height = height)
   grid.arrange(p6s)
   dev.off()
-
-p_grids <- grid.arrange(p2ss+ggtitle(labelHead[1])+theme(legend.position = "none"),p3ss+ggtitle(labelHead[2])+theme(legend.position = "none"),
-                        p4ss+ggtitle(labelHead[3])+theme(legend.position = "none"),p5ss+ggtitle(labelHead[4])+theme(legend.position = "none"))
-legend <- cowplot::get_legend(p2)
-
-p6ss <- cowplot::plot_grid(p_grids, legend,ncol = 2, rel_heights = c(1, 1), rel_widths = c(1,0.15))
-
-# plot 6
-# png("~/Desktop/Figure6.png", width = 10, height = 10, units = 'cm', res = 300)
-# grid.arrange(p6s)
-# dev.off()
-cairo_pdf(paste0("~/Desktop/Figure", fileName,"_log.pdf"), width = width, height = height)
-grid.arrange(p6ss)
-dev.off()
+  
+  p_grids <- grid.arrange(p2ss+ggtitle(labelHead[1])+theme(legend.position = "none"),p3ss+ggtitle(labelHead[2])+theme(legend.position = "none"),
+                          p4ss+ggtitle(labelHead[3])+theme(legend.position = "none"),p5ss+ggtitle(labelHead[4])+theme(legend.position = "none"))
+  # legend2 <- cowplot::get_legend(p2s)
+  
+  # p6ss <- cowplot::plot_grid(p_grids, legend2,ncol = 2, rel_heights = c(1, 1), rel_widths = c(1,0.15))
+  p6ss <- cowplot::plot_grid(p_grids, legend,nrow = 2, rel_heights = c(1, 0.1), rel_widths = c(1,1))
+  
+  # plot 6
+  # png("~/Desktop/Figure6.png", width = 10, height = 10, units = 'cm', res = 300)
+  # grid.arrange(p6s)
+  # dev.off()
+  cairo_pdf(paste0("~/Desktop/Figure", fileName,"_log.pdf"), width = width, height = height)
+  grid.arrange(p6ss)
+  dev.off()
+  
+  if(retP==TRUE) return(p1)
 }
 
