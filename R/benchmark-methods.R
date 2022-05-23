@@ -797,11 +797,27 @@ ProcessResultTableNRMSE <- function(myResultTable, returnResults=FALSE){
 # }
 
 
+#' Visualize benchmark results
+#'
+#' Outputs plots of benchmark results for different inference methods
+#'
+#' @param resultTable1 result table 1 of function benchmarkMultipleNets()
+#' @param resultTable2 result table 2 of function benchmarkMultipleNets()
+#' @param resultTable3 result table 3 of function benchmarkMultipleNets()
+#' @param resultTable4 result table 4 of function benchmarkMultipleNets()
+#' @param labelBP label
+#' @param fileName file name
+#' @param width figure width
+#' @param height figure height
+#' @return plot of benchmark results
+#' 
 #' @import ggplot2
 #' @importFrom RColorBrewer brewer.pal
 #' @importFrom gridExtra grid.arrange
 #' @importFrom grDevices cairo_pdf
 #' @importFrom utils tail
+#' 
+#' @export
 makeAllPlots <- function(resultTable1,resultTable2,resultTable3, resultTable4, labelBP = c("1","2","3","4"), labelHead = c("1","2","3","4"), fileName = "Test", width = 7, height = 4.1){
   # function to create the final plots from the benchmark studies
   
