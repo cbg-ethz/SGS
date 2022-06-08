@@ -56,6 +56,9 @@ Reference
 ---------
 
 If you find this code useful, please consider citing:
+
+Fritz M. Bayer, Giusi Moffa, Niko Beerenwinkel, Jack Kuipers. [Marginalization in Bayesian Networks: Integrating Exact and Approximate Inference](https://arxiv.org/abs/2112.09217), [arXiv preprint](https://arxiv.org/abs/2112.09217), 2021
+
 ```
 @article{bayer2021marginalization,
   title={Marginalization in Bayesian Networks: Integrating Exact and Approximate Inference},
