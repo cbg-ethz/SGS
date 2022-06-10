@@ -1,5 +1,5 @@
 <div > 
-  <img src="vignettes/figures/sgs_icon.png" width="34%" height="34%">
+  <img src="vignettes/figures/sgs_icon.png" width="40%" height="40%">
 </div>
 
 Inference in Bayesian Networks
