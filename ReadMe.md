@@ -1,4 +1,4 @@
-<div align="center"> 
+<div > 
   <img src="vignettes/figures/sgs_icon.png" width="34%" height="34%">
 </div>
 
