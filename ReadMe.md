@@ -8,7 +8,7 @@ This code is an implementation of the paper [Marginalization in Bayesian Network
 Implemented exact inference methods: 
 - SubGroupSeparation (fastest)
 - Junction-tree algorithm
-- Brute force enumeration
+- Complete enumeration
 
 Implemented approximate inference methods:
 - SubGroupSeparation (highest accuracy)
