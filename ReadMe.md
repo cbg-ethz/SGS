@@ -9,7 +9,7 @@ Inference in Bayesian Networks
 `SubGroupSeparation` is an R package for marginalization in Bayesian networks. It allows for efficient exact and approximate inference that works both in low- and high-dimensional settings. Efficient marginalization is reached by splitting the calculation into sub-calculations of lower dimensionality. 
 This code is an implementation of the paper [Marginalization in Bayesian Networks: Integrating Exact and Approximate Inference](https://arxiv.org/abs/2112.09217), [arXiv preprint](https://arxiv.org/abs/2112.09217).
 
-Implemented exact inference methods: 
+Implemented exact inference methods:
 - SubGroupSeparation (fastest)
 - Junction-tree algorithm
 - Complete enumeration
