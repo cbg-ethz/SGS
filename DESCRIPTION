@@ -26,8 +26,6 @@ Imports:
     pcalg,
     RColorBrewer,
     gridExtra
-Authors@R: c(person("Fritz", "Bayer", role=c("aut","cre"),
-    email="frbayer@ethz.ch"))
 License: GPL-3
 Encoding: UTF-8
 RoxygenNote: 7.1.1

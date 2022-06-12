@@ -114,7 +114,7 @@ learnBN <- function(mydata, bdepar = list(chi = 0.5, edgepf = 2)){
 
 # #' Learn CPTs (taken from Bestie package)
 # #'
-# #' Return the CPTs for a Bayesian network (author Jack Kuipers)
+# #' Return the CPTs for a Bayesian network
 # #'
 # #' @param incidence DAG
 # #' @param dataParams score parameters
@@ -203,7 +203,7 @@ learnBN <- function(mydata, bdepar = list(chi = 0.5, edgepf = 2)){
 # }
 
 # DAGparametersCore <- function(j, parentNodes, param) {
-#   # Taken from Bestie package (author Jack Kuipers)
+#   # Taken from Bestie package
 #   
 #   # this function computes the parameters and their posterior distribution
 #   # for a given node with parent set and for the data
@@ -280,7 +280,7 @@ learnBN <- function(mydata, bdepar = list(chi = 0.5, edgepf = 2)){
 
 # #' @import Bestie
 # collectC <- function(xs, ys, n) {
-#   # Taken from Bestie package (author Jack Kuipers)
+#   # Taken from Bestie package
 #   
 #   .Call('_Bestie_collectC', PACKAGE = 'Bestie', xs, ys, n)
 # }
