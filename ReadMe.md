@@ -41,7 +41,7 @@ install_github("cbg-ethz/SubGroupSeparation")
 order to plot graphs, but are not mandatory.
 
 
-Example 
+Examples
 -------
 
 ```{r eval=FALSE}
@@ -57,6 +57,15 @@ plot(myBayesNet)
 # define observed variables and calculate marginal probability
 myObserved <- list(observed.vars=c("rain", "wet grass"), observed.vals=c(2,2))
 exactInference(myBayesNet,myObserved)
+
+# another example: 
+# let's learn the Bayesian network from the "Asia dataset"
+asia_bn <- learn_bn(Asia)
+plot_bn(asia_bn)
+
+# now we can do the inference on the learned Bayesian network
+myObserved <- list(observed.vars=c("X", "D"), observed.vals=c(1,1))
+exactInference(asia_bn, myObserved)
 ```
 
 Benchmark Results 
