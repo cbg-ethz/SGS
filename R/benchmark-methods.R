@@ -556,7 +556,7 @@ plot.BNwithObs <- function(myBN, myObs){
   # plot the Bayes net with observations in grey
   nodeCol <- rep('white',num.nodes(myBN))
   nodeCol[myObs$observed.vars] <- rep('grey',length(myObs$observed.vars))
-  
+
   plot.BN(myBN, node.col = nodeCol)
 }
 
@@ -806,6 +806,7 @@ ProcessResultTableNRMSE <- function(myResultTable, returnResults=FALSE){
 #' @param resultTable3 result table 3 of function benchmarkMultipleNets()
 #' @param resultTable4 result table 4 of function benchmarkMultipleNets()
 #' @param labelBP label
+#' @param labelHead label head
 #' @param fileName file name
 #' @param width figure width
 #' @param height figure height
@@ -820,8 +821,10 @@ ProcessResultTableNRMSE <- function(myResultTable, returnResults=FALSE){
 #' @importFrom utils tail
 #' 
 #' @export
-makeAllPlots <- function(resultTable1,resultTable2,resultTable3, resultTable4, labelBP = c("1","2","3","4"), labelHead = c("1","2","3","4"), fileName = "Test", width = 7, height = 4.1, niceBoxPlot=FALSE, retP=FALSE){
+makeAllPlots <- function(resultTable1, resultTable2, resultTable3, resultTable4, labelBP = c("1","2","3","4"), labelHead = c("1","2","3","4"), fileName = "Test", width = 7, height = 4.1, niceBoxPlot=FALSE, retP=FALSE){
   # function to create the final plots from the benchmark studies
+  
+  dimBN=BoxPlotResNRMS=Method=NRMSE=countsS=group=NULL
   
   ## FinalPlots:
   restuls1 <- ProcessResultTableNRMSE(resultTable1, returnResults = TRUE)
@@ -877,7 +880,7 @@ makeAllPlots <- function(resultTable1,resultTable2,resultTable3, resultTable4, l
   
   if(niceBoxPlot==TRUE){
     # make a boxplot of the results
-    p1 <- ggplot(data=resAllDims2, aes(x=factor(dimBN, level = c(labelBP[1],labelBP[2],labelBP[3],labelBP[4])), y=BoxPlotResNRMS, fill=Method, colour=Method), alpha = 0.3) + 
+    p1 <- ggplot(data=resAllDims2, aes(x=factor(dimBN, levels = c(labelBP[1],labelBP[2],labelBP[3],labelBP[4])), y=BoxPlotResNRMS, fill=Method, colour=Method), alpha = 0.3) + 
       geom_boxplot(outlier.shape = NA, alpha = 0.3) + ## THIS IS FOR JITTER, otherwise geom_boxplot()+
       # geom_jitter(position=position_jitter(0.42), cex=0.4, data=resAllDims2_subset, position = dodge)+
       geom_point(pch = 21,data=resAllDims2_subset, position = position_jitterdodge(0.15),cex=0.4, alpha = 0.3)+ ## THIS IS FOR JITTER

@@ -29,6 +29,8 @@ makeAllPlots(
 
 \item{labelBP}{label}
 
+\item{labelHead}{label head}
+
 \item{fileName}{file name}
 
 \item{width}{figure width}

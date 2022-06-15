@@ -145,9 +145,29 @@ sample.subGroupSampling <- function(BayesNet, obs, N_samples = 100, plot = TRUE)
   
 }
 
-plot.DAG <- function(DAG){
+#' plot_dag
+#'
+#' plot DAG
+#'
+#' @param DAG DAG
+#' @export
+plot_dag <- function(DAG){
   # plot DAG from matrix
   am.graph<-new("graphAM", adjMat=DAG, edgemode="directed")
+  Rgraphviz::plot(am.graph)
+}
+
+#' plot_bn
+#'
+#' plot DAG
+#'
+#' @param bn bn of type sgs
+#' @export
+plot_bn <- function(bn){
+  # plot DAG from matrix
+  rownames(bn@dag) <- bn@variables
+  colnames(bn@dag) <- bn@variables
+  am.graph<-new("graphAM", adjMat=bn@dag, edgemode="directed")
   Rgraphviz::plot(am.graph)
 }
 

@@ -198,7 +198,7 @@ get.allSubGroups <- function(DAG, evidenceNodes, visualize = FALSE){
       # graphviz.plot(allSubGroups[[jj]], highlight = list(nodes = allEvidenceSubGroups[[jj]], col = "black", fill = "grey"))
       subDAG <- as.matrix(as_adjacency_matrix(induced_subgraph(
         graph_from_adjacency_matrix(DAG,mode="directed"),c(allEvidenceSubGroups[[jj]],allSubGroups[[jj]]))))
-      plot.BN(subDAG)#, highlight = list(nodes = allEvidenceSubGroups[[jj]], col = "black", fill = "grey"))
+      plot_bn(subDAG)#, highlight = list(nodes = allEvidenceSubGroups[[jj]], col = "black", fill = "grey"))
     }
     par(mfrow = c(1,1))
     par(mar=storeMar)

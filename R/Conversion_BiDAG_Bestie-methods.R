@@ -130,9 +130,13 @@ learn_bn <- function(mydata, bdepar = list(chi = 0.5, edgepf = 2)){
   
   learnedDAG <- BiDAG::iterativeMCMC(dataScore)
   
-  DAGaugmented <- Bestie:::DAGparameters(learnedDAG$DAG, dataScore)
+  DAGaugmented <- Bestie::DAGparameters(learnedDAG$DAG, dataScore)
   
   BayesNetSGS <- convertBNBestieToSGS(DAGaugmented)
+  
+  if(!length(colnames(learnedDAG$DAG))==0){
+    BayesNetSGS@variables <- colnames(learnedDAG$DAG)
+  }
   
   return(BayesNetSGS)
 }
