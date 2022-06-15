@@ -1,6 +1,32 @@
-##################
 # transform the CPTs from Bestie to SGS
 
+# #' learn_bn
+# #'
+# #' Outputs the Bayesian network of type SGS from data
+# #'
+# #' @param my_data input data for learning
+# #' @param bdepar hyper-parameters for structure learning
+# #' @return Bayesian network of type SubGroupSeparation
+# #' @export 
+# #' 
+# #' @importFrom BiDAG scoreparameters iterativeMCMC
+# #' @import Bestie
+# learn_bn <- function(my_data, bdepar=list(chi = 0.5, edgepf = 2)){
+#   
+#   #constructing score objects
+#   my_score <- scoreparameters("bde", my_data, bdepar = bdepar)
+#   
+#   #Estimating MAP DAGs
+#   learned_dag <- BiDAG::iterativeMCMC(my_score)
+#   
+#   # get the condtional probability tables (CPTs) of both graphs
+#   dag_augmented <- Bestie::DAGparameters(learned_dag$DAG, my_score)
+#   
+#   # convert Bayes net of Bestie to SGS format
+#   bn_sgs <- convertBNBestieToSGS(dag_augmented)
+#   
+#   return(bn_sgs)
+# }
 
 #' CPTs Conversion Bestie to SGS format
 #'
@@ -87,7 +113,7 @@ convertBNBestieToSGS <- function(DAGaugmented){
   return(tempBN)
 }
 
-#' Learn Bayesian Network
+#' learn_bn
 #'
 #' Outputs the Bayesian network DAG and CPTs
 #'
@@ -98,11 +124,11 @@ convertBNBestieToSGS <- function(DAGaugmented){
 #' 
 #' @importFrom BiDAG scoreparameters iterativeMCMC
 #' @import Bestie
-learnBN <- function(mydata, bdepar = list(chi = 0.5, edgepf = 2)){
+learn_bn <- function(mydata, bdepar = list(chi = 0.5, edgepf = 2)){
   
-  dataScore <- BiDAG::scoreparameters("bde", mydata, bdepar)
+  dataScore <- BiDAG::scoreparameters("bde", mydata, bdepar = bdepar)
   
-  learnedDAG <- BiDAG::iterativeMCMC(dataScore, mergetype = "skeleton", verbose = FALSE)
+  learnedDAG <- BiDAG::iterativeMCMC(dataScore)
   
   DAGaugmented <- Bestie:::DAGparameters(learnedDAG$DAG, dataScore)
   
