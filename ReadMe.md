@@ -7,7 +7,7 @@ Inference in Bayesian Networks
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
 `SubGroupSeparation` is an R package for marginalization in Bayesian networks. It allows for efficient exact and approximate inference that works both in low- and high-dimensional settings. Efficient marginalization is reached by splitting the calculation into sub-calculations of lower dimensionality. 
-This code is an implementation of the paper [Marginalization in Bayesian Networks: Integrating Exact and Approximate Inference](https://arxiv.org/abs/2112.09217), [arXiv preprint](https://arxiv.org/abs/2112.09217).
+This code is an implementation of the paper [High-Dimensional Inference in Bayesian Networks](https://arxiv.org/abs/2112.09217), [arXiv preprint](https://arxiv.org/abs/2112.09217).
 
 Implemented exact inference methods:
 - SubGroupSeparation (fastest)
@@ -71,7 +71,7 @@ exactInference(asia_bn, myObserved)
 Benchmark Results 
 -------
 
-We benchmarked the performance of our SGS method against standard inference schemes (Gibbs sampling and loopy belief propagation) over a broad range of different Bayesian networks. The results are summarized in the Figure below (lower is better), displaying the normalized root mean squared error (NRMSE).
+We benchmarked the performance of our SGS method against standard inference schemes (Gibbs sampling and loopy belief propagation) over a broad range of different Bayesian networks. The results are summarized in the Figure below (lower is better), displaying the normalized root mean squared error (NRMSE). To reproduce the results, run the scripts in the benchmark folder. 
 
 # ![SGS](https://github.com/cbg-ethz/SubGroupSeparation/blob/master/vignettes/figures/benchmark.png)
 
