@@ -567,160 +567,160 @@ print.BN <- function(x, ...)
           }#)
 
 
-#' plot a \code{\link{BN}} as a picture.
-#'
-#' @param x a \code{\link{BN}} object.
-#' @param method either \code{default} of \code{qgraph}. The \code{default} method requires
-#'        the \code{Rgraphviz} package, while \code{qgraph} requires the \code{qgraph} package
-#'        and allows for a greater customization.
-#' @param use.node.names \code{TRUE} if node names have to be printed. If \code{FALSE}, numbers are used instead.
-#' @param node.size.lab font size for the node labels in the default mode.
-#' @param node.col list of (\code{R}) colors for the nodes.
-#' @param plot.wpdag if \code{TRUE} plot the network according to the WPDAG computed using bootstrap instead of the DAG.
-#' @param frac minimum fraction [0,1] of presence of an edge to be plotted (used in case of \code{plot.wpdag=TRUE}).
-#' @param max.weight maximum possible weight of an edge (used in case of \code{plot.wpdag=TRUE}).
-#' @param ... potential further arguments when using \code{method="qgraph"}. Please refer to the
-#'        \code{qgraph} documentation for the parameters available for the \code{qgraph()} method.
-#' 
-#' @importFrom graphics plot
-#' @importFrom grDevices colors dev.off postscript
-#' 
-##' @name plot
-#' @aliases plot,BN plot.BN,BN
-#' @rdname plot
-#' @export
-plot.BN <- function( x, method = "default", use.node.names = TRUE, frac = 0.2, max.weight = max(dag(x)),
-                    node.size.lab=14, node.col = rep('white',num.nodes(x)),
-                    plot.wpdag = FALSE, ...)
-          {
-            
-            # check for required packages
-            if (!requireNamespace("graph", quietly=T))
-              stop("this function requires the graph package.")
-            method <- tolower(method)
-            if (method == "default") {
-                if (!requireNamespace("Rgraphviz", quietly=T))
-                    stop("this function requires the Rgraphviz package.")
-            } else if (method == "qgraph") {
-                if (!requireNamespace("qgraph", quietly=T))
-                    stop("this function requires the qgraph package when using 'method = \"qgraph\"'.") 
-            } else {
-                stop("plotting method not available in SubGroupSeparation. Please use one between 'default' and 'qgraph'.")
-            }
+# #' plot a \code{\link{BN}} as a picture.
+# #'
+# #' @param x a \code{\link{BN}} object.
+# #' @param method either \code{default} of \code{qgraph}. The \code{default} method requires
+# #'        the \code{Rgraphviz} package, while \code{qgraph} requires the \code{qgraph} package
+# #'        and allows for a greater customization.
+# #' @param use.node.names \code{TRUE} if node names have to be printed. If \code{FALSE}, numbers are used instead.
+# #' @param node.size.lab font size for the node labels in the default mode.
+# #' @param node.col list of (\code{R}) colors for the nodes.
+# #' @param plot.wpdag if \code{TRUE} plot the network according to the WPDAG computed using bootstrap instead of the DAG.
+# #' @param frac minimum fraction [0,1] of presence of an edge to be plotted (used in case of \code{plot.wpdag=TRUE}).
+# #' @param max.weight maximum possible weight of an edge (used in case of \code{plot.wpdag=TRUE}).
+# #' @param ... potential further arguments when using \code{method="qgraph"}. Please refer to the
+# #'        \code{qgraph} documentation for the parameters available for the \code{qgraph()} method.
+# #' 
+# #' @importFrom graphics plot
+# #' @importFrom grDevices colors dev.off postscript
+# #' 
+# ##' @name plot
+# #' @aliases plot,BN plot.BN,BN
+# #' @rdname plot
+# #' @export
+# plot.BN <- function( x, method = "default", use.node.names = TRUE, frac = 0.2, max.weight = max(dag(x)),
+#                     node.size.lab=14, node.col = rep('white',num.nodes(x)),
+#                     plot.wpdag = FALSE, ...)
+#           {
+#             
+#             # check for required packages
+#             if (!requireNamespace("graph", quietly=T))
+#               stop("this function requires the graph package.")
+#             method <- tolower(method)
+#             if (method == "default") {
+#                 if (!requireNamespace("Rgraphviz", quietly=T))
+#                     stop("this function requires the Rgraphviz package.")
+#             } else if (method == "qgraph") {
+#                 if (!requireNamespace("qgraph", quietly=T))
+#                     stop("this function requires the qgraph package when using 'method = \"qgraph\"'.") 
+#             } else {
+#                 stop("plotting method not available in SubGroupSeparation. Please use one between 'default' and 'qgraph'.")
+#             }
+# 
+#             
+#             # adjacency matrix
+#             if (plot.wpdag || (!is.element(1,dag(x)) && length(which(wpdag(x) != 0)) > 0))
+#               mat <- wpdag(x)
+#             else
+#               mat <- dag(x)
+#             
+#             if (plot.wpdag || (!is.element(1,dag(x)) && length(which(wpdag(x) != 0)) > 0))
+#             {
+#               if (missing(max.weight))
+#                 max.weight <- max(mat)
+#               if (missing(node.col))
+#                 node.col <- rep('white',ncol(mat))
+#             }
+#             
+#             num.nodes <- num.nodes(x)
+#             variables <- variables(x)
+# 
+#             # if (method == "default") {
+#                 # bngzplot(x, mat, num.nodes, variables, use.node.names,
+#                             # frac, max.weight, node.size.lab, node.col)
+#             # } else {
+#                 plist <- list(...)
+#                 bnqgplot(mat, num.nodes, variables, use.node.names,
+#                             frac, max.weight, node.col, plist)
+#             # }
+# }            
 
-            
-            # adjacency matrix
-            if (plot.wpdag || (!is.element(1,dag(x)) && length(which(wpdag(x) != 0)) > 0))
-              mat <- wpdag(x)
-            else
-              mat <- dag(x)
-            
-            if (plot.wpdag || (!is.element(1,dag(x)) && length(which(wpdag(x) != 0)) > 0))
-            {
-              if (missing(max.weight))
-                max.weight <- max(mat)
-              if (missing(node.col))
-                node.col <- rep('white',ncol(mat))
-            }
-            
-            num.nodes <- num.nodes(x)
-            variables <- variables(x)
+# bngzplot <- function(x, mat, num.nodes, variables, use.node.names, frac, max.weight,
+#                       node.size.lab, node.col) {
+# 
+#             mat.th <- mat
+#             mat.th[mat <  frac*max.weight] <- 0
+#             mat.th[mat >= frac*max.weight] <- 1
+#             
+#             # node names
+#             if (use.node.names && length(variables) > 0)
+#               node.names <- variables
+#             else
+#               node.names <- as.character(1:num.nodes)
+#             # build graph
+#             rownames(mat.th) <- node.names
+#             colnames(mat.th) <- node.names
+# 
+#             # node colors
+#             node.fill <- as.list(node.col)
+#             names(node.fill) <- node.names
+# 
+#             g <- new("graphAM", adjMat=mat.th, edgemode="directed")
+# 
+#             en <- Rgraphviz::edgeNames(g,recipEdges="distinct")
+#             if (sum(mat) == 0) {
+#               g <- Rgraphviz::layoutGraph(g, layoutType="neato")
+#             } else {
+#               g <- Rgraphviz::layoutGraph(g)
+#             }
+# 
+#             # set edge darkness proportional to confidence
+#             conf <- mat.th*pmax(mat,t(mat)) # both values to the maximum for edges with 2 directions
+#             col <- colors()[253-100*(t(conf)[t(conf) >= frac*max.weight]/max.weight)]
+#             if (sum(mat) == 0) {
+#               col <- rep(colors()[1], length(en))
+#             }
+#             names(col) <- en
+#             
+#             # remove arrowheads from undirected edges
+#             ahs <- graph::edgeRenderInfo(g)$arrowhead
+#             ats <- graph::edgeRenderInfo(g)$arrowtail
+#             dirs <- graph::edgeRenderInfo(g)$direction
+#             ahs[dirs=="both"] <- ats[dirs=="both"] <- "none"
+#             graph::edgeRenderInfo(g) <- list(col=col,lwd=2,arrowhead=ahs,arrowtail=ats)
+#             graph::nodeRenderInfo(g) <- list(fill=node.fill, fontsize=node.size.lab)
+# 
+#             Rgraphviz::renderGraph(g)
+# }
 
-            if (method == "default") {
-                bngzplot(x, mat, num.nodes, variables, use.node.names,
-                            frac, max.weight, node.size.lab, node.col)
-            } else {
-                plist <- list(...)
-                bnqgplot(mat, num.nodes, variables, use.node.names,
-                            frac, max.weight, node.col, plist)
-            }
-}            
-
-bngzplot <- function(x, mat, num.nodes, variables, use.node.names, frac, max.weight,
-                      node.size.lab, node.col) {
-
-            mat.th <- mat
-            mat.th[mat <  frac*max.weight] <- 0
-            mat.th[mat >= frac*max.weight] <- 1
-            
-            # node names
-            if (use.node.names && length(variables) > 0)
-              node.names <- variables
-            else
-              node.names <- as.character(1:num.nodes)
-            # build graph
-            rownames(mat.th) <- node.names
-            colnames(mat.th) <- node.names
-
-            # node colors
-            node.fill <- as.list(node.col)
-            names(node.fill) <- node.names
-
-            g <- new("graphAM", adjMat=mat.th, edgemode="directed")
-
-            en <- Rgraphviz::edgeNames(g,recipEdges="distinct")
-            if (sum(mat) == 0) {
-              g <- Rgraphviz::layoutGraph(g, layoutType="neato")
-            } else {
-              g <- Rgraphviz::layoutGraph(g)
-            }
-
-            # set edge darkness proportional to confidence
-            conf <- mat.th*pmax(mat,t(mat)) # both values to the maximum for edges with 2 directions
-            col <- colors()[253-100*(t(conf)[t(conf) >= frac*max.weight]/max.weight)]
-            if (sum(mat) == 0) {
-              col <- rep(colors()[1], length(en))
-            }
-            names(col) <- en
-            
-            # remove arrowheads from undirected edges
-            ahs <- graph::edgeRenderInfo(g)$arrowhead
-            ats <- graph::edgeRenderInfo(g)$arrowtail
-            dirs <- graph::edgeRenderInfo(g)$direction
-            ahs[dirs=="both"] <- ats[dirs=="both"] <- "none"
-            graph::edgeRenderInfo(g) <- list(col=col,lwd=2,arrowhead=ahs,arrowtail=ats)
-            graph::nodeRenderInfo(g) <- list(fill=node.fill, fontsize=node.size.lab)
-
-            Rgraphviz::renderGraph(g)
-}
-
-bnqgplot <- function(mat, num.nodes, variables, use.node.names,
-                    frac, max.weight, node.col, ...) {
-
-            # parse ... parameters
-            plist <- unlist(list(...), recursive=F)
-            parnames <- names(plist)
-
-            if (use.node.names && length(variables) > 0)
-              node.names <- variables
-            else
-              node.names <- as.character(1:num.nodes)
-
-            # build graph
-            rownames(mat) <- node.names
-            colnames(mat) <- node.names
-
-            # node colors
-            node.fill <- as.list(node.col)
-            names(node.fill) <- node.names
-            plist[["input"]] <- mat
-
-            if (!("color" %in% parnames)) {
-                plist[["color"]] <- node.col
-            }
-            if (!("minumum" %in% parnames)) {
-                plist[["minimum"]] <- frac * max.weight
-            }
-            if (!("directed" %in% parnames)) {
-                plist[["directed"]] <- TRUE
-            }
-
-            if (!("labels" %in% parnames)) {
-                plist[["labels"]] <- node.names
-            }
-
-            do.call(qgraph::qgraph, plist)
-}
+# bnqgplot <- function(mat, num.nodes, variables, use.node.names,
+#                     frac, max.weight, node.col, ...) {
+# 
+#             # parse ... parameters
+#             plist <- unlist(list(...), recursive=F)
+#             parnames <- names(plist)
+# 
+#             if (use.node.names && length(variables) > 0)
+#               node.names <- variables
+#             else
+#               node.names <- as.character(1:num.nodes)
+# 
+#             # build graph
+#             rownames(mat) <- node.names
+#             colnames(mat) <- node.names
+# 
+#             # node colors
+#             node.fill <- as.list(node.col)
+#             names(node.fill) <- node.names
+#             plist[["input"]] <- mat
+# 
+#             if (!("color" %in% parnames)) {
+#                 plist[["color"]] <- node.col
+#             }
+#             if (!("minumum" %in% parnames)) {
+#                 plist[["minimum"]] <- frac * max.weight
+#             }
+#             if (!("directed" %in% parnames)) {
+#                 plist[["directed"]] <- TRUE
+#             }
+# 
+#             if (!("labels" %in% parnames)) {
+#                 plist[["labels"]] <- node.names
+#             }
+# 
+#             do.call(qgraph::qgraph, plist)
+# }
 
 
 # save BN as eps file
