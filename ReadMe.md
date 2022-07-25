@@ -31,9 +31,13 @@ Being hosted on GitHub, it is possible to use the `install_github`
 tool from an R session:
 
 ```{r eval=FALSE}
+if (!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocManager")
+BiocManager::install(c("graph", "Rgraphviz", "RBGL"))
+
 library("devtools")
 install_github("cbg-ethz/SubGroupSeparation")
 ```
+The packages "graph", "Rgraphviz" and "RBGL" need to be installed from BioConductor, as they are not hosted on CRAN.
 
 `SubGroupSeparation` requires R `>= 3.5`, and depends on
 `bitops` and
@@ -51,7 +55,7 @@ library(SubGroupSeparation)
 set.seed(6)
 myBayesNet <- randomBN(3)
 myBayesNet@variables <- c("rain", "sprinkler", "wet grass")
-plot(myBayesNet)
+plot_bn(myBayesNet)
 
 # what's the probability of having rain and wet grass at the same time?
 # define observed variables and calculate marginal probability
