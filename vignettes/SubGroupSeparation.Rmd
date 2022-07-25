@@ -35,7 +35,7 @@ Inference describes the calculation of the marginal probability $P(v'|e)$ of a f
 set.seed(6)
 myBayesNet <- randomBN(3)
 myBayesNet@variables <- c("rain", "sprinkler", "wet grass")
-plot(myBayesNet)
+plot_bn(myBayesNet)
 ```
 
 What is the probability that it rained?
