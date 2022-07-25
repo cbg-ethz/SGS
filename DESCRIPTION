@@ -9,14 +9,14 @@ Depends:
     bitops,
     methods
 Suggests:
+    graph,
+    Rgraphviz,
+    RBGL,
     qgraph,
     knitr,
     testthat,
     rmarkdown
 Imports: 
-    graph,
-    Rgraphviz,
-    RBGL,
     igraph,
     stats,
     BiDAG,
