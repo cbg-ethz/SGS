@@ -42,3 +42,5 @@ benchmark/high-dim-benchmarks/benchmark_res2/benchmarkHighDims7.rds
 benchmark/high-dim-benchmarks/high-dim-d400.R
 benchmark/high-dim-benchmarks/high-dim-d600.R
 benchmark/high-dim-benchmarks/high-dim-d800.R
+.Rproj.user
+.Rbuildignore

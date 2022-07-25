@@ -2,7 +2,7 @@
 
 # Load packages
 
-library("SubGroupSeparation")
+library("SGS")
 library("usethis")
 
 # packages for benchmark visualization
@@ -27,7 +27,7 @@ resultTable4 <- benchmarkResutls$resultTable4
 
 ## FinalPlots:
 
-p1 <- makeAllPlots(resultTable1,resultTable2,resultTable3, resultTable4, c("50","100","150","200"), 
+p1 <- SGS:::makeAllPlots(resultTable1,resultTable2,resultTable3, resultTable4, c("50","100","150","200"), 
              c("Nodes N=50","Nodes N=100","Nodes N=150","Nodes N=200"), "Dims2", width = 5, height = 4, niceBoxPlot=TRUE, retP=TRUE)
 
 #########################
@@ -43,7 +43,7 @@ resultTable4 <- benchmarkResutls$resultTable4
 
 # final plots 
 
-p2 <- makeAllPlots(resultTable1,resultTable2,resultTable3, resultTable4, c("E-R","E-R Isl.","B-A","W-S"), 
+p2 <- SGS:::makeAllPlots(resultTable1,resultTable2,resultTable3, resultTable4, c("E-R","E-R Isl.","B-A","W-S"), 
              c("Erdoes-Renyi graph","Erdoes-Renyi Island graph","Barabási-Albert graph","Watts-Strogatz graph"), "Nets2", width = 5, height = 4, niceBoxPlot=TRUE, retP=TRUE)
 
 #############################
@@ -59,7 +59,7 @@ resultTable4 <- benchmarkResutls$resultTable4
 
 ## FinalPlots:
 
-p3 <- makeAllPlots(resultTable1,resultTable2,resultTable3, resultTable4, c("S=2","S=3","S=4","S=5"), 
+p3 <- SGS:::makeAllPlots(resultTable1,resultTable2,resultTable3, resultTable4, c("S=2","S=3","S=4","S=5"), 
              c("Markov Blanket size S=2","Markov Blanket size S=3","Markov Blanket size S=4","Markov Blanket size S=5"), "Sparcity2", width = 5, height = 4, niceBoxPlot=TRUE, retP=TRUE)
 
 #####################################
@@ -75,7 +75,7 @@ resultTable4 <- benchmarkResutls$resultTable4
 
 ## FinalPlots:
 
-p4 <- makeAllPlots(resultTable1,resultTable2,resultTable3, resultTable4, c("f=0.2","f=0.4","f=0.6","f=0.8"), 
+p4 <- SGS:::makeAllPlots(resultTable1,resultTable2,resultTable3, resultTable4, c("f=0.2","f=0.4","f=0.6","f=0.8"), 
              c("Evidence Fraction f=0.2","Evidence Fraction f=0.4","Evidence Fraction f=0.6","Evidence Fraction f=0.8"), "Fractions2", width = 5, height = 4, niceBoxPlot=TRUE, retP=TRUE)
 
 #########################
@@ -91,7 +91,7 @@ resultTable4 <- benchmarkResutls$resultTable4
 
 ## FinalPlots:
 
-p5 <- makeAllPlots(resultTable1,resultTable2,resultTable3, resultTable4, c("C=2","C=4","C=6", "C=8"), 
+p5 <- SGS:::makeAllPlots(resultTable1,resultTable2,resultTable3, resultTable4, c("C=2","C=4","C=6", "C=8"), 
              c("Categories C=2","Categories C=4","Categories C=6","Categories C=8"), "Categories2", width = 5, height = 4, niceBoxPlot=TRUE, retP=TRUE)
 
 

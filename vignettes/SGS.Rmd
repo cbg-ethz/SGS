@@ -1,9 +1,9 @@
 ---
-title: "SubGroupSeparation"
+title: "SGS"
 author: "Fritz M. Bayer"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{SubGroupSeparation}
+  %\VignetteIndexEntry{SGS}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -20,8 +20,8 @@ knitr::opts_chunk$set(
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
 
 # load Bayesian network packages
-library(SubGroupSeparation)
-library(reshape2)
+library(SGS)
+# library(reshape2)
 ```
 
 ## Exact and Approximate Inference in Bayesian Networks with R
@@ -72,7 +72,7 @@ Next, let's consider a more high-dimensional problem. Assume, we have measured 1
 # create random BN and label variables 
 set.seed(1)
 myBayesNet <- randomBN(100)
-plot(myBayesNet)
+plot_bn(myBayesNet)
 
 # what's the probability of having rain and wet grass at the same time?
 # define observed variables and calculate marginal probability

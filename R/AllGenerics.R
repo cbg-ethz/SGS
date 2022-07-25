@@ -450,26 +450,26 @@ setGeneric("marginals", function(x, ...) { standardGeneric("marginals") } )
 # setGeneric("query", function(x, observed.vars=c(), observed.vals=c()) standardGeneric("query"))
 
 
-#' save a \code{\link{BN}} picture as \code{.eps} file.
-#' 
-#' Save an image of a Bayesian Network as an \code{.eps} file.
-#' 
-#' @name save.to.eps
-#' @rdname save.to.eps
-#' 
-#' @param x a \code{\link{BN}} object
-#' @param filename name (with path, if needed) of the file to be created
-#' @param ... parameters for the \code{\link{plot}} method.
-#' 
-#' @examples
-#' \dontrun{
-#' save.to.eps(x, "out.eps")
-#' }
-#' 
-#' @seealso \code{\link{plot}}
-#' 
-#' @exportMethod save.to.eps
-setGeneric("save.to.eps", function(x, filename, ...) { standardGeneric("save.to.eps") } )
+# #' save a \code{\link{BN}} picture as \code{.eps} file.
+# #' 
+# #' Save an image of a Bayesian Network as an \code{.eps} file.
+# #' 
+# #' @name save.to.eps
+# #' @rdname save.to.eps
+# #' 
+# #' @param x a \code{\link{BN}} object
+# #' @param filename name (with path, if needed) of the file to be created
+# #' @param ... parameters for the \code{\link{plot}} method.
+# #' 
+# #' @examples
+# #' \dontrun{
+# #' save.to.eps(x, "out.eps")
+# #' }
+# #' 
+# #' @seealso \code{\link{plot}}
+# #' 
+# #' @exportMethod save.to.eps
+# setGeneric("save.to.eps", function(x, filename, ...) { standardGeneric("save.to.eps") } )
 
 
 #' Read a network from a \code{.dsc} file.
@@ -825,12 +825,12 @@ setGeneric("complete", function(x, complete.vars=seq_len(num.variables(x))) { st
 #' If the value ranges for the data are different from the expected ones, it is possible to specify a different
 #' starting value (for the whole dataset) with the \code{starts.from} parameter. E.g. by \code{starts.from=0}
 #' we assume that the values of the variables in the dataset have range \code{[0,|X|-1]}.
-#' Please keep in mind that the internal representation of SubGroupSeparation starts from 1,
+#' Please keep in mind that the internal representation of SGS starts from 1,
 #' and the original starting values are then lost. 
 #' 
 #' It is possible to use two files, one for the data and one for the metadata,
 #' instead of providing manually all of the info. 
-#' SubGroupSeparation requires the data files to be in a format subsequently described.
+#' SGS requires the data files to be in a format subsequently described.
 #' The actual data has to be in (a text file containing data in) tabular format, one tuple per row,
 #' with the values for each variable separated by a space or a tab. Values for each variable have to be
 #' numbers, starting from \code{1} in case of discrete variables.
@@ -979,7 +979,7 @@ setGeneric("build.junction.tree", function(object, ...) { standardGeneric("build
 #' perform belief propagation.
 #' 
 #' Perform belief propagation for the network of an InferenceEngine, given a set of observations.
-#' In the current version of \code{SubGroupSeparation}, belief propagation can be computed only over a junction tree.
+#' In the current version of \code{SGS}, belief propagation can be computed only over a junction tree.
 #' 
 #' @name belief.propagation
 #' @rdname belief.propagation
@@ -1011,7 +1011,7 @@ setGeneric("belief.propagation", function(ie, observations = NULL,
 #' perform LOOPY belief propagation.
 #' 
 #' Perform belief propagation for the network of an InferenceEngine, given a set of observations.
-#' In the current version of \code{SubGroupSeparation}, belief propagation can be computed only over a junction tree.
+#' In the current version of \code{SGS}, belief propagation can be computed only over a junction tree.
 #' 
 #' @name loopy_belief.propagation
 #' @rdname loopy_belief.propagation
@@ -1043,7 +1043,7 @@ setGeneric("loopy_belief.propagation", function(ie, observations = NULL,
 #' perform SUB belief propagation.
 #' 
 #' Perform belief propagation for the network of an InferenceEngine, given a set of observations.
-#' In the current version of \code{SubGroupSeparation}, belief propagation can be computed only over a junction tree.
+#' In the current version of \code{SGS}, belief propagation can be computed only over a junction tree.
 #' 
 #' @name sub_belief.propagation
 #' @rdname sub_belief.propagation

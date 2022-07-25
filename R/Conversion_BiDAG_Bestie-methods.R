@@ -6,7 +6,7 @@
 # #'
 # #' @param my_data input data for learning
 # #' @param bdepar hyper-parameters for structure learning
-# #' @return Bayesian network of type SubGroupSeparation
+# #' @return Bayesian network of type SGS
 # #' @export 
 # #' 
 # #' @importFrom BiDAG scoreparameters iterativeMCMC
@@ -119,7 +119,7 @@ convertBNBestieToSGS <- function(DAGaugmented){
 #'
 #' @param mydata input data for learning
 #' @param bdepar hyper-parameters for structure learning
-#' @return Bayesian network of type SubGroupSeparation
+#' @return Bayesian network of type SGS
 #' @export 
 #' 
 #' @importFrom BiDAG scoreparameters iterativeMCMC

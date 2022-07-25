@@ -5,5 +5,5 @@
 /* Compute the Heterogeneous Euclidean Overlap Metric between vector vec and each row of matrix 
    mat
 */
-SEXP SubGroupSeparation_heom_dist( SEXP sexp_vec, SEXP sexp_mat, SEXP sexp_num_var, SEXP sexp_num_var_range );
+SEXP SGS_heom_dist( SEXP sexp_vec, SEXP sexp_mat, SEXP sexp_num_var, SEXP sexp_num_var_range );
 

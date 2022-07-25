@@ -774,7 +774,7 @@ ProcessResultTableNRMSE <- function(myResultTable, returnResults=FALSE){
 # tempBN <- convert_bnlearn(hailfinder)
 
 # convert_bnlearn <- function(BNconvert){
-#   # convert Bayes net of type "bnlearn" to type "SubGroupSeparation"
+#   # convert Bayes net of type "bnlearn" to type "SGS"
 #   
 #   lengthBNC <- length(BNconvert)
 #   
@@ -816,7 +816,7 @@ ProcessResultTableNRMSE <- function(myResultTable, returnResults=FALSE){
 #' @importFrom grDevices cairo_pdf
 #' @importFrom utils tail
 #' 
-#' @export
+#' 
 makeAllPlots <- function(resultTable1, resultTable2, resultTable3, resultTable4, labelBP = c("1","2","3","4"), labelHead = c("1","2","3","4"), fileName = "Test", width = 7, height = 4.1, niceBoxPlot=FALSE, retP=FALSE){
   # function to create the final plots from the benchmark studies
   
@@ -888,7 +888,7 @@ makeAllPlots <- function(resultTable1, resultTable2, resultTable3, resultTable4,
       theme(legend.position = "bottom")
   }else{
     # make a boxplot of the results
-    p1 <- ggplot(data=resAllDims2, aes(x=factor(dimBN, level = c(labelBP[1],labelBP[2],labelBP[3],labelBP[4])), y=BoxPlotResNRMS, fill=Method, colour=Method), alpha = 0.3) + 
+    p1 <- ggplot(data=resAllDims2, aes(x=factor(dimBN, levels = c(labelBP[1],labelBP[2],labelBP[3],labelBP[4])), y=BoxPlotResNRMS, fill=Method, colour=Method), alpha = 0.3) + 
       geom_boxplot(outlier.shape = NA, alpha = 0.3) + ## THIS IS FOR JITTER, otherwise geom_boxplot()+
       # geom_jitter(position=position_jitter(0.42), cex=0.4, data=resAllDims2_subset, position = dodge)+
       geom_point(pch = 21,data=resAllDims2, position = position_jitterdodge(0.15),cex=0.4, alpha = 0.3)+ ## THIS IS FOR JITTER

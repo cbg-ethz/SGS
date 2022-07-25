@@ -1,4 +1,4 @@
-Package: SubGroupSeparation
+Package: SGS
 Description: Inference in Bayesian Network.
 Type: Package
 Title: Inference in Bayesian Networks

@@ -72,7 +72,7 @@ approxInference <- function(BayesNet, obs, s_method = "SGS", N_samples = 100, re
   Nparents <- sapply(c(1:lengthBN),function(x) length(dim(net@cpts[[x]]))-1)
   
   observed.vars <- obs$observed.vars
-  if (class(obs$observed.vars) == "character") # hope that the user gives coherent input...
+  if (inherits(obs$observed.vars, "character")) # hope that the user gives coherent input...
     observed.vars <- sapply(observed.vars, function(x) which(x == variablesBN))
 
   observed.vals <- obs$observed.vals

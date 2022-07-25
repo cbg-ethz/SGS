@@ -1,6 +1,6 @@
 #include "smfast.h"
 
-SEXP SubGroupSeparation_fbp( SEXP aflml )
+SEXP SGS_fbp( SEXP aflml )
 {
 	R_len_t ni, si, bi, pos, pos2; 
 	R_len_t n_nodes = nrows(aflml); 
@@ -47,7 +47,7 @@ SEXP SubGroupSeparation_fbp( SEXP aflml )
 	return( res );
 }
 
-SEXP SubGroupSeparation_fbs( SEXP bps, SEXP aflml )
+SEXP SGS_fbs( SEXP bps, SEXP aflml )
 {
 	R_len_t si, sink, nop;
 	R_len_t __attribute__((unused)) pos;
@@ -87,7 +87,7 @@ SEXP SubGroupSeparation_fbs( SEXP bps, SEXP aflml )
 	return( res );
 }
 
-SEXP SubGroupSeparation_na_rows_int( SEXP mat )
+SEXP SGS_na_rows_int( SEXP mat )
 {
 	int i,j,stride, *res;
 	int n_rows = nrows( mat );
@@ -111,7 +111,7 @@ SEXP SubGroupSeparation_na_rows_int( SEXP mat )
 	return( result );
 }
 
-SEXP SubGroupSeparation_fumt_mask( SEXP n_elements, SEXP pattern )
+SEXP SGS_fumt_mask( SEXP n_elements, SEXP pattern )
 {
 	int i, times, ind, stride, start;
 	int bitmask = 1;
@@ -147,7 +147,7 @@ SEXP SubGroupSeparation_fumt_mask( SEXP n_elements, SEXP pattern )
 	return(result);
 }
 
-SEXP SubGroupSeparation_all_fam_log_marg_lik( SEXP data, SEXP node_sizes, SEXP imp_fam_mask, SEXP iss, SEXP func )
+SEXP SGS_all_fam_log_marg_lik( SEXP data, SEXP node_sizes, SEXP imp_fam_mask, SEXP iss, SEXP func )
 {
 	unsigned int i,j,n_pa,pos;
 	

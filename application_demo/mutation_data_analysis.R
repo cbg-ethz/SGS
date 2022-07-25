@@ -2,7 +2,7 @@
 
 # load Bayesian network packages
 
-library(SubGroupSeparation)
+library(SGS)
 library(BiDAG)
 library(reshape2)
 library(pcalg)

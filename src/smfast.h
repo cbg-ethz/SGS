@@ -7,16 +7,16 @@
 #include "util.h"
 
 /* find best parents */
-SEXP SubGroupSeparation_fbp( SEXP aflml );
+SEXP SGS_fbp( SEXP aflml );
 
 /* find best sinks */
-SEXP SubGroupSeparation_fbs( SEXP bps, SEXP aflml );
+SEXP SGS_fbs( SEXP bps, SEXP aflml );
 
 /* fast upwards moebius transform */
-SEXP SubGroupSeparation_fumt_mask( SEXP n_elements, SEXP pattern );
+SEXP SGS_fumt_mask( SEXP n_elements, SEXP pattern );
 
 /* computes log marginal likelihood for all possible families */
-SEXP SubGroupSeparation_all_fam_log_marg_lik( SEXP data, SEXP node_sizes, SEXP imp_fam_mask, SEXP iss, SEXP func );
+SEXP SGS_all_fam_log_marg_lik( SEXP data, SEXP node_sizes, SEXP imp_fam_mask, SEXP iss, SEXP func );
 
 /* 
 	very internal function

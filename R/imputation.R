@@ -48,8 +48,8 @@ knn.impute <- function( data, k = 10, cat.var = 1:ncol(data),
       num.var.min <- pmin(use.num.var.min, imp.data[i,num.var], na.rm=TRUE)
       num.var.range <- num.var.max - num.var.min
       
-      d <- .Call( "SubGroupSeparation_heom_dist", imp.data[i,], use.data, 
-                  num.var, num.var.range, PACKAGE = "SubGroupSeparation" )
+      d <- .Call( "SGS_heom_dist", imp.data[i,], use.data, 
+                  num.var, num.var.range, PACKAGE = "SGS" )
       s <- sort(d, index.return=TRUE)$ix
       
       for( j in which(is.na(imp.data[i,])) )
@@ -182,8 +182,8 @@ tune.knn.impute <- function( data, cat.var = 1:ncol(data), k.min = 1, k.max = 20
     {
       if( new.na.cases[i] )
       {
-        d <- .Call( "SubGroupSeparation_heom_dist", miss.data[i,], miss.data, 
-                    num.var, num.var.range, PACKAGE = "SubGroupSeparation" )
+        d <- .Call( "SGS_heom_dist", miss.data[i,], miss.data, 
+                    num.var, num.var.range, PACKAGE = "SGS" )
         s <- sort(d, index.return=TRUE)$ix
         
         for( j in which(is.na(miss.data[i,]) &!is.na(data[i,])) )

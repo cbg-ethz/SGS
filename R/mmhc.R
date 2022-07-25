@@ -72,8 +72,8 @@ hc <- function( data, node.sizes, scoring.func = 0, cpc, cont.nodes = c(), ess =
   
   curr.score.nodes <- array(0,n.nodes)
   for( i in 1L:n.nodes )
-    curr.score.nodes[i] <- .Call( "SubGroupSeparation_score_node", data, node.sizes, i-1L, which(curr.g[,i]!=0)-1L,
-                                  scoring.func, ess, PACKAGE = "SubGroupSeparation" )
+    curr.score.nodes[i] <- .Call( "SGS_score_node", data, node.sizes, i-1L, which(curr.g[,i]!=0)-1L,
+                                  scoring.func, ess, PACKAGE = "SGS" )
 
   # global best solution
   global.best.g <- curr.g
@@ -104,11 +104,11 @@ hc <- function( data, node.sizes, scoring.func = 0, cpc, cont.nodes = c(), ess =
           if( curr.g[par,node] == 1L ) # edge removal
           {
             next.g[par,node] = 0L;
-            if( .Call("SubGroupSeparation_is_acyclic", next.g, PACKAGE = "SubGroupSeparation") &!.Call("SubGroupSeparation_in_tabu", next.g, tabu, PACKAGE = "SubGroupSeparation"))
+            if( .Call("SGS_is_acyclic", next.g, PACKAGE = "SGS") &!.Call("SGS_in_tabu", next.g, tabu, PACKAGE = "SGS"))
             {
 #               cat(node.sizes,'\t',node-1L,'\t',which(next.g[,node]!=0)-1L,'\n')
-              s.diff <- .Call( "SubGroupSeparation_score_node", data, node.sizes, node-1L, which(next.g[,node]!=0)-1L, 
-                               scoring.func, ess, PACKAGE = "SubGroupSeparation" ) - curr.score.nodes[node];
+              s.diff <- .Call( "SGS_score_node", data, node.sizes, node-1L, which(next.g[,node]!=0)-1L, 
+                               scoring.func, ess, PACKAGE = "SGS" ) - curr.score.nodes[node];
             }
           }
           # edge addition
@@ -116,14 +116,14 @@ hc <- function( data, node.sizes, scoring.func = 0, cpc, cont.nodes = c(), ess =
           else if( curr.g[node,par] == 0L && sum(curr.g[,node]) < max.parents ) 
           {
             next.g[par,node] = 1L;
-            # print(c(node,par,.Call("is_acyclic", next.g, PACKAGE = "SubGroupSeparation"),!.Call("in_tabu", next.g, tabu, PACKAGE = "SubGroupSeparation")))
-            if( .Call("SubGroupSeparation_is_acyclic", next.g, PACKAGE = "SubGroupSeparation") & !.Call("SubGroupSeparation_in_tabu", next.g, tabu, PACKAGE = "SubGroupSeparation"))
+            # print(c(node,par,.Call("is_acyclic", next.g, PACKAGE = "SGS"),!.Call("in_tabu", next.g, tabu, PACKAGE = "SGS")))
+            if( .Call("SGS_is_acyclic", next.g, PACKAGE = "SGS") & !.Call("SGS_in_tabu", next.g, tabu, PACKAGE = "SGS"))
             {
               # print("here\n");
               
 #               cat(node.sizes,'\t',node-1L,'\t',which(next.g[,node]!=0)-1L,'\n')
-              s.diff <- .Call( "SubGroupSeparation_score_node", data, node.sizes, node-1L, which(next.g[,node]!=0)-1L,
-                               scoring.func, ess, PACKAGE = "SubGroupSeparation" ) - curr.score.nodes[node];
+              s.diff <- .Call( "SGS_score_node", data, node.sizes, node-1L, which(next.g[,node]!=0)-1L,
+                               scoring.func, ess, PACKAGE = "SGS" ) - curr.score.nodes[node];
             }
           }
           # edge reversal
@@ -132,13 +132,13 @@ hc <- function( data, node.sizes, scoring.func = 0, cpc, cont.nodes = c(), ess =
           {
             next.g[par,node] = 1L;
             next.g[node,par] = 0L;
-            if( .Call("SubGroupSeparation_is_acyclic", next.g, PACKAGE = "SubGroupSeparation") & !.Call("SubGroupSeparation_in_tabu", next.g, tabu, PACKAGE = "SubGroupSeparation"))
+            if( .Call("SGS_is_acyclic", next.g, PACKAGE = "SGS") & !.Call("SGS_in_tabu", next.g, tabu, PACKAGE = "SGS"))
             {
 #               cat(node.sizes,'\t',node-1L,'\t',which(next.g[,node]!=0)-1L,'\t',par-1L,'\t',which(next.g[,par]!=0)-1L,'\n')
-              s.diff <- .Call( "SubGroupSeparation_score_node", data, node.sizes, node-1L, which(next.g[,node]!=0)-1L,
-                               scoring.func, ess, PACKAGE = "SubGroupSeparation" ) + 
-                        .Call( "SubGroupSeparation_score_node", data, node.sizes, par-1L, which(next.g[,par]!=0)-1L,
-                               scoring.func, ess, PACKAGE = "SubGroupSeparation" ) -
+              s.diff <- .Call( "SGS_score_node", data, node.sizes, node-1L, which(next.g[,node]!=0)-1L,
+                               scoring.func, ess, PACKAGE = "SGS" ) + 
+                        .Call( "SGS_score_node", data, node.sizes, par-1L, which(next.g[,par]!=0)-1L,
+                               scoring.func, ess, PACKAGE = "SGS" ) -
                         ( curr.score.nodes[node] + curr.score.nodes[par] )
             }
           }
@@ -164,10 +164,10 @@ hc <- function( data, node.sizes, scoring.func = 0, cpc, cont.nodes = c(), ess =
     {
       curr.g[best.node,next.pert[best.node]] = 0L;
       # cat(node.sizes,'\t',best.node-1L,'\t',which(curr.g[,best.node]!=0)-1L,'\t',next.pert[best.node]-1L,'\t',which(curr.g[,next.pert[best.node]]!=0)-1L,'\n')
-      curr.score.nodes[best.node] <- .Call( "SubGroupSeparation_score_node", data, node.sizes, best.node-1L, 
-                                            which(curr.g[,best.node]!=0)-1L, scoring.func, ess, PACKAGE = "SubGroupSeparation" )
-      curr.score.nodes[next.pert[best.node]] <- .Call( "SubGroupSeparation_score_node", data, node.sizes, next.pert[best.node]-1L, 
-                                            which(curr.g[,next.pert[best.node]]!=0)-1L, scoring.func, ess, PACKAGE = "SubGroupSeparation" )
+      curr.score.nodes[best.node] <- .Call( "SGS_score_node", data, node.sizes, best.node-1L, 
+                                            which(curr.g[,best.node]!=0)-1L, scoring.func, ess, PACKAGE = "SGS" )
+      curr.score.nodes[next.pert[best.node]] <- .Call( "SGS_score_node", data, node.sizes, next.pert[best.node]-1L, 
+                                            which(curr.g[,next.pert[best.node]]!=0)-1L, scoring.func, ess, PACKAGE = "SGS" )
     }
     else
       curr.score.nodes[best.node] = curr.score.nodes[best.node] + next.score.diff[best.node]
@@ -347,7 +347,7 @@ mmpc.fwd <- function( data, node.sizes, allowed, x, chi.th, min.counts, max.fani
               allowed[x,y] = 0
               break
             }
-	    comb <- .Call( "SubGroupSeparation_next_comb", comb, n, PACKAGE = "SubGroupSeparation" )
+	    comb <- .Call( "SGS_next_comb", comb, n, PACKAGE = "SGS" )
           }
           if( allowed[x,y] == 0 ) # came out from the break
             break
@@ -407,7 +407,7 @@ mmpc.bwd <- function( data, node.sizes, cpc.vec, x, chi.th, min.counts, max.fani
 #            cat(which(cpc.vec!=0),"\n");
             break
           }
-          comb <- .Call("SubGroupSeparation_next_comb", comb, n, PACKAGE = "SubGroupSeparation" )
+          comb <- .Call("SGS_next_comb", comb, n, PACKAGE = "SGS" )
         }
         if( cpc.vec[y] == 0 ) # came out from the break
           break
@@ -426,7 +426,7 @@ g2 <- function( data, sizes, x, y, chi.th = 0.05, z=c(), min.counts = 5)
 
   # tab <- compute.counts( data[,c(x,y,z)], sizes[c(x,y,z)] )
 #   tab <- .Call("compute_counts", data = data[,c(x,y,z)], node_sizes = sizes[c(x,y,z)], 
-#                PACKAGE = "SubGroupSeparation" )
+#                PACKAGE = "SGS" )
 #   
 #   dim(tab) <- c(sizes[x], sizes[y], prod(sizes[z]))
 #   sz <- array( rep(apply(tab, 3, sum), each=sizes[x]*sizes[y]), dim(tab) )
@@ -457,8 +457,8 @@ g2 <- function( data, sizes, x, y, chi.th = 0.05, z=c(), min.counts = 5)
 #   
 #   return( max(pchisq(2*sum(s),df) - 1+chi.th, 0) )
   
-  stat <- .Call("SubGroupSeparation_g2_stat", data = data[,c(x,y,z)], node_sizes = sizes[c(x,y,z)], 
-                 PACKAGE = "SubGroupSeparation")
+  stat <- .Call("SGS_g2_stat", data = data[,c(x,y,z)], node_sizes = sizes[c(x,y,z)], 
+                 PACKAGE = "SGS")
   
   # print(stat)
   

@@ -35,7 +35,7 @@ fancy.cpt <- function( cpt )
 # 	{
 # 		family <- c( which(dag[,i]!=0), i )
 # 		counts <- .Call( "compute_counts_nas", data[,family], node.sizes[family], 
-# 			PACKAGE = "SubGroupSeparation" )
+# 			PACKAGE = "SGS" )
 # 		cpts[[i]] <- counts.to.probs( counts + ess / prod(dim(counts)) )
 #     dimnames(cpts[[i]]) <- d.names[family]
 # 	}

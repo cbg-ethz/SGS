@@ -8,21 +8,21 @@
 /* compute the BDEu score of node _ni_, with parents _pars_, from dataset
    _data_ and with equivalent sample size _ess_
 */
-SEXP SubGroupSeparation_score_node( SEXP data, SEXP node_sizes, SEXP ni, SEXP pars, SEXP func, SEXP ess );
+SEXP SGS_score_node( SEXP data, SEXP node_sizes, SEXP ni, SEXP pars, SEXP func, SEXP ess );
 
 // compute score for a node as above, but called from c, not from R
 double score_node_1( unsigned int* data, int ncols_data, int nrows_data, unsigned int* node_sizes, unsigned int ni, unsigned int* pars, int length_pars, int func, double ess );
 
 /* test wether the graph _g_ is acyclic
 */
-SEXP SubGroupSeparation_is_acyclic( SEXP g );
+SEXP SGS_is_acyclic( SEXP g );
 
 /* computes contingency table, excluding NAs: 
 */
-SEXP SubGroupSeparation_compute_counts_nas( SEXP data, SEXP node_sizes );
+SEXP SGS_compute_counts_nas( SEXP data, SEXP node_sizes );
 
 /* computes contingency table, no NAs assumed */
-SEXP SubGroupSeparation_compute_counts( SEXP data, SEXP node_sizes );
+SEXP SGS_compute_counts( SEXP data, SEXP node_sizes );
 
 /* computes log likelihood for the family (ni,pa), accounting for NAs
 */

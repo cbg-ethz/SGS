@@ -2,7 +2,7 @@
 
 # Load packages
 
-library("SubGroupSeparation")
+library("SGS")
 library("usethis")
 
 # packages for benchmark visualization
@@ -68,7 +68,7 @@ resultTable4 <- benchmarkResutls$resultTable4
 
 ## FinalPlots:
 
-makeAllPlots(resultTable1,resultTable2,resultTable3, resultTable4, c("50","100","150","200"), 
+SGS:::makeAllPlots(resultTable1,resultTable2,resultTable3, resultTable4, c("50","100","150","200"), 
              c("Number of Nodes n=50","Number of Nodes n=100","Number of Nodes n=150","Number of Nodes n=200"), "Dims")
 
 
@@ -122,7 +122,7 @@ resultTable4 <- benchmarkResutls$resultTable4
 
 # final plots 
 
-makeAllPlots(resultTable1,resultTable2,resultTable3, resultTable4, c("E-R","E-R Isl.","B-A","W-S"), 
+SGS:::makeAllPlots(resultTable1,resultTable2,resultTable3, resultTable4, c("E-R","E-R Isl.","B-A","W-S"), 
              c("Erdős–Rényi graphs","Erdős–Rényi island graphs","Barabási-Albert graph","Watts-Strogatz graph"), "Nets")
 
 
@@ -176,7 +176,7 @@ resultTable4 <- benchmarkResutls$resultTable4
 
 ## FinalPlots:
 
-makeAllPlots(resultTable1,resultTable2,resultTable3, resultTable4, c("S=2","S=3","S=4","S=5"), 
+SGS:::makeAllPlots(resultTable1,resultTable2,resultTable3, resultTable4, c("S=2","S=3","S=4","S=5"), 
              c("Markov Blanket size S=2","Markov Blanket size S=3","Markov Blanket size S=4","Markov Blanket size S=5"), "Sparcity")
 
 
@@ -230,7 +230,7 @@ resultTable4 <- benchmarkResutls$resultTable4
 
 ## FinalPlots:
 
-makeAllPlots(resultTable1,resultTable2,resultTable3, resultTable4, c("f=0.2","f=0.4","f=0.6","f=0.8"), 
+SGS:::makeAllPlots(resultTable1,resultTable2,resultTable3, resultTable4, c("f=0.2","f=0.4","f=0.6","f=0.8"), 
              c("Evidence Fraction f=0.2","Evidence Fraction f=0.4","Evidence Fraction f=0.6","Evidence Fraction f=0.8"), "Fractions")
 
 
@@ -288,7 +288,7 @@ resultTable4 <- benchmarkResutls$resultTable4
 
 ## FinalPlots:
 
-makeAllPlots(resultTable1,resultTable2,resultTable3, resultTable4, c("C=2","C=4","C=6", "C=8"), 
+SGS:::makeAllPlots(resultTable1,resultTable2,resultTable3, resultTable4, c("C=2","C=4","C=6", "C=8"), 
              c("Categories C=2","Categories C=4","Categories C=6","Categories C=8"), "Categories")
 
 

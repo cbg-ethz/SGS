@@ -1,6 +1,6 @@
 #include "mmhcfast.h"
 
-SEXP SubGroupSeparation_next_comb( SEXP sexp_comb, SEXP sexp_n )
+SEXP SGS_next_comb( SEXP sexp_comb, SEXP sexp_n )
 {
 	R_len_t m, i, j, finished;
 	m = length(sexp_comb);
@@ -36,7 +36,7 @@ SEXP SubGroupSeparation_next_comb( SEXP sexp_comb, SEXP sexp_n )
 	return( result );
 }
 
-SEXP SubGroupSeparation_g2_stat( SEXP data, SEXP node_sizes )
+SEXP SGS_g2_stat( SEXP data, SEXP node_sizes )
 {
 	int i,j,k,index,sx,sy,sz,sxy,val,zx,zy,zz,zc,df,elmt;
 	double stat = 0;
@@ -137,7 +137,7 @@ SEXP SubGroupSeparation_g2_stat( SEXP data, SEXP node_sizes )
 	return result;
 }
 
-SEXP SubGroupSeparation_in_tabu( SEXP mat, SEXP tabu )
+SEXP SGS_in_tabu( SEXP mat, SEXP tabu )
 {
   int n_nodes = ncols(mat);
   int t_tenure = INTEGER(getAttrib(tabu, R_DimSymbol))[2]; // dim[3]

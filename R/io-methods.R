@@ -51,7 +51,7 @@ setMethod("read.dataset",
               if (disc[d] %in% c("d","D","T","TRUE")) disc[d] <- 'D'
               else if (disc[d] %in% c("c","C","F","FALSE")) disc[d] <- 'C'
               else {
-                SubGroupSeparation.log("Unrecognized status for variable ",variables(object)[d],", converting it to discrete.")
+                SGS.log("Unrecognized status for variable ",variables(object)[d],", converting it to discrete.")
                 disc[d] <- 'D'
               }
             }
@@ -554,14 +554,14 @@ setMethod("write_xgmml","BN",
             if (write.wpdag) {
               g <- wpdag(x)
               if (is.null(g))
-                SubGroupSeparation.log("error: no wpdag to be saved")
+                SGS.log("error: no wpdag to be saved")
               g <- g / max.weight
               g[which(g < frac)] <- 0
               g <- g * 255 # rescale for color
             } else {
               g <- dag(x)
               if (is.null(g))
-                SubGroupSeparation.log("error: no dag to be saved")
+                SGS.log("error: no dag to be saved")
             }
             
             num.nodes  <- num.nodes(x)
@@ -694,35 +694,35 @@ setMethod("write_xgmml","BN",
 
 
 # output log messages
-SubGroupSeparation.log <- function(...)
+SGS.log <- function(...)
 {
   m <- ""
   
-  blit <- get("SubGroupSeparation.log.indent.tracker", .SubGroupSeparation.env)
+  blit <- get("SGS.log.indent.tracker", .SGS.env)
   if (blit > 0)
     for (i in seq_len(blit))
       m <- paste(m, "... ", sep='')
   
-  m <- strcat(m, "SubGroupSeparation :: ")
+  m <- strcat(m, "SGS :: ")
   m <- strcat(m, ...)
   message(m)
 }
 
 # output begin-of-action log messages
-SubGroupSeparation.start.log <- function(...)
+SGS.start.log <- function(...)
 {
-  SubGroupSeparation.log(...)
-  assign("SubGroupSeparation.log.indent.tracker", get("SubGroupSeparation.log.indent.tracker", .SubGroupSeparation.env) + 1, envir = .SubGroupSeparation.env)
+  SGS.log(...)
+  assign("SGS.log.indent.tracker", get("SGS.log.indent.tracker", .SGS.env) + 1, envir = .SGS.env)
 }
 
 # output begin-of-action log messages
-SubGroupSeparation.end.log <- function(...)
+SGS.end.log <- function(...)
 {
-  assign("SubGroupSeparation.log.indent.tracker", max(0,get("SubGroupSeparation.log.indent.tracker", .SubGroupSeparation.env) - 1), envir = .SubGroupSeparation.env)
-  SubGroupSeparation.log(...)
+  assign("SGS.log.indent.tracker", max(0,get("SGS.log.indent.tracker", .SGS.env) - 1), envir = .SGS.env)
+  SGS.log(...)
 }
 
-SubGroupSeparation.reset.log <- function()
+SGS.reset.log <- function()
 {
-  assign("SubGroupSeparation.log.indent.tracker", 0, envir = .SubGroupSeparation.env)
+  assign("SGS.log.indent.tracker", 0, envir = .SGS.env)
 }

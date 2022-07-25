@@ -1,11 +1,11 @@
 # test.compute.counts.nas <- function( data, bins, nas )
 # {
-# 	.Call("compute_counts_nas", data, bins, nas, package = "SubGroupSeparation")
+# 	.Call("compute_counts_nas", data, bins, nas, package = "SGS")
 # }
 # 
 # test.na.rows.int <- function( data )
 # {
-# 	.Call("na_rows_int", data, package = "SubGroupSeparation")
+# 	.Call("na_rows_int", data, package = "SGS")
 # }
 
 # Silander and Myllymaki complete search, BDeu score, high memory occupation.
@@ -78,8 +78,8 @@ sm <- function(x, node.sizes, scoring.func = 0, cont.nodes = NULL, max.fanin = N
         # remove parents not in cpc, if cpc.matrix is given
 	if( !is.null(cpc.mat) )
             for( i in 1:n.nodes )
-                ifm[ i, (.Call("SubGroupSeparation_fumt_mask", n_elements = n.nodes, pattern = which(cpc.mat[i,]==0), 
-                         PACKAGE = "SubGroupSeparation") > 0) ] <- FALSE
+                ifm[ i, (.Call("SGS_fumt_mask", n_elements = n.nodes, pattern = which(cpc.mat[i,]==0), 
+                         PACKAGE = "SGS") > 0) ] <- FALSE
 
         # remove candidate parents not consistent with mandatory edges.
         # The idea is to transform this matrix in something similar to
@@ -88,14 +88,14 @@ sm <- function(x, node.sizes, scoring.func = 0, cont.nodes = NULL, max.fanin = N
         if (!is.null(mandatory.edges) ) {
             for ( i in 1:n.nodes ) {
                 if ( sum(mandatory.edges[i,]) > 0 || sum(mandatory.edges[,i] > 0)) {
-                    ifm[ i, (.Call("SubGroupSeparation_fumt_mask", n_elements = n.nodes, pattern = which(mandatory.edges[i,]==1),
-                             PACKAGE = "SubGroupSeparation") > 0) ] <- FALSE
+                    ifm[ i, (.Call("SGS_fumt_mask", n_elements = n.nodes, pattern = which(mandatory.edges[i,]==1),
+                             PACKAGE = "SGS") > 0) ] <- FALSE
                     backup.ifm <- ifm[i,]
                     for ( j in 1:n.nodes ) {
                         if (mandatory.edges[j,i] == 1 && i != j) {
                             ifm2 <- rep(TRUE, length(backup.ifm))
-                            ifm2[ (.Call("SubGroupSeparation_fumt_mask", n_elements = n.nodes, pattern = j,
-                                  PACKAGE = "SubGroupSeparation") > 0) ] <- FALSE
+                            ifm2[ (.Call("SGS_fumt_mask", n_elements = n.nodes, pattern = j,
+                                  PACKAGE = "SGS") > 0) ] <- FALSE
                             backup.ifm <- backup.ifm & !ifm2
                         }
                     }
@@ -105,13 +105,13 @@ sm <- function(x, node.sizes, scoring.func = 0, cont.nodes = NULL, max.fanin = N
         }
   
   # aflml <- all.families.log.marginal.likelihood( data, node.sizes, ifm, ess )
-	aflml <- .Call("SubGroupSeparation_all_fam_log_marg_lik", data, node.sizes, ifm, ess, scoring.func, PACKAGE = "SubGroupSeparation" )
+	aflml <- .Call("SGS_all_fam_log_marg_lik", data, node.sizes, ifm, ess, scoring.func, PACKAGE = "SGS" )
 	
 	# bps <- find.best.parents( aflml )
-	bps <- .Call("SubGroupSeparation_fbp", aflml = aflml, PACKAGE = "SubGroupSeparation");
+	bps <- .Call("SGS_fbp", aflml = aflml, PACKAGE = "SGS");
 	
 	# sinks <- find.best.sinks( bps, aflml )
-	sinks <- .Call("SubGroupSeparation_fbs", bps = bps, aflml = aflml, PACKAGE = "SubGroupSeparation");
+	sinks <- .Call("SGS_fbs", bps = bps, aflml = aflml, PACKAGE = "SGS");
 	
 	order <- find.best.ordering( sinks )
 	
@@ -172,8 +172,8 @@ impossible.family.mask <- function( n.nodes, layering, max.fanin.layers)
 	# base.mask <- rep(0,2^n.nodes)
 	# base.mask[ 2^((1:n.nodes)-1)+1 ] <- 1
 	# base.mask <- fumt(base.mask) > max(diag(max.fanin.layers))
-	base.mask <- (.Call("SubGroupSeparation_fumt_mask", n_elements = n.nodes, pattern = seq_len(n.nodes),
-		PACKAGE = "SubGroupSeparation") > max(diag(max.fanin.layers)) );
+	base.mask <- (.Call("SGS_fumt_mask", n_elements = n.nodes, pattern = seq_len(n.nodes),
+		PACKAGE = "SGS") > max(diag(max.fanin.layers)) );
 	
 	ifm <- !matrix( rep(base.mask,n.nodes), n.nodes, 2^n.nodes, byrow = TRUE)
 	
@@ -182,8 +182,8 @@ impossible.family.mask <- function( n.nodes, layering, max.fanin.layers)
 		# mask <- rep(0, 2^n.nodes)
 		# mask[ 2^(i-1)+1 ] <- 1
 		# mask <- fumt(mask) > 0
-		mask <- (.Call("SubGroupSeparation_fumt_mask", n_elements = n.nodes, 
-			pattern = i, PACKAGE = "SubGroupSeparation") > 0);
+		mask <- (.Call("SGS_fumt_mask", n_elements = n.nodes, 
+			pattern = i, PACKAGE = "SGS") > 0);
 		
 		ifm[ i, mask ] <- FALSE
 	}
@@ -197,8 +197,8 @@ impossible.family.mask <- function( n.nodes, layering, max.fanin.layers)
 			# mask <- rep(0, 2^n.nodes)
 			# mask[ 2^(invalidParents-1)+1 ] <- 1
 			# mask <- fumt(mask) > 0
-			mask <- (.Call("SubGroupSeparation_fumt_mask", n_elements = n.nodes, 
-				pattern = invalidParents, PACKAGE = "SubGroupSeparation") > 0);
+			mask <- (.Call("SGS_fumt_mask", n_elements = n.nodes, 
+				pattern = invalidParents, PACKAGE = "SGS") > 0);
 			
 			ifm[ i, mask ] <- FALSE
 			
@@ -220,8 +220,8 @@ impossible.family.mask <- function( n.nodes, layering, max.fanin.layers)
 				# mask <- rep(0, 2^n.nodes)
 				# mask[ 2^(parents-1)+1 ] <- 1
 				# mask <- fumt(mask) > max.fanin.layers[j, layering[i]];
-				mask <- ( .Call("SubGroupSeparation_fumt_mask", n_elements = n.nodes, pattern = parents,
-					PACKAGE = "SubGroupSeparation") > max.fanin.layers[j, layering[i]] );
+				mask <- ( .Call("SGS_fumt_mask", n_elements = n.nodes, pattern = parents,
+					PACKAGE = "SGS") > max.fanin.layers[j, layering[i]] );
 				ifm[i, mask] <- FALSE;
 			}
 		}
@@ -281,11 +281,11 @@ impossible.family.mask <- function( n.nodes, layering, max.fanin.layers)
 # 	{
 # 		prod.sizes.pa <- prod(node.sizes[2:n.nodes])
 # 		prod.sizes <- prod.sizes.pa * node.sizes[1]
-# 		na.rows <- .Call("na_rows_int", mat = data, PACKAGE = "SubGroupSeparation")
+# 		na.rows <- .Call("na_rows_int", mat = data, PACKAGE = "SGS")
 # 		
 # 		# counts <- compute.counts( data, node.sizes )
 # 		# prior <- array( ess/prod.sizes, node.sizes ); # faster !
-# 		counts <- .Call("compute_counts_nas", data, node.sizes, na.rows, package = "SubGroupSeparation")
+# 		counts <- .Call("compute_counts_nas", data, node.sizes, na.rows, package = "SGS")
 # 		prior <- ess/prod.sizes;
 # 		
 # 		# correct for NAs with maximum a posteriori estimate
@@ -305,7 +305,7 @@ impossible.family.mask <- function( n.nodes, layering, max.fanin.layers)
 # 	{
 # 		na.rows <- as.integer(is.na(data))
 # 		# counts <- compute.counts( data, node.sizes )
-# 		counts <- .Call("compute_counts_nas", data, node.sizes, na.rows, package = "SubGroupSeparation")
+# 		counts <- .Call("compute_counts_nas", data, node.sizes, na.rows, package = "SGS")
 # 		#prior <- rep( ess/node.sizes, node.sizes );
 # 		prior <- ess/node.sizes
 # 
@@ -327,12 +327,12 @@ log.lik <- function( node.sizes, ess, data )
   {
     prod.sizes.pa <- prod(node.sizes[2:n.nodes])
     prod.sizes <- prod.sizes.pa * node.sizes[1]
-    # na.rows <- .Call("na_rows_int", mat = data, PACKAGE = "SubGroupSeparation")
+    # na.rows <- .Call("na_rows_int", mat = data, PACKAGE = "SGS")
     
     # counts <- compute.counts( data, node.sizes )
     # prior <- array( ess/prod.sizes, node.sizes ); # faster !
-    # counts <- .Call("compute_counts_nas", data, node.sizes, na.rows, package = "SubGroupSeparation")
-    counts <- .Call("SubGroupSeparation_compute_counts", data, node.sizes, PACKAGE = "SubGroupSeparation")
+    # counts <- .Call("compute_counts_nas", data, node.sizes, na.rows, package = "SGS")
+    counts <- .Call("SGS_compute_counts", data, node.sizes, PACKAGE = "SGS")
     prior <- ess/prod.sizes;
     
     # correct for NAs with maximum a posteriori estimate
@@ -352,9 +352,9 @@ log.lik <- function( node.sizes, ess, data )
   {
     # na.rows <- as.integer(is.na(data))
     # counts <- compute.counts( data, node.sizes )
-    # counts <- .Call("compute_counts_nas", data, node.sizes, na.rows, package = "SubGroupSeparation")
+    # counts <- .Call("compute_counts_nas", data, node.sizes, na.rows, package = "SGS")
     # prior <- rep( ess/node.sizes, node.sizes );
-    counts <- .Call("SubGroupSeparation_compute_counts", data, node.sizes, PACKAGE = "SubGroupSeparation")
+    counts <- .Call("SGS_compute_counts", data, node.sizes, PACKAGE = "SGS")
     prior <- ess/node.sizes
     
     # correct for NAs with maximum a posteriori estimate
@@ -380,7 +380,7 @@ log.lik <- function( node.sizes, ess, data )
 # 	{
 # 		# correct for NAs with maximum a posteriori estimate
 # 		
-# 		n.na <- sum(.Call("na_rows", mat =data[,c(pa,ni)], PACKAGE = "SubGroupSeparation"))
+# 		n.na <- sum(.Call("na_rows", mat =data[,c(pa,ni)], PACKAGE = "SGS"))
 # 		counts <- counts + n.na * (counts + prior) / ( nrow(data) - n.na + ess )
 # 	
 # 		# LL <- sum( lgamma(prior+counts) - lgamma(prior) )

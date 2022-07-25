@@ -81,7 +81,7 @@ setMethod("belief.propagation",
               is.discrete <- discreteness(net)
               
               # discretize continuous observed variables
-              if (class(observed.vars) == "character") # hope that the user gives coherent input...
+              if (inherits(observed.vars, "character")) # hope that the user gives coherent input...
                 observed.vars <- sapply(observed.vars, function(x) which(x == variables))
               
               observed.vals.disc <- c()
@@ -262,7 +262,7 @@ setMethod("belief.propagation",
               {
                 # observed.vars <- c(unlist(observed.vars, F, F))
                 
-                if (class(observed.vars) == "character") # hope that the user gives coherent input...
+                if (inherits(observed.vars, "character")) # hope that the user gives coherent input...
                   observed.vars <- sapply(observed.vars, function(x) which(x == variables))
                 
                 for (var in 1:length(observed.vars))

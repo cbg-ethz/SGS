@@ -1,6 +1,6 @@
 #include "util.h"
 
-SEXP SubGroupSeparation_score_node( SEXP data, SEXP node_sizes, SEXP ni, SEXP pars, SEXP func, SEXP ess )
+SEXP SGS_score_node( SEXP data, SEXP node_sizes, SEXP ni, SEXP pars, SEXP func, SEXP ess )
 {
   SEXP score;
   PROTECT( score = allocVector(REALSXP, 1) );
@@ -52,7 +52,7 @@ double score_node_1( unsigned int* data, int ncols_data, int nrows_data, unsigne
 }
 
 
-SEXP SubGroupSeparation_is_acyclic( SEXP graph )
+SEXP SGS_is_acyclic( SEXP graph )
 {
   int n_nodes = nrows(graph);
   int * g = INTEGER(graph);
@@ -195,7 +195,7 @@ double bdeu_score( unsigned int * d, unsigned int n_nodes, unsigned int n_cases,
 	return ll;
 }
 
-SEXP SubGroupSeparation_compute_counts_nas( SEXP data, SEXP node_sizes )
+SEXP SGS_compute_counts_nas( SEXP data, SEXP node_sizes )
 {
 	long int i,j,index,elmt;
 	long int __attribute__((unused)) stride;
@@ -249,7 +249,7 @@ SEXP SubGroupSeparation_compute_counts_nas( SEXP data, SEXP node_sizes )
 	return result;
 }
 
-SEXP SubGroupSeparation_compute_counts( SEXP data, SEXP node_sizes )
+SEXP SGS_compute_counts( SEXP data, SEXP node_sizes )
 {
   int i,j,index;
   int __attribute__((unused)) elmt;

@@ -12,7 +12,7 @@ learn_bn(mydata, bdepar = list(chi = 0.5, edgepf = 2))
 \item{bdepar}{hyper-parameters for structure learning}
 }
 \value{
-Bayesian network of type SubGroupSeparation
+Bayesian network of type SGS
 }
 \description{
 Outputs the Bayesian network DAG and CPTs
