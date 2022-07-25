@@ -9,13 +9,14 @@ Depends:
     bitops,
     methods
 Suggests:
-    graph,
-    Rgraphviz,
     qgraph,
     knitr,
     testthat,
     rmarkdown
 Imports: 
+    graph,
+    Rgraphviz,
+    RBGL,
     igraph,
     stats,
     BiDAG,
@@ -30,6 +31,6 @@ Authors@R: c(person("Fritz", "Bayer", role=c("aut","cre"),
     email="frbayer@ethz.ch"))
 License: GPL-3 | file LICENSE
 Encoding: UTF-8
-RoxygenNote: 7.1.1
+RoxygenNote: 7.2.1
 LazyData: true
 VignetteBuilder: knitr

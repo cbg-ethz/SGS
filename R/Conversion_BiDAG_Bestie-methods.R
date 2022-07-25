@@ -94,7 +94,7 @@ convertCPTsBestieToSGS <- function(DAGaugmented){
 convertBNBestieToSGS <- function(DAGaugmented){
 
   # get BN information from Bestie
-  tempDAGSGS <- unname(DAGaugmented$DAG)
+  tempDAGSGS <- unname(as.matrix(DAGaugmented$DAG))
   tempNamesSGS <- as.character(1:dim(tempDAGSGS)[1])
   tempCPTsSGS <- convertCPTsBestieToSGS(DAGaugmented)
   N_nodes <- length(tempNamesSGS)

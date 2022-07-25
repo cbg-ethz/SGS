@@ -595,10 +595,6 @@ plot.BNwithSubGroups <- function(myBN, myObs, visualizeAll=FALSE){
     storeMar <- par("mar")
     par(mfrow=c(dim1,dim2),mar=c(1,1,1,1))
     for (jj in 1:length(mySubGroups$allSubGroups)){
-      # graphviz.plot(allSubBNs[[jj]])
-      # graphviz.plot(allSubGroups[[jj]], highlight = list(nodes = allEvidenceSubGroups[[jj]], col = "black", fill = "grey"))
-      # subDAG <- as.matrix(as_adjacency_matrix(induced_subgraph(
-        # graph_from_adjacency_matrix(DAG,mode="directed"),c(mySubGroups$allEvidenceSubGroups[[jj]],mySubGroups$allSubGroups[[jj]]))))
       subBN <- get.subBN(myBN, c(mySubGroups$allEvidenceSubGroups[[jj]],mySubGroups$allSubGroups[[jj]]))
       plot.BN(subBN)
     }

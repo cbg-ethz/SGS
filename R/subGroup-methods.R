@@ -100,14 +100,14 @@ get.allSubGroups <- function(DAG, evidenceNodes, visualize = FALSE){
   
   # reduce to relevant Subnetwork
   relevantNodes <- get.allAncestors(DAG,evidenceNodes)
-  subDAG <- as.matrix(as_adjacency_matrix(induced_subgraph(
+  subDAG <- as.matrix(as_adj(induced_subgraph(
     graph_from_adjacency_matrix(DAG,mode="directed"),relevantNodes)))
   nodesOrder <- intersect(c(1:lengthDAG), relevantNodes)
   evidenceNodesNew <- match(evidenceNodes, nodesOrder)
   
   # DAGgraph <- graph_from_adjacency_matrix(DAG,mode="directed")
   # DAGsubgraph <- induced_subgraph((DAGgraph,relevantNodes)
-  # subDAG <- as_adjacency_matrix(DAGsubgraph)
+  # subDAG <- as_adj(DAGsubgraph)
   
   # check if subgroups are available
   if(length(setdiff(relevantNodes, evidenceNodes))==0){
@@ -196,7 +196,7 @@ get.allSubGroups <- function(DAG, evidenceNodes, visualize = FALSE){
     for (jj in 1:length(allSubGroups)){
       # graphviz.plot(allSubBNs[[jj]])
       # graphviz.plot(allSubGroups[[jj]], highlight = list(nodes = allEvidenceSubGroups[[jj]], col = "black", fill = "grey"))
-      subDAG <- as.matrix(as_adjacency_matrix(induced_subgraph(
+      subDAG <- as.matrix(as_adj(induced_subgraph(
         graph_from_adjacency_matrix(DAG,mode="directed"),c(allEvidenceSubGroups[[jj]],allSubGroups[[jj]]))))
       plot_bn(subDAG)#, highlight = list(nodes = allEvidenceSubGroups[[jj]], col = "black", fill = "grey"))
     }
@@ -223,11 +223,11 @@ get.subBN <- function(BayesNet,relevantNodes)
   subBN@discreteness <- BayesNet@discreteness[relNodes]
   subBN@node.sizes <- BayesNet@node.sizes[relNodes]
   subBN@cpts <- BayesNet@cpts[relNodes]
-  subDAG <- as.matrix(as_adjacency_matrix(induced_subgraph(
+  subDAG <- as.matrix(as_adj(induced_subgraph(
     graph_from_adjacency_matrix(BayesNet@dag,mode="directed"),relNodes)))
   subBN@cpts <- BayesNet@cpts[relNodes]
   subBN@dag <- subDAG
-  subWPDAG <- as.matrix(as_adjacency_matrix(induced_subgraph(
+  subWPDAG <- as.matrix(as_adj(induced_subgraph(
     graph_from_adjacency_matrix(BayesNet@wpdag,mode="directed"),relNodes)))
   subBN@wpdag <- subWPDAG
   

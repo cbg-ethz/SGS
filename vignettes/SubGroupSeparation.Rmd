@@ -1,11 +1,13 @@
 ---
-title: "SubGroupSeparation: Exact and Approximate Inference in Bayesian Networks"
+title: "SubGroupSeparation"
+author: "Fritz M. Bayer"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{SubGroupSeparation}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
+
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
@@ -15,17 +17,16 @@ knitr::opts_chunk$set(
 ```
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+
 # load Bayesian network packages
 library(SubGroupSeparation)
 library(reshape2)
 ```
 
-## Inference and Marginalization
-
 ## Exact and Approximate Inference in Bayesian Networks with R
 
-Bayesian networks are a fundamental tool in the world of machine learning and statistics and have recently gained popularity as a common model for causality. In this article, we discuss efficient methods for inference in Bayesian networks and discuss how they can be applied to missing data problems. 
+Bayesian networks are a fundamental tool in the world of machine learning and statistics and have recently gained popularity as a common model for causality. Here, we discuss efficient methods for inference in Bayesian networks and discuss how they can be applied to missing data problems. 
 
 Inference describes the calculation of the marginal probability $P(v'|e)$ of a fraction of variables $v' \in V$ conditioned on a (typically observed) fraction of variables $e$. As an example, we might be interested in the probability that it rained given that the grass is wet, where $v':=rain$ and $e:=wet\ grass$. A corresponiding directed acyclic graph (DAG)  might look as follows:
 
@@ -37,51 +38,32 @@ myBayesNet@variables <- c("rain", "sprinkler", "wet grass")
 plot(myBayesNet)
 ```
 
-
-Before getting more formal, lets consider a simple example: the probabilistic relationships of the variables "rain", "sprinkler" and "grass wet" can be modelled by a Bayesian network. The corresponding directed acyclic graph (DAG) would look as follows.
-
-```{r}
-# create random BN and label variables 
-set.seed(6)
-myBayesNet <- randomBN(3)
-myBayesNet@variables <- c("rain", "sprinkler", "wet grass")
-plot(myBayesNet)
-```
-
-Assume that we know that the grass is wet - what is the probability that it rained? Inference describes the process of answering this question. 
-
-$B$ that describes wet grass due to rain and sprinkler
-But what exactly do we mean by inference and marginalization?
-In simple terms, inference describes the probability of the unobserved variables given the observed variables.
-
-Consider a probability distribution of $n$ variables, that is described by a Bayesian network $B=(G,P)$. 
-Marginalization describtes the calculation of the marginal probability of a subset of observed variables.  
-
-
-This article will discuss efficient ways to calculate the exact marginal probab
-
-
-But what do we mean by inference and marginalization? To answer the question, let us start with a simple example of wet grass. We know that either rain or a sprinkler increase the probability of the grass being wet, so let us draw the corresponding graph:
-
-
-
-
-With inference we mean calculating the probability of a single variable, e.g. rain.
+What is the probability that it rained?
 
 ```{r}
-# what's the probability of having rain?
-# define observed variables and calculate marginal probability
+# define observed variables and calculate the probability
 myObserved <- list(observed.vars=c("rain"), observed.vals=c(2))
 exactInference(myBayesNet,myObserved)
 ```
 
-With marginal probability we mean calculating the probability of multiple variables, e.g. rain and wet grass.
+With marginal probability we mean calculating the probability of multiple variables, e.g. rain and wet grass. What's the probability of having rain and wet grass at the same time?
 
 ```{r}
-# what's the probability of having rain and wet grass at the same time?
-# define observed variables and calculate marginal probability
+# define observed variables and calculate the marginal probability
 myObserved <- list(observed.vars=c("rain", "wet grass"), observed.vals=c(2,2))
 exactInference(myBayesNet,myObserved)
+```
+
+Instead of simulating a Bayesian network, we can also learn it from data. In the following example, we learn a the Bayesian network from the well-known "Asia dataset" and subsequently perform inference on that. 
+
+```{r}
+# let's learn the Bayesian network from the "Asia dataset"
+asia_bn <- learn_bn(Asia)
+plot_bn(asia_bn)
+
+# now we can do the inference on the learned Bayesian network
+myObserved <- list(observed.vars=c("X", "D"), observed.vals=c(1,1))
+exactInference(asia_bn, myObserved)
 ```
 
 Next, let's consider a more high-dimensional problem. Assume, we have measured 100 genes and would like to know what the probability of 4 particular genes is. We will use both exact and approximate inference to get the marginal probability distribution. For approximate inference, we use the efficient SGS algorithm (default) and the famous loopy belief propagation algorithm as a reference. 
@@ -97,8 +79,4 @@ plot(myBayesNet)
 myObserved <- list(observed.vars=c(49,40,44,47), observed.vals=c(2,1,2,1))
 exactInference(myBayesNet,myObserved)
 approxInference(myBayesNet,myObserved)
-approxInference(myBayesNet,myObserved, s_method = "LBP")
 ```
-
-
-%#% While recent advances allow us to learn high-dimensional Bayesian networks, the task of inference or marginalization remains challenging. 
