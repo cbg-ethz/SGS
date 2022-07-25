@@ -1,5 +1,5 @@
 <div > 
-  <img src="vignettes/figures/sgs_icon.png" width="35%" height="35%">
+  <img src="vignettes/sgs_icon.png" width="35%" height="35%">
 </div>
 
 Inference in Bayesian Networks
@@ -77,7 +77,7 @@ Benchmark Results
 
 We benchmarked the performance of our SGS method against standard inference schemes (Gibbs sampling and loopy belief propagation) over a broad range of different Bayesian networks. The results are summarized in the Figure below (lower is better), displaying the normalized root mean squared error (NRMSE). To reproduce the results, run the scripts in the benchmark folder. 
 
-# ![SGS](https://github.com/cbg-ethz/SubGroupSeparation/blob/master/vignettes/figures/benchmark.png)
+# ![SGS](https://github.com/cbg-ethz/SubGroupSeparation/blob/master/vignettes/benchmark.png)
 
 Reference
 ---------
