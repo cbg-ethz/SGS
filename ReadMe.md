@@ -30,13 +30,14 @@ from a terminal, or `make install` from within the package source folder.
 Being hosted on GitHub, it is possible to use the `install_github`
 tool from an R session:
 
-```{r eval=FALSE}
+```
 if (!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocManager")
 BiocManager::install(c("graph", "Rgraphviz", "RBGL"))
 
 library("devtools")
 install_github("cbg-ethz/SubGroupSeparation")
 ```
+
 The packages "graph", "Rgraphviz" and "RBGL" need to be installed from BioConductor, as they are not hosted on CRAN.
 
 `SGS` requires R `>= 3.5`, and depends on
@@ -48,7 +49,7 @@ order to plot graphs, but are not mandatory.
 Examples
 -------
 
-```{r eval=FALSE}
+```
 library(SGS)
 
 # create BN and label variables 

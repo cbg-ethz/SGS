@@ -1,0 +1,14 @@
+citHeader("To cite SGS in publications use:")
+
+citEntry(
+  entry    = "Article",
+  title	   = "High-Dimensional Inference in Bayesian Networks",
+  author   = "Fritz M Bayer, Giusi Moffa, Niko Beerenwinkel, Jack Kuipers",
+  journal  = "arXiv preprint arXiv:2112.09217",
+  year     = "2021",
+  url      = "https://arxiv.org/abs/2112.09217",
+  textVersion = paste(
+
+  )
+)
+

@@ -8,6 +8,7 @@ Depends:
     R (>= 3.5.0),
     bitops,
     methods
+biocViews:
 Suggests:
     graph,
     Rgraphviz,
