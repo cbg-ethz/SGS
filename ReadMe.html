@@ -56,41 +56,37 @@
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a></h2>
 <p>In order to install the package, it suffices to launch <code>R CMD INSTALL path/to/SubGroupSeparation</code> from a terminal, or <code>make install</code> from within the package source folder.</p>
 <p>Being hosted on GitHub, it is possible to use the <code>install_github</code> tool from an R session:</p>
-<p>```{r eval=FALSE} if (!requireNamespace(“BiocManager”, quietly = TRUE)) install.packages(“BiocManager”) BiocManager::install(c(“graph”, “Rgraphviz”, “RBGL”))</p>
-<p>library(“devtools”) install_github(“cbg-ethz/SubGroupSeparation”)</p>
-<pre><code>The packages "graph", "Rgraphviz" and "RBGL" need to be installed from BioConductor, as they are not hosted on CRAN.
-
-`SGS` requires R `&gt;= 3.5`, and depends on
-`bitops` and
-`methods`. Other packages are requested in
-order to plot graphs, but are not mandatory.
-
-
-Examples
--------
-
-```{r eval=FALSE}
-library(SGS)
-
-# create BN and label variables 
-set.seed(6)
-myBayesNet &lt;- randomBN(3)
-myBayesNet@variables &lt;- c("rain", "sprinkler", "wet grass")
-plot_bn(myBayesNet)
-
-# what's the probability of having rain and wet grass at the same time?
-# define observed variables and calculate marginal probability
-myObserved &lt;- list(observed.vars=c("rain", "wet grass"), observed.vals=c(2,2))
-exactInference(myBayesNet,myObserved)
-
-# another example: 
-# let's learn the Bayesian network from the "Asia dataset"
-asia_bn &lt;- learn_bn(Asia)
-plot_bn(asia_bn)
-
-# now we can do the inference on the learned Bayesian network
-myObserved &lt;- list(observed.vars=c("X", "D"), observed.vals=c(1,1))
-exactInference(asia_bn, myObserved)</code></pre>
+<pre><code><span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"BiocManager"</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"BiocManager"</span><span class="op">)</span></span>
+<span><span class="fu">BiocManager</span><span class="fu">::</span><span class="fu">install</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"graph"</span>, <span class="st">"Rgraphviz"</span>, <span class="st">"RBGL"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://devtools.r-lib.org/" class="external-link">"devtools"</a></span><span class="op">)</span></span>
+<span><span class="fu">install_github</span><span class="op">(</span><span class="st">"cbg-ethz/SubGroupSeparation"</span><span class="op">)</span></span></code></pre>
+<p>The packages “graph”, “Rgraphviz” and “RBGL” need to be installed from BioConductor, as they are not hosted on CRAN.</p>
+<p><code>SGS</code> requires R <code>&gt;= 3.5</code>, and depends on <code>bitops</code> and <code>methods</code>. Other packages are requested in order to plot graphs, but are not mandatory.</p>
+</div>
+<div class="section level2">
+<h2 id="examples">Examples<a class="anchor" aria-label="anchor" href="#examples"></a></h2>
+<pre><code><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">SGS</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># create BN and label variables </span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">6</span><span class="op">)</span></span>
+<span><span class="va">myBayesNet</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/randomBN.html">randomBN</a></span><span class="op">(</span><span class="fl">3</span><span class="op">)</span></span>
+<span><span class="va">myBayesNet</span><span class="op">@</span><span class="va">variables</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"rain"</span>, <span class="st">"sprinkler"</span>, <span class="st">"wet grass"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/plot_bn.html">plot_bn</a></span><span class="op">(</span><span class="va">myBayesNet</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># what's the probability of having rain and wet grass at the same time?</span></span>
+<span><span class="co"># define observed variables and calculate marginal probability</span></span>
+<span><span class="va">myObserved</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>observed.vars<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"rain"</span>, <span class="st">"wet grass"</span><span class="op">)</span>, observed.vals<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/exactInference.html">exactInference</a></span><span class="op">(</span><span class="va">myBayesNet</span>,<span class="va">myObserved</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># another example: </span></span>
+<span><span class="co"># let's learn the Bayesian network from the "Asia dataset"</span></span>
+<span><span class="va">asia_bn</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/learn_bn.html">learn_bn</a></span><span class="op">(</span><span class="va">Asia</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/plot_bn.html">plot_bn</a></span><span class="op">(</span><span class="va">asia_bn</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># now we can do the inference on the learned Bayesian network</span></span>
+<span><span class="va">myObserved</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>observed.vars<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"X"</span>, <span class="st">"D"</span><span class="op">)</span>, observed.vals<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/exactInference.html">exactInference</a></span><span class="op">(</span><span class="va">asia_bn</span>, <span class="va">myObserved</span><span class="op">)</span></span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="benchmark-results">Benchmark Results<a class="anchor" aria-label="anchor" href="#benchmark-results"></a></h2>
