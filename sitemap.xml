@@ -10,7 +10,7 @@
     <loc>/ReadMe.html</loc>
   </url>
   <url>
-    <loc>/articles/SubGroupSeparation.html</loc>
+    <loc>/articles/SGS.html</loc>
   </url>
   <url>
     <loc>/articles/index.html</loc>
@@ -314,9 +314,6 @@
   </url>
   <url>
     <loc>/reference/sample.subGroupSampling.html</loc>
-  </url>
-  <url>
-    <loc>/reference/save.to.eps.html</loc>
   </url>
   <url>
     <loc>/reference/scoring.func-set.html</loc>
