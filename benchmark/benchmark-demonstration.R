@@ -46,10 +46,10 @@ resultTable4 <- benchmarkMultipleNets(N_var4, N_Obs4, N_nets, N_rep, N_samples, 
 
 # Visualize the results of the benchmark
 
-ProcessResultTableNRMSE(resultTable1)
-ProcessResultTableNRMSE(resultTable2)
-ProcessResultTableNRMSE(resultTable3)
-ProcessResultTableNRMSE(resultTable4)
+SGS:::ProcessResultTableNRMSE(resultTable1)
+SGS:::ProcessResultTableNRMSE(resultTable2)
+SGS:::ProcessResultTableNRMSE(resultTable3)
+SGS:::ProcessResultTableNRMSE(resultTable4)
 
 # ProcessResultTable(resultTable1)
 # ProcessResultTable(resultTable2)
