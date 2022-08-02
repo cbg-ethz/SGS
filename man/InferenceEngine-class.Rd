@@ -62,15 +62,3 @@ constructor for \code{\link{InferenceEngine}} object
 }
 }
 
-\examples{
-\dontrun{
-dataset <- BNDataset()
-dataset <- read.dataset(dataset, "file.header", "file.data")
-bn <- BN(dataset)
-eng <- InferenceEngine(bn)
-
-obs <- list(c("A","G,"X),c(1,2,1))
-eng.2 <- InferenceEngine(bn, obs)
-}
-
-}

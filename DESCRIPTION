@@ -35,3 +35,4 @@ Encoding: UTF-8
 RoxygenNote: 7.2.1
 LazyData: true
 VignetteBuilder: knitr
+URL: https://cbg-ethz.github.io/SubGroupSeparation/
