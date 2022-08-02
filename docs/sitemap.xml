@@ -1,375 +1,375 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/404.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/404.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/LICENSE-text.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/LICENSE-text.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/ReadMe.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/ReadMe.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/articles/SGS.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/articles/SGS.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/articles/SubGroupSeparation.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/articles/SubGroupSeparation.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/articles/index.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/articles/index.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/authors.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/authors.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/index.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/index.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/news/index.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/news/index.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/Asia.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/Asia.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/Asiamat.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/Asiamat.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/BN-class.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/BN-class.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/BNDataset-class.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/BNDataset-class.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/InferenceEngine-class.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/InferenceEngine-class.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/add.observations-set.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/add.observations-set.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/approxInference.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/approxInference.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/belief.propagation.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/belief.propagation.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/benchmarkMultipleNets.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/benchmarkMultipleNets.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/bn-method.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/bn-method.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/bn-set.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/bn-set.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/boot.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/boot.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/boots-set.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/boots-set.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/boots.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/boots.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/bootstrap.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/bootstrap.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/build.junction.tree.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/build.junction.tree.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/complete.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/complete.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/convertBNBestieToSGS.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/convertBNBestieToSGS.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/convertCPTsBestieToSGS.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/convertCPTsBestieToSGS.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/cpts-set.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/cpts-set.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/cpts.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/cpts.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/dag-set.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/dag-set.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/dag.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/dag.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/dag.to.cpdag.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/dag.to.cpdag.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/data.file-set.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/data.file-set.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/data.file.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/data.file.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/discreteness-set.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/discreteness-set.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/discreteness.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/discreteness.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/edge.dir.wpdag.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/edge.dir.wpdag.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/em.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/em.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/exactInference.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/exactInference.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/get.allAncestors.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/get.allAncestors.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/get.allSubGroups.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/get.allSubGroups.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/get.most.probable.values.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/get.most.probable.values.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/get.subGroup.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/get.subGroup.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/has.boots.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/has.boots.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/has.imputed.boots.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/has.imputed.boots.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/has.imputed.data.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/has.imputed.data.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/has.raw.data.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/has.raw.data.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/header.file-set.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/header.file-set.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/header.file.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/header.file.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/imp.boots-set.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/imp.boots-set.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/imp.boots.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/imp.boots.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/impute.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/impute.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/imputed.data-set.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/imputed.data-set.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/imputed.data.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/imputed.data.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/index.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/index.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/interventions-set.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/interventions-set.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/interventions.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/interventions.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/jpts-set.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/jpts-set.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/jpts.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/jpts.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/jt.cliques-set.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/jt.cliques-set.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/jt.cliques.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/jt.cliques.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/junction.tree-set.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/junction.tree-set.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/junction.tree.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/junction.tree.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/knn.impute.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/knn.impute.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/layering.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/layering.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/learn.dynamic.network.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/learn.dynamic.network.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/learn.network.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/learn.network.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/learn.params.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/learn.params.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/learn.structure.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/learn.structure.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/learn_bn.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/learn_bn.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/loopy_belief.propagation.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/loopy_belief.propagation.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/makeAllPlots.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/makeAllPlots.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/marginals.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/marginals.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/name-set.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/name-set.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/name.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/name.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/node.sizes-set.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/node.sizes-set.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/node.sizes.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/node.sizes.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/num.boots-set.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/num.boots-set.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/num.boots.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/num.boots.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/num.items-set.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/num.items-set.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/num.items.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/num.items.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/num.nodes-set.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/num.nodes-set.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/num.nodes.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/num.nodes.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/num.time.steps-set.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/num.time.steps-set.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/num.time.steps.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/num.time.steps.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/num.variables-set.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/num.variables-set.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/num.variables.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/num.variables.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/observations-set.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/observations-set.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/observations.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/observations.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/plot.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/plot.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/plot_bn.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/plot_bn.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/plot_dag.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/plot_dag.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/print.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/print.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/quantiles-set.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/quantiles-set.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/quantiles.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/quantiles.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/randomBN.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/randomBN.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/raw.data-set.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/raw.data-set.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/raw.data.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/raw.data.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/read.bif.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/read.bif.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/read.dataset.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/read.dataset.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/read.dsc.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/read.dsc.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/read.net.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/read.net.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/sample.dataset.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/sample.dataset.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/sample.row.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/sample.row.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/sample.subGroupSampling.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/sample.subGroupSampling.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/scoring.func-set.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/scoring.func-set.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/scoring.func.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/scoring.func.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/shd.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/shd.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/show.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/show.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/struct.algo-set.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/struct.algo-set.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/struct.algo.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/struct.algo.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/sub_belief.propagation.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/sub_belief.propagation.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/test.updated.bn.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/test.updated.bn.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/tune.knn.impute.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/tune.knn.impute.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/updated.bn-method.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/updated.bn-method.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/updated.bn-set.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/updated.bn-set.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/variables-set.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/variables-set.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/variables.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/variables.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/wpdag-set.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/wpdag-set.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/wpdag.from.dag.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/wpdag.from.dag.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/wpdag.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/wpdag.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/write.dsc.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/write.dsc.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/SubGroupSeparation/reference/write_xgmml.html</loc>
+    <loc>https://cbg-ethz.github.io/SGS/reference/write_xgmml.html</loc>
   </url>
 </urlset>
