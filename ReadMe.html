@@ -52,13 +52,13 @@
 </div>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a></h2>
-<p>In order to install the package, it suffices to launch <code>R CMD INSTALL path/to/SubGroupSeparation</code> from a terminal, or <code>make install</code> from within the package source folder.</p>
+<p>In order to install the package, it suffices to launch <code>R CMD INSTALL path/to/SGS</code> from a terminal, or <code>make install</code> from within the package source folder.</p>
 <p>Being hosted on GitHub, it is possible to use the <code>install_github</code> tool from an R session:</p>
 <pre><code><span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"BiocManager"</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"BiocManager"</span><span class="op">)</span></span>
 <span><span class="fu">BiocManager</span><span class="fu">::</span><span class="fu">install</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"graph"</span>, <span class="st">"Rgraphviz"</span>, <span class="st">"RBGL"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://devtools.r-lib.org/" class="external-link">"devtools"</a></span><span class="op">)</span></span>
-<span><span class="fu">install_github</span><span class="op">(</span><span class="st">"cbg-ethz/SubGroupSeparation"</span><span class="op">)</span></span></code></pre>
+<span><span class="fu">install_github</span><span class="op">(</span><span class="st">"cbg-ethz/SGS"</span><span class="op">)</span></span></code></pre>
 <p>The packages “graph”, “Rgraphviz” and “RBGL” need to be installed from BioConductor, as they are not hosted on CRAN.</p>
 <p><code>SGS</code> requires R <code>&gt;= 3.5</code>, and depends on <code>bitops</code> and <code>methods</code>. Other packages are requested in order to plot graphs, but are not mandatory.</p>
 </div>
