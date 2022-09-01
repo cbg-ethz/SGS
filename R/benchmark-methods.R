@@ -298,8 +298,8 @@ benchmarkStudyMain <- function(BayesNet = NULL, obs = NULL, methods = c("FS","GS
 }
 
 
-#' @importFrom RColorBrewer brewer.pal
-#' @importFrom ggpubr ggarrange
+# #' @importFrom RColorBrewer brewer.pal
+# #' @importFrom ggpubr ggarrange
 processAndPlot <- function(benchmarkResults, exactVal)
 {
   normC=countsS=group=Method=0

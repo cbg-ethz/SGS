@@ -29,7 +29,6 @@ Imports:
     Bestie,
     cowplot,
     ggplot2,
-    ggpubr,
     pcalg,
     RColorBrewer,
     gridExtra
