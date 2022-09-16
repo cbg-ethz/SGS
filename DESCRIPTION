@@ -4,11 +4,11 @@ Title: Inference in Bayesian Networks
 Description: Implementation of common inference algorithms for Bayesian networks. Allows for efficient exact and approximate inference that works both in low- and high-dimensional settings. Efficient marginalization is reached by splitting the calculation into sub-calculations of lower dimensionality. Implemented approximate inference algoti Gibbs sampling, loopy belief propagation and SubGroupSeparation. 
 	Implemented exact inference methods: SubGroupSeparation (fastest), junction-tree algorithm, complete enumeration. 
 	Implemented approximate inference methods: SubGroupSeparation (highest accuracy), loopy belief propagation, Markov chain Monte Carlo (MCMC) sampling.
-	References: Bayer, F.M., Moffa, G., Beerenwinkel, N. and Kuipers, J., 2021. High-Dimesnional Inference in Bayesian Networks. arXiv preprint <doi.org/10.48550/arXiv.2112.09217>.
+	References: Bayer, F.M., Moffa, G., Beerenwinkel, N. and Kuipers, J., 2021. High-Dimensional Inference in Bayesian Networks. arXiv preprint <doi:10.48550/arXiv.2112.09217>.
 Author: Fritz Bayer [aut, cre]
 Maintainer: Fritz Bayer <frbayer@ethz.ch>
 Version: 1.0.0
-Date: 2022-08-02
+Date: 2022-09-16
 Depends:
     R (>= 3.5.0),
     bitops,
