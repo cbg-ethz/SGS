@@ -45,3 +45,4 @@ benchmark/high-dim-benchmarks/high-dim-d800.R
 .Rproj.user
 .Rbuildignore
 docs
+benchmark/SGS_group_size_analysis.R
